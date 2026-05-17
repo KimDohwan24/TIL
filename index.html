@@ -1,0 +1,5447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-translate-customization" content="108d9124921d80c3-80e20d618ff053c8-g4f02ec6f3dba68b7-c">
+<!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>Home | DoHwan’s Study Room</title>
+<meta name="generator" content="Jekyll v4.4.1">
+<meta property="og:title" content="Home">
+<meta name="author" content="KimDohwan24">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.">
+<meta name="twitter:description" property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.">
+<link rel="canonical" href="https://kimdohwan24.github.io/TIL/">
+<meta property="og:url" content="https://kimdohwan24.github.io/TIL/">
+<meta property="og:site_name" content="DoHwan’s Study Room">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Home">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"KimDohwan24"},"description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Home","name":"DoHwan’s Study Room","url":"https://kimdohwan24.github.io/TIL/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="icon" href="">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
+  <link rel="stylesheet" href="/TIL/assets/css/main.css">
+  <script src="/TIL/assets/js/main.js"></script><link type="application/atom+xml" rel="alternate" href="https://kimdohwan24.github.io/TIL/feed.xml" title="DoHwan's Study Room">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/languages/go.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+// Init highlight js
+document.addEventListener('DOMContentLoaded', function(event) {
+  var els = document.querySelectorAll('pre code')
+
+  function addLangData(block) {
+    var outer = block.parentElement.parentElement.parentElement;
+    var lang = block.getAttribute('data-lang');
+    for (var i = 0; i < outer.classList.length; i++) {
+      var cls = outer.classList[i];
+      if (cls.startsWith('language-')) {
+        lang = cls;
+        break;
+      }
+    }
+    if (!lang) {
+      cls = block.getAttribute('class');
+      lang = cls ? cls.replace('hljs ', '') : '';
+    }
+    if (lang.startsWith('language-')) {
+      lang = lang.substr(9);
+    }
+    block.setAttribute('class', 'hljs ' + lang);
+    block.parentNode.setAttribute('data-lang', lang);
+  }
+
+  function addBadge(block) {
+    var enabled = ('true' || 'true').toLowerCase();
+    if (enabled == 'true') {
+      var pre = block.parentElement;
+      pre.classList.add('badge');
+    }
+  }
+
+  function handle(block) {
+    addLangData(block);
+    addBadge(block)
+    hljs.highlightBlock(block);
+  }
+
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    handle(el);
+  }
+});
+</script>
+
+<style>
+  /* code language badge */
+  pre.badge::before {
+    content: attr(data-lang);
+    color: #fff;
+    background-color: #ff4e00;
+    padding: 0 .5em;
+    border-radius: 0 2px;
+    text-transform: uppercase;
+    text-align: center;
+    min-width: 32px;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  /* fix wrong badge display for firefox browser */
+  code > table pre::before {
+    display: none;
+  }
+</style>
+<script src="//cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/default-skin/default-skin.css" rel="stylesheet">
+<style>
+  .pswp .pswp__container .pswp__img {
+    background-color: white;
+  }
+</style>
+
+<script>
+  function initPhotoSwipe() {
+    var mainEl = document.querySelector("section.main");
+
+    var imgEls = mainEl.querySelectorAll("img:not(.emoji)");
+    imgEls.forEach((imgEl) => {
+      imgEl.outerHTML = `
+    <a class="photo-swipe"
+      href="${imgEl.src}"
+      data-width="${imgEl.getAttribute("width") || imgEl.width * 2}"
+      data-height="${imgEl.getAttribute("height") || imgEl.height * 2}"
+      data-caption="${imgEl.getAttribute("caption") || imgEl.alt}"
+      target="_blank">
+      ${imgEl.outerHTML}
+    </a>`;
+    });
+
+    // Init empty gallery array
+    var container = [];
+
+    // Loop over gallery items and push it to the array
+    var linkEls = mainEl.querySelectorAll("a.photo-swipe");
+    linkEls.forEach((link) => {
+      var item = {
+        src: link.getAttribute("href"),
+        w: link.dataset.width,
+        h: link.dataset.height,
+        title: link.dataset.caption || "",
+      };
+      container.push(item);
+    });
+
+    // Define click event on gallery item
+    linkEls.forEach((link, index) => {
+      link.addEventListener("click", (event) => {
+        // Prevent location change
+        event.preventDefault();
+
+        // Define object and gallery options
+        var pswp = document.querySelector(".pswp");
+
+        var zoomLevel = 1;
+
+        // Define object and gallery options
+        var options = {
+          index: index,
+          bgOpacity: 0.85,
+          showHideOpacity: true,
+          closeOnScroll: true,
+          maxSpreadZoom: 1,
+          getDoubleTapZoom: (isMouseClick, item) => {
+            if (item.detail) {
+              zoomLevel += item.detail.origEvent.shiftKey ? -1 : 1;
+              item.detail = undefined;
+            } else {
+              zoomLevel = zoomLevel === 1 ? 2 : 1;
+            }
+            if (zoomLevel <= 1) {
+              zoomLevel = 1;
+              setTimeout(() => pswp.classList.remove("pswp--zoomed-in"), 0);
+            }
+            return item.initialZoomLevel * zoomLevel;
+          },
+        };
+
+        // Initialize PhotoSwipe
+        var gallery = new PhotoSwipe(
+          pswp,
+          PhotoSwipeUI_Default,
+          container,
+          options
+        );
+
+        gallery.init();
+
+        // Custom zoom event
+        gallery.container.addEventListener("pswpTap", (e) => {
+          gallery.currItem.detail = e.detail;
+        });
+      });
+    });
+  }
+
+  window.addEventListener("load", initPhotoSwipe);
+</script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+</head>
+<body>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe.
+           It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg"></div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides.
+              PhotoSwipe keeps only 3 of them in the DOM to save memory.
+              Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter"></div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--share" title="Share"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip"></div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="site-header site-header-transparent" role="banner">
+
+  <div class="wrapper">
+    <div class="site-header-inner">
+<span class="site-brand"><a class="site-brand-inner" rel="author" href="/TIL/">
+  <img class="site-favicon" title="DoHwan's Study Room" src="" onerror="this.style.display='none'">
+  DoHwan's Study Room
+</a>
+</span><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger">
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewbox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="trigger">
+<a class="page-link" href="/TIL/about.html">ABOUT</a><a class="page-link" href="/TIL/archives.html">ARCHIVES</a><a class="page-link" href="/TIL/categories.html">CATEGORIES</a><a class="page-link" href="/TIL/">HOME</a><a class="page-link" href="/TIL/tags.html">TAGS</a>
+
+
+
+
+
+
+
+
+
+<span class="page-link">
+
+
+
+<div id="google_translate_element" style="display: none;">
+</div>
+
+<span class="ct-language">
+  <ul class="list-unstyled ct-language-dropdown">
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="en">
+          
+          <img src="https://cdn.countryflags.com/thumbs/united-states-of-america/flag-400.png" title="English">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="fr">
+          
+          <img src="https://cdn.countryflags.com/thumbs/france/flag-400.png" title="French">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="zh-CN">
+          
+          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Chinese(Simple)">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ja">
+          
+          <img src="https://cdn.countryflags.com/thumbs/japan/flag-400.png" title="Japanese">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ko">
+          
+          <img src="https://cdn.countryflags.com/thumbs/south-korea/flag-400.png" title="Korean">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ru">
+          
+          <img src="https://cdn.countryflags.com/thumbs/russia/flag-400.png" title="Russian">
+          
+        </a>
+      </li>
+    
+  </ul>
+</span>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    autoDisplay: false,
+    layout: google.translate.TranslateElement.InlineLayout.VERTICAL
+  }, 'google_translate_element');
+
+  // Links to cross-origin destinations are unsafe
+  var gll = document.getElementsByClassName('goog-logo-link')[0];
+  if (gll) {
+    gll.setAttribute('rel', 'noopener');
+  }
+
+  function restoreLang() {
+    var iframe = document.getElementsByClassName('goog-te-banner-frame')[0];
+    if (!iframe) return;
+
+    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    var restore_el = innerDoc.getElementsByTagName("button");
+
+    for (var i = 0; i < restore_el.length; i++) {
+      if (restore_el[i].id.indexOf("restore") >= 0) {
+        restore_el[i].click();
+        var close_el = innerDoc.getElementsByClassName("goog-close-link");
+        close_el[0].click();
+        return;
+      }
+    }
+  }
+
+  function triggerHtmlEvent(element, eventName) {
+    var event;
+    if (document.createEvent) {
+      event = document.createEvent('HTMLEvents');
+      event.initEvent(eventName, true, true);
+      element.dispatchEvent(event);
+    } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+      element.fireEvent('on' + event.eventType, event);
+    }
+  }
+
+  var googleCombo = document.querySelector("select.goog-te-combo");
+  var langSelect = document.querySelector('.ct-language');
+  langSelect.addEventListener('click', function(event) {
+    if (!event.target) {
+      return;
+    }
+
+    var selected = document.querySelector('.ct-language .ct-language-selected');
+    if (selected) {
+      selected.classList.remove('ct-language-selected');
+    }
+
+    var target = event.target;
+    while (target && target !== langSelect ) {
+      if (target.matches('.lang-select')) {
+        break;
+      }
+      target = target.parentElement;
+    }
+
+    if (target && target.matches('.lang-select')) {
+      var lang = target.getAttribute('data-lang');
+      if (googleCombo.value == lang) {
+        restoreLang();
+      } else {
+        target.parentElement.classList.add('ct-language-selected');
+        googleCombo.value = lang;
+        triggerHtmlEvent(googleCombo, 'change');
+      }
+    }
+
+    event.preventDefault();
+  });
+}
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</span>
+</div>
+        </nav>
+</div>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    var lastScrollY = getScrollPos().y;
+    var documentElement = document.documentElement;
+
+    function storeScrollData() {
+      var y = getScrollPos().y;documentElement.setAttribute("data-header-transparent", "");var scrollStatus = "";
+
+      if (y <= 0) {
+        scrollStatus = "top";
+      } else if ((window.innerHeight + y) >= document.body.offsetHeight) {
+        scrollStatus = "bottom";
+      } else {
+        var isScrollDown = (y - lastScrollY > 0) ? true : false;
+        scrollStatus = isScrollDown ? "down" : "up";
+      }
+
+      lastScrollY = y;
+      documentElement.setAttribute("data-scroll-status", scrollStatus);
+    }
+
+    window.addEventListener('scroll', function(e) {
+      storeScrollData();
+    });
+
+    storeScrollData();
+  }
+  document.addEventListener('DOMContentLoaded', initHeader);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="page-banner">
+    <div class="page-banner-img">
+<div style="background-image: url(/TIL/assets/images/banners/home.jpeg)"></div>
+        <img class="img-placeholder" src="/TIL/assets/images/banners/home.jpeg">
+</div>
+    <div class="wrapper">
+      <div class="page-banner-inner"><div class="page-banner-default">
+            <h1 class="page-banner-heading">
+              Traces of study
+            </h1>
+            <h2 class="page-banner-subheading">
+              Let's do our best.
+            </h2>
+          </div></div>
+    </div>
+  </section><script>
+  function hashLocate(hashValue) {
+    hashValue = hashValue.replace(/^.*#h-/, '');
+    hashValue = decodeURIComponent(hashValue);
+    var element = document.getElementById(hashValue);
+
+    if (!element) {
+      return;
+    }
+
+    var header = document.querySelector('header.site-header');
+    var headerRect = header.getBoundingClientRect();
+    var headerTop = Math.floor(headerRect.top);
+    var headerHeight = Math.floor(headerRect.height);
+    var scrollPos = getScrollPos();
+    var offsetY = element.offsetTop - (headerTop + headerHeight + 20);
+
+    if (offsetY == scrollPos.y) {
+      return;
+    }
+
+    if (headerTop == 0  && offsetY > scrollPos.y) {
+      offsetY += headerHeight + 2;
+    } else if (headerTop < 0  && offsetY < scrollPos.y) {
+      offsetY -= headerHeight - 2;
+    }
+
+    smoothScrollTo(offsetY);
+  }
+
+  // The first event occurred
+  window.addEventListener('load', function(event) {
+    if (window.location.hash) {
+      hashLocate(window.location.hash);
+    }
+  });
+
+  // The first event occurred
+  window.addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() == 'a') {
+      hashLocate(event.target.getAttribute('href'));
+    }
+  });
+</script>
+<div class="theme-toggle">
+  <input type="checkbox" id="theme-switch">
+  <label for="theme-switch">
+    <div class="toggle"></div>
+    <div class="names">
+      <p class="light">Light</p>
+      <p class="dark">Dark</p>
+    </div>
+  </label>
+</div>
+
+
+
+
+<script>
+  (function() {
+    var sw = document.getElementById('theme-switch');
+    var html = document.getElementsByTagName('html')[0];
+    var nightModeOption = ('auto' || 'auto').toLowerCase();
+    var storage = nightModeOption === 'manual'
+        ? localStorage
+        : sessionStorage;
+    var themeData = loadThemeData();
+
+    function saveThemeData(data) {
+      storage.setItem('theme', JSON.stringify(data));
+    }
+
+    function loadThemeData() {
+      var data = storage.getItem('theme');
+      try {
+        data = JSON.parse(data ? data : '');
+      } catch(e) {
+        data = { nightShift: undefined, autoToggleAt: 0 };
+        saveThemeData(data);
+      }
+      return data;
+    }
+
+    function handleThemeToggle(nightShift) {
+      themeData.nightShift = nightShift;
+      saveThemeData(themeData);
+      html.dataset.theme = nightShift ? 'dark' : 'light';
+      setTimeout(function() {
+        sw.checked = nightShift ? true : false;
+      }, 50);
+    }
+
+    function autoThemeToggle() {
+      // Next time point of theme toggle
+      var now = new Date();
+      var toggleAt = new Date();
+      var hours = now.getHours();
+      var nightShift = hours >= 19 || hours <=7;
+
+      if (nightShift) {
+        if (hours > 7) {
+          toggleAt.setDate(toggleAt.getDate() + 1);
+        }
+        toggleAt.setHours(7);
+      } else {
+        toggleAt.setHours(19);
+      }
+
+      toggleAt.setMinutes(0);
+      toggleAt.setSeconds(0);
+      toggleAt.setMilliseconds(0)
+
+      var delay = toggleAt.getTime() - now.getTime();
+
+      // auto toggle theme mode
+      setTimeout(function() {
+        handleThemeToggle(!nightShift);
+      }, delay);
+
+      return {
+        nightShift: nightShift,
+        toggleAt: toggleAt.getTime()
+      };
+    }
+
+    // Listen the theme toggle event
+    sw.addEventListener('change', function(event) {
+      handleThemeToggle(event.target.checked);
+    });
+
+    if (nightModeOption == 'auto') {
+      var data = autoThemeToggle();
+
+      // Toggle theme by local setting
+      if (data.toggleAt > themeData.autoToggleAt) {
+        themeData.autoToggleAt = data.toggleAt;
+        handleThemeToggle(data.nightShift);
+      } else {
+        handleThemeToggle(themeData.nightShift);
+      }
+    } else if (nightModeOption == 'manual') {
+      handleThemeToggle(themeData.nightShift);
+    } else {
+      var nightShift = themeData.nightShift;
+      if (nightShift === undefined) {
+        nightShift = nightModeOption === 'on';
+      }
+      handleThemeToggle(nightShift);
+    }
+  })();
+</script>
+<div id="click-to-top" class="click-to-top">
+  <i class="fa fa-arrow-up"></i>
+</div>
+<script>
+  (function () {
+    const clickToTop = document.getElementById('click-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        clickToTop.classList.add('show')
+      }else {
+        clickToTop.classList.remove('show')
+      }
+    });
+    clickToTop.addEventListener('click', () => {
+      window.smoothScrollTo(0);
+    });
+  })();
+</script>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="framework">
+  <section class="main">
+
+     <div class="articles">
+  
+
+  
+
+
+  <div class="pagination">
+  <!-- Post list links -->
+  <ul class="post-list">
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2026/05/19/TIL-36.html">
+          주식 조회 서비스 성능 최적화
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> May 19, 2026</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 22 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2026/05/19/TIL-36.html">
+        <p>
+        개요
+
+AI 뉴스 기반 주식 추천 서비스(StockAI)에서 조회 속도 저하 문제를 분석하고, BE(Spring Boot) + FE(Next.js) 전체 스택에 걸쳐 13개 최적화 항목을 도출. 순차적 병목 → 병렬화, 2왕복 → 1왕복, 중복 요청 → 캐시 재사용 등의 원칙으로 접근.
+
+
+
+1. 국내 주식 배치 가격 조회: 순차 → 병렬
+
+Before
+StockPriceBatchService.processChunk()
+├─ stockCode[0]: cache miss → KIS API → 125ms
+├─ stockCode[1]: cache miss → KIS API → 125ms
+├─ stockCode[2]: c... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Spring%20Boot">#Spring Boot</a><a class="post-tag" href="/TIL/tags.html#Next.js">#Next.js</a><a class="post-tag" href="/TIL/tags.html#Performance">#Performance</a><a class="post-tag" href="/TIL/tags.html#WebClient">#WebClient</a><a class="post-tag" href="/TIL/tags.html#HikariCP">#HikariCP</a><a class="post-tag" href="/TIL/tags.html#SWR">#SWR</a><a class="post-tag" href="/TIL/tags.html#React">#React</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2026/05/18/TIL-35.html">
+          API 워터폴 제거로 전체조회 속도 개선하기
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> May 18, 2026</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 9 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2026/05/18/TIL-35.html">
+        <p>
+        사전 개념
+
+이 글에서 반복해서 등장하는 세 가지 개념을 먼저 정리한다.
+
+
+  SSR (Server-Side Rendering): 서버에서 HTML을 완성해 브라우저에 보내는 방식. 클라이언트가 빈 화면을 보지 않고 곧바로 콘텐츠를 볼 수 있다. 단, 서버가 데이터를 가져와야 하므로 응답 자체가 느려질 수 있다.
+  ISR (Incremental Static Regeneration): 정적 페이지를 빌드한 뒤 일정 시간(revalidate)이 지나면 백그라운드에서 다시 생성하는 방식. 매 요청마다 서버가 일할 필요 없으므로 응답이 빠르고, 캐시 만료 시에만 갱신된다.
+  Delta 조회: 이미 가지고 있는 데이터... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#React">#React</a><a class="post-tag" href="/TIL/tags.html#Next.js">#Next.js</a><a class="post-tag" href="/TIL/tags.html#Performance">#Performance</a><a class="post-tag" href="/TIL/tags.html#SWR">#SWR</a><a class="post-tag" href="/TIL/tags.html#SSR">#SSR</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2026/04/27/TIL-34.html">
+          Harness, CLAUDE.md, AGENTS.md의 역할과 차이
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 27, 2026</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 7 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2026/04/27/TIL-34.html">
+        <p>
+        들어가며
+
+오늘은 Harness, CLAUDE.md, AGENTS.md가 각각 어떤 역할을 하는지 정리해봤다.
+
+처음 이름만 보면 셋 다 작업을 더 효율적으로 도와주는 무언가처럼 느껴진다. 하지만 실제로는 다루는 대상도 다르고, 사용되는 맥락도 분명히 다르다.
+
+
+  Harness는 소프트웨어를 안전하게 배포하기 위한 운영 플랫폼이다.
+  CLAUDE.md는 AI에게 프로젝트 규칙을 알려주는 문서다.
+  AGENTS.md는 AI의 역할 분담과 작업 흐름을 정의하는 문서다.
+
+
+즉, Harness는 실제 서비스 전달 과정을 다루는 도구이고, CLAUDE.md와 AGENTS.md는 AI가 프로젝트 안에서 더 정확하고 ... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#DevOps">#DevOps</a><a class="post-tag" href="/TIL/tags.html#CI/CD">#CI/CD</a><a class="post-tag" href="/TIL/tags.html#Harness">#Harness</a><a class="post-tag" href="/TIL/tags.html#AI">#AI</a><a class="post-tag" href="/TIL/tags.html#Documentation">#Documentation</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2026/04/25/TIL-33.html">
+          Harness란
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 25, 2026</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 5 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2026/04/25/TIL-33.html">
+        <p>
+        Harness
+
+  Harness는 소프트웨어를 개발한 뒤 실제 운영 환경까지 안전하게 전달하기 위한 빌드, 테스트, 배포, 검증 과정을 자동화하고 관리하는 플랫폼이다.
+  단순히 코드를 작성하는 것에서 끝나는 것이 아니라, 그 코드가 어떤 흐름으로 배포되고 운영되는지까지 설계하는 개념에 가깝다.
+  즉, 개발과 운영 사이를 연결하는 DevOps 관점의 엔지니어링이라고 볼 수 있다.
+  예전에는 배포를 사람이 직접 서버에 접속해 명령어를 실행하거나, 순서를 기억해가며 수동으로 진행하는 경우가 많았다.
+  하지만 서비스 규모가 커질수록 이런 방식은 실수 가능성이 높고, 같은 작업을 반복할 때마다 품질이 달라질 수 있... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#DevOps">#DevOps</a><a class="post-tag" href="/TIL/tags.html#CI/CD">#CI/CD</a><a class="post-tag" href="/TIL/tags.html#Deployment">#Deployment</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2026/04/23/TIL-32.html">
+          Refresh Token 구현 방식 고도화
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 23, 2026</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2026/04/23/TIL-32.html">
+        <p>
+        요약
+
+  기존: Random Hex String 방식
+  
+    변경: JWT + Metadata JSON 방식
+  
+  이전에는 특정 토큰을 찾기 위해 Redis를 순회해야 할 수 있어 조회 비용이 O(N)에 가까워질 수 있었습니다.
+  현재는 JWT 내부의 사용자 정보와 디바이스 정보를 활용해 O(1) 수준의 직접 조회가 가능해졌습니다.
+  성능뿐 아니라 운영 편의성과 보안 검증 수준도 함께 개선되었습니다.
+
+
+버전별 상세 비교
+
+
+  
+    
+      항목
+      이전 버전 (Legacy)
+      현재 버전 (Modern)
+      비고
+    
+  
+  
+    
+      토큰 형태
+   ... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#JWT">#JWT</a><a class="post-tag" href="/TIL/tags.html#RefreshToken">#RefreshToken</a><a class="post-tag" href="/TIL/tags.html#Redis">#Redis</a><a class="post-tag" href="/TIL/tags.html#Authentication">#Authentication</a><a class="post-tag" href="/TIL/tags.html#Security">#Security</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/06/19/TIL-31.html">
+          Token stateless
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Jun 19, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/06/19/TIL-31.html">
+        <p>
+        문제 상황
+
+  JWT 기반 인증 시스템을 구현하면서 로그아웃 기능을 추가하려 했습니다.
+  하지만 JWT는 기본적으로 서버가 상태를 저장하지 않는 무상태(stateless) 구조이기 때문에, 사용자가 로그아웃을 하더라도 서버는 해당 토큰이 유효한지 아닌지를 판단할 수 없습니다.
+  처음에는 이 문제를 해결하기 위해 Redis를 도입해 사용자의 토큰을 저장하고, 블랙리스트 방식으로 로그아웃 시 해당 토큰을 무효화하려고 했습니다.
+
+
+고민한 점
+
+  Redis에 토큰을 저장하면 로그아웃 처리를 쉽게 할 수 있고, 토큰 유효성 검사 시 블랙리스트에 있는지 체크하면 되므로 보안 측면에서 유리합니다.
+  하지만 이 방식은... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#JWT">#JWT</a><a class="post-tag" href="/TIL/tags.html#Security">#Security</a><a class="post-tag" href="/TIL/tags.html#Redis">#Redis</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/06/13/TIL-30.html">
+          JPQL
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Jun 13, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 5 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/06/13/TIL-30.html">
+        <p>
+        JPQL
+
+  JPA는 SQL을 추상화한 JPQL이라는 개체 지향 쿼리 언어를 제공한다
+  테이블을 대상으로 쿼리 하는 것이 아닌 엔티티 객체를 대항으로 쿼리한다
+  JPQL은 SQL을 추상화했기 때문에 특정 데이터베이스 SQL에 의존하지 않는 장점이 있다
+  JPQL은 SQL과 문법이 유사하며, SELECT, FROM, WHERE, GROUP BY, HAVING, JOIN을 지원한다
+  JPQL은 결국 SQL로 변환된다
+
+
+JPQL 예제
+
+
+// 예: Member 엔티티에서 이름이 '홍길동'인 멤버 조회
+@Query("SELECT m FROM Member m WHERE m.name = :name")
+List&amp;lt... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#JPA">#JPA</a><a class="post-tag" href="/TIL/tags.html#JPQL">#JPQL</a><a class="post-tag" href="/TIL/tags.html#Database">#Database</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/06/11/TIL-29.html">
+          AOP
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Jun 11, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/06/11/TIL-29.html">
+        <p>
+        AOP ( 관점 지향 프로그래밍 )
+
+  AOP는 OOP( Object Oriented Programming )를 돕는 보조적인 기술로, 관심사의 분리( 기능의 분리 )의 문제를 해결하기 위해 만들어진 프로그래밍 패러다임이다.
+  AOP는 기능을 핵심 관심 사항( Core Concern )과 공통 관심 사항( Cross - Cutting Concern )으로 분리시키고 각각을 모듈화 하는것을 의미한다.
+
+
+AOP의 핵심 개념
+
+
+  관심사 ( Concern )
+    
+      애플리케이션에서 어떤 기능이나 책임을 말한다
+      예 : 비즈니스 로직, 보안, 로깅 등..
+    
+  
+  횡단 관심사 ( Cr... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Spring">#Spring</a><a class="post-tag" href="/TIL/tags.html#AOP">#AOP</a><a class="post-tag" href="/TIL/tags.html#Aspect">#Aspect</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/06/09/TIL-28.html">
+          Test Code
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Jun 09, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/06/09/TIL-28.html">
+        <p>
+        테스트 코드
+
+  소프트웨어 개발 후 기능과 동작을 테스트하는 데 사용되는 코드이다.
+  개발자가 예상한대로 프로그램이 실행하는지 확인하는 역할을 한다.
+  어떤 기능을 테스트할 것인지에 대해 각각 테스트 케이스를 분류하고, 다양한 라이브러리와 프레임워크를 이용해 작성할 수 있다.
+
+
+테스트 코드의 종류
+
+
+  단위 테스트 ( Unit Test )
+    
+      하나의 메서드나 클래스 등 작은 단위를 독립적으로 테스트하는 방법이다.
+      외부 의존성( DB, 네트워크 등 )은 mock이 처리
+      예 : 회원가입 시 이메일 형식을 검사하는 함수만 따로 테스트
+    
+  
+  통합 테스트 ( Int... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Test">#Test</a><a class="post-tag" href="/TIL/tags.html#Spring">#Spring</a><a class="post-tag" href="/TIL/tags.html#Quality">#Quality</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/06/05/TIL-27.html">
+          Filter
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Jun 05, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/06/05/TIL-27.html">
+        <p>
+        Filter
+
+  Servlet Filter는 서블릿 스펙의 일부로, 웹 애플리케이션의 요정(Request) 또는 응답(Response)을 가로채고 가공할 수 있는 재사용 가능한 컴포넌트이다.
+  Spring에서도 이를 활용해 인증/인가 필터, 로깅 필터, CORS 필터 등을 만들 수 있다.
+
+
+Filter 동작 순서
+
+  클라이언트의 요청이 먼저 필터를 통과함
+  각 필터는 doFilter() 메서드를 통해 요청을 가로채고 필요 시 후속 필터 또는 서블릿으로 넘김
+  서블릿/컨트롤러가 응답을 생성한 후 필터로 다시 돌아옴
+  필터가 응답을 후처리하고 클라이언트로 전달
+
+
+[HTTP 요청]
+   ↓
+[FilterC... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Spring">#Spring</a><a class="post-tag" href="/TIL/tags.html#Servlet">#Servlet</a><a class="post-tag" href="/TIL/tags.html#Filter">#Filter</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/05/26/TIL-26.html">
+          SOLID 원칙
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> May 26, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 7 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/05/26/TIL-26.html">
+        <p>
+        SOLID 원칙 정리
+
+  SOLID는 객체지향 설계의 5가지 핵심 원칙을 의미하며, 유지보수성과 확장성을 고려한 유연한 소프트웨어 설계를 가능하게 한다. 이 원칙은 로버트 C. 마틴(Robert C. Martin, 일명 ‘Uncle Bob’)이 제안했다.
+
+
+단일 책임 원칙 (Single Responsibility Principle, SRP)
+
+  하나의 클래스는 하나의 책임만 가져야 하며, 클래스는 오직 하나의 변경 이유만 가져야 한다.
+  클래스가 여러 책임을 가지면, 하나의 변경이 다른 기능에 예기치 않은 영향을 줄 수 있다. 이는 응집도가 낮고, 유지보수가 어려운 코드로 이어진다.
+
+
+// 책임이 뒤섞인 ... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#OOP">#OOP</a><a class="post-tag" href="/TIL/tags.html#SOLID">#SOLID</a><a class="post-tag" href="/TIL/tags.html#Design">#Design</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/05/26/TIL-25.html">
+          Json Web Token
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> May 26, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/05/26/TIL-25.html">
+        <p>
+        Json Web Token
+
+  사용자 인증 및 권한 부여에 널리 사용되는 토큰 기반 인증 방식이다.
+  클라이언트와 서버 간에 정보를 안전하게 전달하기 위한 JSON 기반의 암호화된 토큰이다.
+  JWT는 세 파트로 나누어지며, 각 파트는 점(.)으로 구분하여 표현한다.
+
+
+1) Header ( 헤더 ) : 해시 암호화 알고리즘과 토큰의 타입으로 구성
+
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+
+  alg: 서명에 사용할 알고리즘 (예: HMAC SHA256)
+  typ: 토큰의 타입, 일반적으로 “JWT”
+
+
+2) Payload ( 페이로드 ) : 내용, 즉 토큰에 담을 클레임(cla... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Security">#Security</a><a class="post-tag" href="/TIL/tags.html#JWT">#JWT</a><a class="post-tag" href="/TIL/tags.html#Authentication">#Authentication</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/05/21/TIL-24.html">
+          Cookie, Session, Token
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> May 21, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 7 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/05/21/TIL-24.html">
+        <p>
+        Cookie
+
+  사용자의 웹 브라우저에 저장되는 정보로 사용자의 상태 혹은 세션을 유지하거나 사용자 경험을 개선하기 위해 사용된다.
+  서버가 Set-Cookie 해더를 통해 브라우저에게 쿠키를 저장하게 하고, 이후 브라우저는 요청마다 쿠키를 Cookie헤더에 실어 보낸다.
+  간단하게 클라이언트에 저장되는 작은 데이터 파일이다.
+
+
+Cookie 특징
+
+  클라이언트에 저장되며, 보통 키 - 값 쌍으로 구성된다.
+  로그인 정보, 세션 ID 등 상태 유지를 위한 정보를 담는데 사용된다.
+  기본적으로는 보안에 취약하므로 HttpOnly,Secure,SameSite등의 옵션을 설정하여 보안을 강화한다.
+
+
+Cook... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Security">#Security</a><a class="post-tag" href="/TIL/tags.html#Authentication">#Authentication</a><a class="post-tag" href="/TIL/tags.html#Session">#Session</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/05/20/TIL-23.html">
+          Validation, BindingResult
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> May 20, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/05/20/TIL-23.html">
+        <p>
+        Validation(검증)
+
+  클라이언트에서 서버로 값을 전달하고자 할 때 (@RequestBody, @RequestParam, @PathVariable) 전달되는 데이터에 대해 유효성 검증을 수행하며 유효하지 않을 경우 에러
+
+
+@PostMapping("/users")
+public ResponseEntity&lt;?&gt; createUser(@Valid @RequestBody UserDTO userDTO) {
+    // 유효성 검사 통과 시 실행됨
+    return ResponseEntity.ok("Created");
+}
+
+
+Validation의 주요 기능
+
+  @Valid 또는 @Validated 어노테... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Spring">#Spring</a><a class="post-tag" href="/TIL/tags.html#Validation">#Validation</a><a class="post-tag" href="/TIL/tags.html#BindingResult">#BindingResult</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/05/19/TIL-22.html">
+          Spring Bean, Singleton Pattern
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> May 19, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/05/19/TIL-22.html">
+        <p>
+        Bean 이란?
+
+  빈( Bean )은 스프링 컨테이너에 의해 관리되는 재사용 가능한 소프트웨어 컴포넌트이다.
+  즉 스프링 컨테이너가 관리하는 자바 객체를 뜻하며, 하나 이상의 빈(Bean)을 관리한다
+
+
+스프링 컨테이너?
+
+  스프링 컨테이너는 스프링 빈의 생명 주기를 관리하며, 생성된 스프링 빈들에게 추가적인 기능을 제공하는 역할을 한다.
+  IoC와 DI의 원리가 스프링 컨테이너에 적용된다.
+
+
+Bean 핵심 개념
+
+
+  
+    
+      용어
+      설명
+    
+  
+  
+    
+      **Bean**
+      Spring 컨테이너가 생성하고 관리하는 객체
+    
+    
+      *... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Spring">#Spring</a><a class="post-tag" href="/TIL/tags.html#Bean">#Bean</a><a class="post-tag" href="/TIL/tags.html#Singleton">#Singleton</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/05/16/TIL-21.html">
+          객체지향 설계
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> May 16, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 2 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/05/16/TIL-21.html">
+        <p>
+        객체지향 설계 과정 ( OOD - Object-Oriented Design )
+
+
+  요구사항을 찾고 세분화 한다
+    
+      무엇을 만들건지 정의
+      기능과 제약사항 도출
+    
+  
+  클래스 및 책임 도출 ( 도메인 모델링 )
+    
+      핵심 개념을 분석해서 클래스와 메서드로 변환
+      클래스는 실세계 개념을 반영 ( User,Schedule … )
+    
+  
+  객체 관계 정의
+
+
+
+  객체 간 관계 설정
+    
+      연관 ( Association )
+      상속 ( Inheritance )
+      집합 ( Aggregation )
+      포함 ( Comp... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#OOP">#OOP</a><a class="post-tag" href="/TIL/tags.html#Design">#Design</a><a class="post-tag" href="/TIL/tags.html#Architecture">#Architecture</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/05/07/TIL-20.html">
+          Spring 데이터 흐름
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> May 07, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/05/07/TIL-20.html">
+        <p>
+        Spring
+
+  자바 기반의 웹 애플리 케이션 개발을 위한 프레임 워크(오픈소스) 이다.
+
+
+
+  
+    
+      구분
+      내용
+    
+  
+  
+    
+      장점
+      - 경량 프레임워크로 유연한 모듈화 가능
+    
+    
+       
+      - 의존성 주입(DI)으로 낮은 결합도 유지
+    
+    
+       
+      - AOP로 공통 기능 분리 및 재사용성 향상
+    
+    
+       
+      - Spring Boot 등 풍부한 생태계 지원
+    
+    
+       
+      - 자동 설정, 내장 서버로 빠른 개발 가능
+    
+    
+    ... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Spring">#Spring</a><a class="post-tag" href="/TIL/tags.html#MVC">#MVC</a><a class="post-tag" href="/TIL/tags.html#Servlet">#Servlet</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/05/01/TIL-19.html">
+          Quick sort, Merge sort, Heap sort
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> May 01, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 14 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/05/01/TIL-19.html">
+        <p>
+        Quick sort ( 퀵 정렬 )
+
+  이름 그대로 빠르게 정렬을 수행하는 알고리즘이다.
+  하나의 피벗(pivot)을 기준으로 두 개의 부분리스트로 나누어 하나는 피벗보다 작은 값들의 부분 리스트, 다른 하나는 피벗보다 큰 값들의 부분리스트로 정렬한 다음, 각 부분리스트에 대해 다시 위 처럼 재귀적으로 수행하는 정렬하는 방법이다.
+  비균등 분할 정렬이다 : 항상 데이터를 균등하게 나누지 않는다.
+  불안정 정렬이다 : 피벗을 기준으로 요소들을 교환(swap)하면서 정렬을 수행하는데, 이 과정에서 같은 값을 가진 원소들끼리도 위치가 바뀔수 있다.
+
+
+Quick 정렬 과정
+
+  피벗을 하나 선택한다
+  피벗을 기... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Algorithm">#Algorithm</a><a class="post-tag" href="/TIL/tags.html#Sort">#Sort</a><a class="post-tag" href="/TIL/tags.html#Heap">#Heap</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/30/TIL-18.html">
+          Stack, binary search
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 30, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 8 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/30/TIL-18.html">
+        <p>
+        STACK
+
+  스택은 쌓다,쌓아올리다와 같은 뜻을 가진 용어로, 쉽게 생각하면 접시를 높이 쌓아 놓은 형태라고 생각하면 된다.
+  즉, 데이터를 순서대로 쌓는 자료구조이다.
+
+
+Stack의 특징
+
+  후입선출 (LIFO) : 먼저 들어온 데이터가 나중에 빠져나가는 구조
+  단방향 입출력 구조 : 데이터의 들어오는 방향이나 나가는 방향이 같다.
+  데이터를 하나씩만 넣고 뺄수 있다.
+  깊이 우선 탐색(DFS)에 이용된다
+
+
+Stack 선언
+
+class StackEx {
+    public static void main(String[] args) {
+        // Integer형 스택 선언
+        St... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Algorithm">#Algorithm</a><a class="post-tag" href="/TIL/tags.html#Stack">#Stack</a><a class="post-tag" href="/TIL/tags.html#BinarySearch">#BinarySearch</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/29/TIL-17.html">
+          시간복잡도와 공간복잡도
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 29, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/29/TIL-17.html">
+        <p>
+        빅오 표기법( Big-O Notation )
+
+  어떤 함수나 알고리즘이 입력 크기 n에 따라 얼마나 빠르게(또는 얼마나 많은 자원을) 증가하는지를 나타냅니다.
+  핵심은 “점근적 상한선”: 입력이 매우 커질 때, 가장 큰 항만 고려하여 효율성을 비교합니다.
+  빅오(O) : 최악의 경우 (가장 많이 사용)
+  빅Ω (오메가) : 최선의 경우
+  빅Θ (세타): 평균 혹은 정확한 경우 (상하한 모두 같을 때)
+  평균은 최상과 최악의 평균값으로 시간복잡도는 최악을 기준으로 “빅오 표기법”으로 판단하여 성능을 예측한다.
+  why? 알고리즘 효율성을 상한선 기준으로 표기하기 때문이다.
+  알고리즘 효율성은 값이 클수... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Algorithm">#Algorithm</a><a class="post-tag" href="/TIL/tags.html#Complexity">#Complexity</a><a class="post-tag" href="/TIL/tags.html#BigO">#BigO</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/24/TIL-16.html">
+          동기와 비동기
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 24, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/24/TIL-16.html">
+        <p>
+        동기식 처리 ( Synchronous )
+
+  동기식 처리 모델(Synchronous processing model)은 직렬적으로 태스크(task)를 수행한다.
+  순차적으로 실행되며 어떤 작업이 수행중이면 다음 작업은 대기한다.
+
+
+동기식 처리 코드
+
+public class Synchro {
+	public static void main(String[] args) {
+		
+		method1();
+		method2();
+		method3();
+		
+	}
+	
+	public static void method1() {
+		System.out.println("method1");
+	}
+	public static void me... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#Async">#Async</a><a class="post-tag" href="/TIL/tags.html#Concurrency">#Concurrency</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/programmers/2025/04/23/Programmers-09.html">
+          Programmers [09]
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 23, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/programmers/2025/04/23/Programmers-09.html">
+        <p>
+        정수 내림차순으로 배치하기
+
+문제설명
+함수 solution은 정수 n을 매개변수로 입력받습니다. n의 각 자릿수를 큰것부터 작은 순으로 정렬한 새로운 정수를 리턴해주세요. 예를들어 n이 118372면 873211을 리턴하면 됩니다.
+
+제한조건
+
+  n은 1이상 8000000000 이하인 자연수입니다.
+
+
+입출력 예
+
+
+  
+    
+      n
+      return
+    
+  
+  
+    
+      118372
+      873211
+    
+  
+
+
+주어진 솔루션
+
+class Solution {
+    public long solution(long n) {
+        long answer = 0;
+ ... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#programmers">#programmers</a><a class="post-tag" href="/TIL/tags.html#Lv.1">#Lv.1</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/23/TIL-15.html">
+          Thread
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 23, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 11 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/23/TIL-15.html">
+        <p>
+        Thread
+
+  프로그램 내에서 독립적으로 실행되는 하나의 작업 단위이다.
+  싱글 쓰레드는 한번에 하나의 작업만 처리하지만, 멀티 쓰레드는 여러 작업을 동시에 처리 할 수 있다.
+  멀티 쓰레드를 활용하면 여러 작업을 병렬로 수행할 수 있어 처리 성능을 향상시킬 수 있다.
+
+
+싱글 쓰레드 (Single Thread)
+
+  한 명의 일꾼이 작업을 처리하는 것과 같다.
+  한명의 일꾼이기 때문에 여러 개의 작업이 있다면 순차적으로 처리한다.
+  main() 메서드는 프로그램 시작과 동시에 생성되는 하나의 쓰레드이다.
+
+
+싱글 쓰레드 예제
+
+        System.out.println("::: main 쓰레드 시... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#Thread">#Thread</a><a class="post-tag" href="/TIL/tags.html#Concurrency">#Concurrency</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/22/TIL-14.html">
+          Stream
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 22, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/22/TIL-14.html">
+        <p>
+        Stream
+
+  데이터를 효율적으로 처리할 수 있는 흐름
+  선언형 스타일로 가독성이 뛰어나다
+  데이터 준비 -&gt; 중간 연산 -&gt; 최종 연산 순으로 처리된다
+
+
+stream의 특징
+
+  원본 데이터 소스를 변경하지 않는다 : 읽기만 한다.
+  일회용이다 : 한번 사용하면 닫혀서 재사용이 불가능하다.
+  최종 연산 전까지 중간 연산을 수행하지 않는다.
+  작업을 내부 반복으로 처리한다: forEach()는 매개변수에 대입된 람다식을 데이터 소스의 모든 요소에 적용한다.
+
+
+for문과 stream 비교하기
+
+// for 명령형 스타일 : 각 요소  * 10
+        List&lt;Integer&amp;gt... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#Stream">#Stream</a><a class="post-tag" href="/TIL/tags.html#FunctionalProgramming">#FunctionalProgramming</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/22/TIL-13.html">
+          Lambda
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 22, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/22/TIL-13.html">
+        <p>
+        익명 클래스
+
+  익명 클래스는 이름이 없는 클래스를 익명 클래스하고 한다.
+  별도의 클래스 파일을 만들지 않고 코드 내에서 일회성으로 정의해 사용하기 때문에 이름이 없다.
+  인터페이스, 클래스의 구현과 상속을 활용해 익명 클래스를 구현할수 있다
+-&gt; 람다에서는 인터페이스를 사용한 익명 클래스가 활용된다.
+
+
+인터페이스를 활용한 익명 클레스 예제
+
+// Calculator class
+@FunctionalInterface // 함수형 인터페이스 설정
+public interface Calculator {
+    int sum(int a, int b);
+
+}
+
+
+
+
+// 인터페이스를 활용한 익명클래스 만들기
+ ... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#Lambda">#Lambda</a><a class="post-tag" href="/TIL/tags.html#FunctionalProgramming">#FunctionalProgramming</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/21/TIL-12.html">
+          Generic
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 21, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/21/TIL-12.html">
+        <p>
+        Generic
+
+  클래스 내부에서 사용할 데이터 타입을 외부에서 지정하는 기법을 의미
+  제네릭을 활용하면 코드 재사용성과 타입 안정성을 보장받을 수 있다.
+  사용방법 List&lt; 타입 매개변수 &gt; -&gt; List stringList = new ArrayList();
+
+
+주의사항!
+
+  제네릭 타입 자체로 타입을 지정하여 객체를 생성하는 것은 불가능 한다. 
+즉, new 연산자 뒤에 제네릭 타입 파라미터가 올수는 없다.
+  static 변수의 데이터 타입으로 제네릭 타입 파라미터가 올수는 없다.
+
+
+Generic 예제
+
+    // Main Class
+    // 1. 재사용성 보장 (타입 소거 :... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#Generic">#Generic</a><a class="post-tag" href="/TIL/tags.html#TypeSafety">#TypeSafety</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/18/TIL-11.html">
+          Collection
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 18, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 5 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/18/TIL-11.html">
+        <p>
+        Collection
+
+  다수의 데이터를 쉽고 효과적으로 처리할 수 있는 표준화된 방법을 제공하는 클래스의 집합을 의미
+  데이터를 저장하는 자료 구조와 데이터를 처리하는 알고리즘을 구조화하여 클래스로 구현해 놓은 것을 말한다.
+  이러한 Collection은 자바의 인터페이스를 사용하여 구현한다.
+
+
+array(배열)가 있는데 왜 굳이 collection을 쓸까?
+
+  배열은 정적 메모리이고, collection은 동적 메모리이기 때문이다.
+  배열은 할당 받은 공간이 정해지면 변경이 불가능하지만, collection은 공간이 필요한 만큼 추가가 가능하다.
+
+
+Collection의 종류
+
+
+  
+    
+    ... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#Collection">#Collection</a><a class="post-tag" href="/TIL/tags.html#DataStructure">#DataStructure</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/18/TIL-10.html">
+          Optional
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 18, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/18/TIL-10.html">
+        <p>
+        Optional
+
+  
+    null을 안전하게 다루게 해주는 객체이다. 
+-&gt; null : 프로그램에서 값이 없음 또는 참조하지 않음을 나타내는 키워드
+  
+  
+    null을 직접 다루는 대신 Optional을 사용하면 NullPointerException을 방지할 수 있다.
+  
+
+
+NPE(NullPointerException)
+
+  개발을 할 때 가장 많이 발생하는 예외 중 하나가 바로 NPE(NullPointerException)이다.
+  NPE를 피하려면 null 여부를 검사해야 하는데, null 검사를 해야하는 변수가 많은 경우 코드가 복잡해지고 번거롭다.  
+그래서 null 대신 초기값을 ... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#Optional">#Optional</a><a class="post-tag" href="/TIL/tags.html#NullSafety">#NullSafety</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/17/TIL-09.html">
+          예외처리 ( Exception )
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 17, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/17/TIL-09.html">
+        <p>
+        예외처리
+
+  예상치 못한 상황이 발생하는 경우
+
+
+의도하지 않은 예외
+        // 의도하지 않은 예외
+       int ret = 10/0;
+       System.out.println("ret = " + ret);
+       System.out.println("프로그램 종료");
+        // 결과값
+        // Exception in thread "main" java.lang.ArithmeticException: / by zero
+	    // at chapter3.exception.Main.main(Main.java:8)
+        // Process finished with e... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#Exception">#Exception</a><a class="post-tag" href="/TIL/tags.html#ErrorHandling">#ErrorHandling</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/16/TIL-08.html">
+          클래스 하나만으로 계산기 만들기
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 16, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/16/TIL-08.html">
+        <p>
+        계산기 만들기
+객체지향에 대해 배웠으니 스탭별 계산기를 만들어보자.
+
+계산기
+클래스 하나로 계산기를 만들어 보자
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+
+        // 초기값 설정
+        int sum = 0;
+        boolean check = true;
+
+        while (check) {
+            System.out.println("첫번째 양의 정수를 입력해주세요... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#OOP">#OOP</a><a class="post-tag" href="/TIL/tags.html#Project">#Project</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/15/TIL-07.html">
+          객체지향 이해하기 - 3
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 15, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 5 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/15/TIL-07.html">
+        <p>
+        추상클래스 ( abstract )
+
+  공통 기능을 제공하면서 하위 클래스에 특정 메서드를 구현을 강제하기 위해 사용한다.
+  추상 클래스는 인스턴스화 할 수 없다.
+
+
+추상 클래스와 인터페이스의 차이점
+
+  계층적 구조를 표현하면서 공통 속성과 기능을 재사용할때 추상 클래스를 사용하는것이 적합하다.
+
+
+추상화와 다형성
+
+  추상화 : 특정 계층에서 불필요한 정보를 제거하고 본질적인 특징만 남기는것
+  다형성 : 하나의 타입으로 여러 객체를 다룰 수 있는 특징
+
+
+형변환
+
+  부모타입으로 자식타입을 다룰 수 있는 이유는 자동으로 형변환(Config)이 발생했기 때문이다.
+  [ 부모 -&gt; 자식 ] : 업케스팅... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#OOP">#OOP</a><a class="post-tag" href="/TIL/tags.html#Polymorphism">#Polymorphism</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/15/TIL-06.html">
+          객체지향 이해하기 - 2
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 15, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 5 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/15/TIL-06.html">
+        <p>
+        캡슐화 ( Encapsulation )
+
+  외부에서 직접 접근하지 못하게 보호하는 개념 ( why? 정보은닉 )
+  접근제어자를 통해야만 변경이 가능하다. 
+-&gt; 접근제어자 : 클래스, 변수, 매서드, 생성자의 접근 범위를 제한하는 키워드이다.
+
+
+접근제어자 종류
+
+
+  
+    
+      접근 제어자
+      클래스 내부
+      패키지 내부
+      상속한 클래스
+      전체공개
+    
+  
+  
+    
+      public
+      O
+      O
+      O
+      O
+    
+    
+      protected
+      O
+      O
+      O
+      X
+  ... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#OOP">#OOP</a><a class="post-tag" href="/TIL/tags.html#Inheritance">#Inheritance</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/15/TIL-05.html">
+          객체지향 이해하기 - 1
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 15, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 7 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/15/TIL-05.html">
+        <p>
+        Static
+
+  모든 객체가 같은 값을 공유한다.
+  static 변수와 메서드는 한번만 생성되고 Method Area에 저장된다.
+
+
+인스턴스 맴버 (인스턴스 변수 + 인스턴스 메서드 )
+
+  객체를 만들때마다 생성되는 변수와 메서드이다.
+  각 객체가 개별적으로 값을 가진다 ( 공유 X )
+  인스턴스는 Heap 영역에 위치한다.
+
+
+인스턴스 변수
+
+  객체가 생성될 때마다 따로 만들어지는 변수 
+( 객체를 생성한 후 접근할 수 있다. )
+
+
+클래스 변수
+
+  클래스가 로드될때 한번만 생성
+  모든 객체가 공유하는 변수이다.
+  Heap이 아니라 Mthod Area에 저장된다. 
+( 객체를 만들지 않아도 “클... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Java">#Java</a><a class="post-tag" href="/TIL/tags.html#OOP">#OOP</a><a class="post-tag" href="/TIL/tags.html#Static">#Static</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/14/TIL-04.html">
+          Github 기본 명령어
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 14, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 1 min</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/14/TIL-04.html">
+        <p>
+        Github와 친해지기
+
+
+
+기본적인 문법
+
+git branch  login : commit이 있어야 가능
+
+git branch -m main : 현재 브랜치의 이름을 main으로 변경하라
+
+git branch : 현재 .git 폴더 안의 branch 확인
+
+git switch login “브랜치 이름” = git checkout login “브랜치 이름” : 브랜치 위치 이동
+
+git switch -c “브랜치 이름” = git checkout -b “브랜치 이름” : 브랜치 한번에 생성 &amp; 이동
+
+git merge “브랜치 이름” : “브랜치 이름”에서 작업한걸 main에 합친다
+
+git branch “... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Git">#Git</a><a class="post-tag" href="/TIL/tags.html#Branch">#Branch</a><a class="post-tag" href="/TIL/tags.html#PullRequest">#PullRequest</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/programmers/2025/04/11/Programmers-08.html">
+          Programmers [08]
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 11, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/programmers/2025/04/11/Programmers-08.html">
+        <p>
+        프로그래머스 문제풀이
+K번째 수
+
+
+
+문제 설명
+배열 array의 i번째 숫자부터 j번째 숫자까지 자르고 정렬했을 때, k번째에 있는 수를 구하려 합니다.
+
+예를 들어 array가 [1, 5, 2, 6, 3, 7, 4], i = 2, j = 5, k = 3이라면
+
+
+  array의 2번째부터 5번째까지 자르면 [5, 2, 6, 3]입니다.
+  1에서 나온 배열을 정렬하면 [2, 3, 5, 6]입니다.
+  2에서 나온 배열의 3번째 숫자는 5입니다.
+
+
+배열 array, [i, j, k]를 원소로 가진 2차원 배열 commands가 매개변수로 주어질 때, commands의 모든 원소에 대해 앞서 설명한 연산을 적용했... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#programmers">#programmers</a><a class="post-tag" href="/TIL/tags.html#Lv.1">#Lv.1</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/programmers/2025/04/11/Programmers-07.html">
+          Programmers [07]
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 11, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 1 min</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/programmers/2025/04/11/Programmers-07.html">
+        <p>
+        프로그래머스 문제풀이
+하샤드 수
+
+문제 설명
+양의 정수 x가 하샤드 수이려면 x의 자릿수의 합으로 x가 나누어져야 합니다. 
+예를 들어 18의 자릿수 합은 1+8=9이고, 18은 9로 나누어 떨어지므로 18은 하샤드 수입니다.  
+자연수 x를 입력받아 x가 하샤드 수인지 아닌지 검사하는 함수, solution을 완성해주세요.
+
+입출력 예
+
+
+  
+    
+      x
+      return
+    
+  
+  
+    
+      10
+      true
+    
+    
+      12
+      true
+    
+    
+      11
+      false
+    
+    
+      13
+      fals... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#programmers">#programmers</a><a class="post-tag" href="/TIL/tags.html#Lv.1">#Lv.1</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/09/TIL-03.html">
+          SQL 기본기 다지기
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 09, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 2 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/09/TIL-03.html">
+        <p>
+        SQL 구문 배우기
+
+SQL 기본 틀
+
+select * &lt;- 전체 조회 
+from table_테이블 이름
+where 조건
+group by (뭘로 그룹지을건지)
+order by (데이터를 출력하거나 정렬하기)
+
+
+1) 문자 변경
+
+
+  REPLACE : 지정한 문자를 다른 문자로 변경
+  SUBSTRING : 특정 문자만 추출
+  CONCAT : 여러 문자를 합하여 포멧팅
+
+
+2) 조건문
+
+  IF : if(조건, 조건을 충족할때, 조건을 충족하지 못할때)
+
+
+- CASE WHEN END : 
+  case when 조건1 then 값(수식)1
+       when 조건2 then 값(수식)2
+       els... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#SQL">#SQL</a><a class="post-tag" href="/TIL/tags.html#Database">#Database</a><a class="post-tag" href="/TIL/tags.html#Query">#Query</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/08/TIL-02.html">
+          DB연동
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 08, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 10 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/08/TIL-02.html">
+        <p>
+        Firebase Database 시작하기
+기본 세팅 구성
+&lt;script type="module"&gt; // 타입 변경 해주기 
+    // Firebase SDK 라이브러리 가져오기
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+import { collection, addDoc } from "https://www.gstati... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Firebase">#Firebase</a><a class="post-tag" href="/TIL/tags.html#Database">#Database</a><a class="post-tag" href="/TIL/tags.html#JavaScript">#JavaScript</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/til/2025/04/07/TIL-01.html">
+          HTML 기본기 다지기
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Apr 07, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 19 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/til/2025/04/07/TIL-01.html">
+        <p>
+        구글 폰트 가져오기
+
+먼저 구글 폰트를 검색한 후에 마음에 드는 폰트를 골라 import를 가져온다.
+
+&lt;style&gt;
+    @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&amp;family=Gowun+Dodum&amp;display=swap');
+    * { // 여기서 *은 밑에 있는 모든 코드들에게 적용한다.
+            font-family: "Gowun Dodum", sans-serif;
+      }
+&lt;/style&gt;
+
+
+이런식으로 html에 폰트를 적용할 수 있다.
+
+부트스트랩
+다음은 다양한 사람... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#HTML">#HTML</a><a class="post-tag" href="/TIL/tags.html#CSS">#CSS</a><a class="post-tag" href="/TIL/tags.html#JavaScript">#JavaScript</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/programmers/2025/02/20/Programmers-06.html">
+          Programmers [06]
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Feb 20, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/programmers/2025/02/20/Programmers-06.html">
+        <p>
+        프로그래머스 문제풀이
+예산
+
+
+
+문제 설명
+문제 설명
+S사에서는 각 부서에 필요한 물품을 지원해 주기 위해 부서별로 물품을 구매하는데 필요한 금액을 조사했습니다. 그러나, 전체 예산이 정해져 있기 때문에 모든 부서의 물품을 구매해 줄 수는 없습니다. 그래서 최대한 많은 부서의 물품을 구매해 줄 수 있도록 하려고 합니다.
+
+물품을 구매해 줄 때는 각 부서가 신청한 금액만큼을 모두 지원해 줘야 합니다. 예를 들어 1,000원을 신청한 부서에는 정확히 1,000원을 지원해야 하며, 1,000원보다 적은 금액을 지원해 줄 수는 없습니다.
+
+부서별로 신청한 금액이 들어있는 배열 d와 예산 budget이 매개변수로 주어질 때... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#programmers">#programmers</a><a class="post-tag" href="/TIL/tags.html#Lv.1">#Lv.1</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/programmers/2025/02/20/Programmers-05.html">
+          Programmers [05]
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Feb 20, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/programmers/2025/02/20/Programmers-05.html">
+        <p>
+        프로그래머스 문제풀이
+숫자 문자열과 영단어
+
+
+
+문제설명
+
+네오와 프로도가 숫자놀이를 하고 있습니다. 네오가 프로도에게 숫자를 건넬 때 일부 자릿수를 영단어로 바꾼 카드를 건네주면 프로도는 원래 숫자를 찾는 게임입니다.
+
+다음은 숫자의 일부 자릿수를 영단어로 바꾸는 예시입니다.
+
+
+  1478 → “one4seveneight”
+  234567 → “23four5six7”
+  10203 → “1zerotwozero3”
+
+
+이렇게 숫자의 일부 자릿수가 영단어로 바뀌어졌거나, 혹은 바뀌지 않고 그대로인 문자열 s가 매개변수로 주어집니다. s가 의미하는 원래 숫자를 return 하도록 solution 함수를 완성해주세요.... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#programmers">#programmers</a><a class="post-tag" href="/TIL/tags.html#Lv.1">#Lv.1</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/programmers/2025/02/05/Programmers-04.html">
+          Programmers [04]
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Feb 05, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/programmers/2025/02/05/Programmers-04.html">
+        <p>
+        프로그래머스 문제풀이
+덧칠하기
+
+
+
+문제설명
+
+어느 학교에 페인트가 칠해진 길이가 n미터인 벽이 있습니다. 벽에 동아리 · 학회 홍보나 회사 채용 공고 포스터 등을 게시하기 위해 테이프로 붙였다가 철거할 때 떼는 일이 많고 그 과정에서 페인트가 벗겨지곤 합니다. 페인트가 벗겨진 벽이 보기 흉해져 학교는 벽에 페인트를 덧칠하기로 했습니다.
+
+넓은 벽 전체에 페인트를 새로 칠하는 대신, 구역을 나누어 일부만 페인트를 새로 칠 함으로써 예산을 아끼려 합니다. 이를 위해 벽을 1미터 길이의 구역 n개로 나누고, 각 구역에 왼쪽부터 순서대로 1번부터 n번까지 번호를 붙였습니다. 그리고 페인트를 다시 칠해야 할 구역들을 정했... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#programmers">#programmers</a><a class="post-tag" href="/TIL/tags.html#Lv.1">#Lv.1</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/programmers/2025/02/05/Programmers-03.html">
+          Programmers [03]
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Feb 05, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 4 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/programmers/2025/02/05/Programmers-03.html">
+        <p>
+        프로그래머스 문제풀이
+[PCCE 병과분류]
+
+
+
+문제설명
+
+퓨쳐종합병원에서는 접수한 환자가 진료받을 병과에 따라 자동으로 환자 코드를 부여해 주는 프로그램이 있습니다. 환자 코드의 마지막 네 글자를 보면 환자가 어디 병과에서 진료를 받아야 할지 알 수 있습니다. 
+예를 들어 환자의 코드가 “_eye”로 끝난다면 안과를, “head”로 끝난다면 신경외과 진료를 보게 됩니다. 환자 코드의 마지막 글자에 따른 병과 분류 기준은 다음과 같습니다.
+
+
+  
+    
+      마지막 글자
+      병과
+    
+  
+  
+    
+      "_eye"
+      Ophthalmology
+    
+    
+      "h... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#programmers">#programmers</a><a class="post-tag" href="/TIL/tags.html#Lv.0">#Lv.0</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/programmers/2025/02/03/Programmers-02.html">
+          Programmers [02]
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Feb 03, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/programmers/2025/02/03/Programmers-02.html">
+        <p>
+        프로그래머스 문제풀이
+콜라 문제
+
+
+
+문제 설명
+오래전 유행했던 콜라 문제가 있습니다. 콜라 문제의 지문은 다음과 같습니다.
+
+정답은 아무에게도 말하지 마세요.
+
+콜라 빈 병 2개를 가져다주면 콜라 1병을 주는 마트가 있다. 빈 병 20개를 가져다주면 몇 병을 받을 수 있는가?
+
+단, 보유 중인 빈 병이 2개 미만이면, 콜라를 받을 수 없다.
+
+문제를 풀던 상빈이는 콜라 문제의 완벽한 해답을 찾았습니다. 상빈이가 푼 방법은 아래 그림과 같습니다. 우선 콜라 빈 병 20병을 가져가서 10병을 받습니다. 받은 10병을 모두 마신 뒤, 가져가서 5병을 받습니다. 5병 중 4병을 모두 마신 뒤 가져가서 2병을 받고, 또 ... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#programmers">#programmers</a><a class="post-tag" href="/TIL/tags.html#Lv.1">#Lv.1</a>
+</div>
+    </li>
+<li>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2 class="post-title">
+        <a class="post-link" href="/TIL/programmers/2025/02/03/Programmers-01.html">
+          Programmers [01]
+        </a>
+      </h2>
+      <div class="post-meta">
+        <span class="post-date"><i class="fa fa-calendar"></i> Feb 03, 2025</span>
+        <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 3 mins</span>
+      </div>
+      <a class="post-excerpt" href="/TIL/programmers/2025/02/03/Programmers-01.html">
+        <p>
+        프로그래머스 문제풀이
+뒤에 있는 큰 수 찾기
+
+
+문제 설명
+
+정수로 이루어진 배열 numbers가 있습니다. 배열 의 각 원소들에 대해 자신보다 뒤에 있는 숫자 중에서 자신보다 크면서 가장 가까이 있는 수를 뒷 큰수라고 합니다.
+정수 배열 numbers가 매개변수로 주어질 때, 모든 원소에 대한 뒷 큰수들을 차례로 담은 배열을 return 하도록 solution 함수를 완성해주세요. 단, 뒷 큰수가 존재하지 않는 원소는 -1을 담습니다.
+
+입출력 예
+
+
+  
+    
+      numbers
+      result
+    
+  
+  
+    
+      [2, 3, 3, 5]
+      [3, 5, 5, -1]
+ ... <span class="read_more">Read More</span>
+        </p>
+      </a>
+      <div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#programmers">#programmers</a><a class="post-tag" href="/TIL/tags.html#Lv.2">#Lv.2</a>
+</div>
+    </li>
+</ul>
+
+  <!-- Pagination links -->
+</div>
+</div>
+
+
+  </section>
+  <section class="sidebar" style="margin-left: 15px;">
+    <!-- Get sidebar items -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="common-list">
+  <ul>
+    <li>
+      <a href="/TIL/index.html">
+        All<span>45</span>
+      </a>
+    </li>
+
+    
+      <li>
+        <a href="/TIL/categories.html#h-TIL">
+          TIL <span>36</span>
+        </a>
+      </li>
+    
+      <li>
+        <a href="/TIL/categories.html#h-programmers">
+          programmers <span>9</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+</section>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/TIL/"></data>
+
+  <div class="wrapper">
+    <div class="site-footer-inner">
+<div>Unpublished Work <span class="copyleft">©</span> 2017-2026 KimDohwan24</div>
+      <div>Powered by <a title="Jekyll is a simple, blog-aware, static site
+      generator." href="https://jekyllrb.com/">Jekyll</a> &amp; <a title="Yat, yet
+      another theme." href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>.</div>
+      <div class="footer-col rss-subscribe">Subscribe <a href="/TIL/feed.xml">via RSS</a>
+</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

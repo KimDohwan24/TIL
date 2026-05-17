@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-translate-customization" content="108d9124921d80c3-80e20d618ff053c8-g4f02ec6f3dba68b7-c">
+<!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>API 워터폴 제거로 전체조회 속도 개선하기 | DoHwan’s Study Room</title>
+<meta name="generator" content="Jekyll v4.4.1">
+<meta property="og:title" content="API 워터폴 제거로 전체조회 속도 개선하기">
+<meta name="author" content="KimDohwan24">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="사전 개념">
+<meta name="twitter:description" property="og:description" content="사전 개념">
+<link rel="canonical" href="https://kimdohwan24.github.io/TIL/til/2026/05/18/TIL-35.html">
+<meta property="og:url" content="https://kimdohwan24.github.io/TIL/til/2026/05/18/TIL-35.html">
+<meta property="og:site_name" content="DoHwan’s Study Room">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-05-18T00:00:00+00:00">
+<meta property="article:modified_time" content="2026-05-18T00:00:00+00:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="API 워터폴 제거로 전체조회 속도 개선하기">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"KimDohwan24"},"dateModified":"2026-05-18T00:00:00+00:00","datePublished":"2026-05-18T00:00:00+00:00","description":"사전 개념","headline":"API 워터폴 제거로 전체조회 속도 개선하기","mainEntityOfPage":{"@type":"WebPage","@id":"https://kimdohwan24.github.io/TIL/til/2026/05/18/TIL-35.html"},"url":"https://kimdohwan24.github.io/TIL/til/2026/05/18/TIL-35.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="icon" href="">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
+  <link rel="stylesheet" href="/TIL/assets/css/main.css">
+  <script src="/TIL/assets/js/main.js"></script><link type="application/atom+xml" rel="alternate" href="https://kimdohwan24.github.io/TIL/feed.xml" title="DoHwan's Study Room">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/languages/go.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+// Init highlight js
+document.addEventListener('DOMContentLoaded', function(event) {
+  var els = document.querySelectorAll('pre code')
+
+  function addLangData(block) {
+    var outer = block.parentElement.parentElement.parentElement;
+    var lang = block.getAttribute('data-lang');
+    for (var i = 0; i < outer.classList.length; i++) {
+      var cls = outer.classList[i];
+      if (cls.startsWith('language-')) {
+        lang = cls;
+        break;
+      }
+    }
+    if (!lang) {
+      cls = block.getAttribute('class');
+      lang = cls ? cls.replace('hljs ', '') : '';
+    }
+    if (lang.startsWith('language-')) {
+      lang = lang.substr(9);
+    }
+    block.setAttribute('class', 'hljs ' + lang);
+    block.parentNode.setAttribute('data-lang', lang);
+  }
+
+  function addBadge(block) {
+    var enabled = ('true' || 'true').toLowerCase();
+    if (enabled == 'true') {
+      var pre = block.parentElement;
+      pre.classList.add('badge');
+    }
+  }
+
+  function handle(block) {
+    addLangData(block);
+    addBadge(block)
+    hljs.highlightBlock(block);
+  }
+
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    handle(el);
+  }
+});
+</script>
+
+<style>
+  /* code language badge */
+  pre.badge::before {
+    content: attr(data-lang);
+    color: #fff;
+    background-color: #ff4e00;
+    padding: 0 .5em;
+    border-radius: 0 2px;
+    text-transform: uppercase;
+    text-align: center;
+    min-width: 32px;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  /* fix wrong badge display for firefox browser */
+  code > table pre::before {
+    display: none;
+  }
+</style>
+<script src="//cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/default-skin/default-skin.css" rel="stylesheet">
+<style>
+  .pswp .pswp__container .pswp__img {
+    background-color: white;
+  }
+</style>
+
+<script>
+  function initPhotoSwipe() {
+    var mainEl = document.querySelector("section.main");
+
+    var imgEls = mainEl.querySelectorAll("img:not(.emoji)");
+    imgEls.forEach((imgEl) => {
+      imgEl.outerHTML = `
+    <a class="photo-swipe"
+      href="${imgEl.src}"
+      data-width="${imgEl.getAttribute("width") || imgEl.width * 2}"
+      data-height="${imgEl.getAttribute("height") || imgEl.height * 2}"
+      data-caption="${imgEl.getAttribute("caption") || imgEl.alt}"
+      target="_blank">
+      ${imgEl.outerHTML}
+    </a>`;
+    });
+
+    // Init empty gallery array
+    var container = [];
+
+    // Loop over gallery items and push it to the array
+    var linkEls = mainEl.querySelectorAll("a.photo-swipe");
+    linkEls.forEach((link) => {
+      var item = {
+        src: link.getAttribute("href"),
+        w: link.dataset.width,
+        h: link.dataset.height,
+        title: link.dataset.caption || "",
+      };
+      container.push(item);
+    });
+
+    // Define click event on gallery item
+    linkEls.forEach((link, index) => {
+      link.addEventListener("click", (event) => {
+        // Prevent location change
+        event.preventDefault();
+
+        // Define object and gallery options
+        var pswp = document.querySelector(".pswp");
+
+        var zoomLevel = 1;
+
+        // Define object and gallery options
+        var options = {
+          index: index,
+          bgOpacity: 0.85,
+          showHideOpacity: true,
+          closeOnScroll: true,
+          maxSpreadZoom: 1,
+          getDoubleTapZoom: (isMouseClick, item) => {
+            if (item.detail) {
+              zoomLevel += item.detail.origEvent.shiftKey ? -1 : 1;
+              item.detail = undefined;
+            } else {
+              zoomLevel = zoomLevel === 1 ? 2 : 1;
+            }
+            if (zoomLevel <= 1) {
+              zoomLevel = 1;
+              setTimeout(() => pswp.classList.remove("pswp--zoomed-in"), 0);
+            }
+            return item.initialZoomLevel * zoomLevel;
+          },
+        };
+
+        // Initialize PhotoSwipe
+        var gallery = new PhotoSwipe(
+          pswp,
+          PhotoSwipeUI_Default,
+          container,
+          options
+        );
+
+        gallery.init();
+
+        // Custom zoom event
+        gallery.container.addEventListener("pswpTap", (e) => {
+          gallery.currItem.detail = e.detail;
+        });
+      });
+    });
+  }
+
+  window.addEventListener("load", initPhotoSwipe);
+</script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+</head>
+<body>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe.
+           It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg"></div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides.
+              PhotoSwipe keeps only 3 of them in the DOM to save memory.
+              Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter"></div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--share" title="Share"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip"></div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="site-header " role="banner">
+
+  <div class="wrapper">
+    <div class="site-header-inner">
+<span class="site-brand"><a class="site-brand-inner" rel="author" href="/TIL/">
+  <img class="site-favicon" title="DoHwan's Study Room" src="" onerror="this.style.display='none'">
+  DoHwan's Study Room
+</a>
+</span><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger">
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewbox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="trigger">
+<a class="page-link" href="/TIL/about.html">ABOUT</a><a class="page-link" href="/TIL/archives.html">ARCHIVES</a><a class="page-link" href="/TIL/categories.html">CATEGORIES</a><a class="page-link" href="/TIL/">HOME</a><a class="page-link" href="/TIL/tags.html">TAGS</a>
+
+
+
+
+
+
+
+
+
+<span class="page-link">
+
+
+
+<div id="google_translate_element" style="display: none;">
+</div>
+
+<span class="ct-language">
+  <ul class="list-unstyled ct-language-dropdown">
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="en">
+          
+          <img src="https://cdn.countryflags.com/thumbs/united-states-of-america/flag-400.png" title="English">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="fr">
+          
+          <img src="https://cdn.countryflags.com/thumbs/france/flag-400.png" title="French">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="zh-CN">
+          
+          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Chinese(Simple)">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ja">
+          
+          <img src="https://cdn.countryflags.com/thumbs/japan/flag-400.png" title="Japanese">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ko">
+          
+          <img src="https://cdn.countryflags.com/thumbs/south-korea/flag-400.png" title="Korean">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ru">
+          
+          <img src="https://cdn.countryflags.com/thumbs/russia/flag-400.png" title="Russian">
+          
+        </a>
+      </li>
+    
+  </ul>
+</span>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    autoDisplay: false,
+    layout: google.translate.TranslateElement.InlineLayout.VERTICAL
+  }, 'google_translate_element');
+
+  // Links to cross-origin destinations are unsafe
+  var gll = document.getElementsByClassName('goog-logo-link')[0];
+  if (gll) {
+    gll.setAttribute('rel', 'noopener');
+  }
+
+  function restoreLang() {
+    var iframe = document.getElementsByClassName('goog-te-banner-frame')[0];
+    if (!iframe) return;
+
+    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    var restore_el = innerDoc.getElementsByTagName("button");
+
+    for (var i = 0; i < restore_el.length; i++) {
+      if (restore_el[i].id.indexOf("restore") >= 0) {
+        restore_el[i].click();
+        var close_el = innerDoc.getElementsByClassName("goog-close-link");
+        close_el[0].click();
+        return;
+      }
+    }
+  }
+
+  function triggerHtmlEvent(element, eventName) {
+    var event;
+    if (document.createEvent) {
+      event = document.createEvent('HTMLEvents');
+      event.initEvent(eventName, true, true);
+      element.dispatchEvent(event);
+    } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+      element.fireEvent('on' + event.eventType, event);
+    }
+  }
+
+  var googleCombo = document.querySelector("select.goog-te-combo");
+  var langSelect = document.querySelector('.ct-language');
+  langSelect.addEventListener('click', function(event) {
+    if (!event.target) {
+      return;
+    }
+
+    var selected = document.querySelector('.ct-language .ct-language-selected');
+    if (selected) {
+      selected.classList.remove('ct-language-selected');
+    }
+
+    var target = event.target;
+    while (target && target !== langSelect ) {
+      if (target.matches('.lang-select')) {
+        break;
+      }
+      target = target.parentElement;
+    }
+
+    if (target && target.matches('.lang-select')) {
+      var lang = target.getAttribute('data-lang');
+      if (googleCombo.value == lang) {
+        restoreLang();
+      } else {
+        target.parentElement.classList.add('ct-language-selected');
+        googleCombo.value = lang;
+        triggerHtmlEvent(googleCombo, 'change');
+      }
+    }
+
+    event.preventDefault();
+  });
+}
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</span>
+</div>
+        </nav>
+</div>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    var lastScrollY = getScrollPos().y;
+    var documentElement = document.documentElement;
+
+    function storeScrollData() {
+      var y = getScrollPos().y;var scrollStatus = "";
+
+      if (y <= 0) {
+        scrollStatus = "top";
+      } else if ((window.innerHeight + y) >= document.body.offsetHeight) {
+        scrollStatus = "bottom";
+      } else {
+        var isScrollDown = (y - lastScrollY > 0) ? true : false;
+        scrollStatus = isScrollDown ? "down" : "up";
+      }
+
+      lastScrollY = y;
+      documentElement.setAttribute("data-scroll-status", scrollStatus);
+    }
+
+    window.addEventListener('scroll', function(e) {
+      storeScrollData();
+    });
+
+    storeScrollData();
+  }
+  document.addEventListener('DOMContentLoaded', initHeader);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  function hashLocate(hashValue) {
+    hashValue = hashValue.replace(/^.*#h-/, '');
+    hashValue = decodeURIComponent(hashValue);
+    var element = document.getElementById(hashValue);
+
+    if (!element) {
+      return;
+    }
+
+    var header = document.querySelector('header.site-header');
+    var headerRect = header.getBoundingClientRect();
+    var headerTop = Math.floor(headerRect.top);
+    var headerHeight = Math.floor(headerRect.height);
+    var scrollPos = getScrollPos();
+    var offsetY = element.offsetTop - (headerTop + headerHeight + 20);
+
+    if (offsetY == scrollPos.y) {
+      return;
+    }
+
+    if (headerTop == 0  && offsetY > scrollPos.y) {
+      offsetY += headerHeight + 2;
+    } else if (headerTop < 0  && offsetY < scrollPos.y) {
+      offsetY -= headerHeight - 2;
+    }
+
+    smoothScrollTo(offsetY);
+  }
+
+  // The first event occurred
+  window.addEventListener('load', function(event) {
+    if (window.location.hash) {
+      hashLocate(window.location.hash);
+    }
+  });
+
+  // The first event occurred
+  window.addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() == 'a') {
+      hashLocate(event.target.getAttribute('href'));
+    }
+  });
+</script>
+<div class="theme-toggle">
+  <input type="checkbox" id="theme-switch">
+  <label for="theme-switch">
+    <div class="toggle"></div>
+    <div class="names">
+      <p class="light">Light</p>
+      <p class="dark">Dark</p>
+    </div>
+  </label>
+</div>
+
+
+
+
+<script>
+  (function() {
+    var sw = document.getElementById('theme-switch');
+    var html = document.getElementsByTagName('html')[0];
+    var nightModeOption = ('auto' || 'auto').toLowerCase();
+    var storage = nightModeOption === 'manual'
+        ? localStorage
+        : sessionStorage;
+    var themeData = loadThemeData();
+
+    function saveThemeData(data) {
+      storage.setItem('theme', JSON.stringify(data));
+    }
+
+    function loadThemeData() {
+      var data = storage.getItem('theme');
+      try {
+        data = JSON.parse(data ? data : '');
+      } catch(e) {
+        data = { nightShift: undefined, autoToggleAt: 0 };
+        saveThemeData(data);
+      }
+      return data;
+    }
+
+    function handleThemeToggle(nightShift) {
+      themeData.nightShift = nightShift;
+      saveThemeData(themeData);
+      html.dataset.theme = nightShift ? 'dark' : 'light';
+      setTimeout(function() {
+        sw.checked = nightShift ? true : false;
+      }, 50);
+    }
+
+    function autoThemeToggle() {
+      // Next time point of theme toggle
+      var now = new Date();
+      var toggleAt = new Date();
+      var hours = now.getHours();
+      var nightShift = hours >= 19 || hours <=7;
+
+      if (nightShift) {
+        if (hours > 7) {
+          toggleAt.setDate(toggleAt.getDate() + 1);
+        }
+        toggleAt.setHours(7);
+      } else {
+        toggleAt.setHours(19);
+      }
+
+      toggleAt.setMinutes(0);
+      toggleAt.setSeconds(0);
+      toggleAt.setMilliseconds(0)
+
+      var delay = toggleAt.getTime() - now.getTime();
+
+      // auto toggle theme mode
+      setTimeout(function() {
+        handleThemeToggle(!nightShift);
+      }, delay);
+
+      return {
+        nightShift: nightShift,
+        toggleAt: toggleAt.getTime()
+      };
+    }
+
+    // Listen the theme toggle event
+    sw.addEventListener('change', function(event) {
+      handleThemeToggle(event.target.checked);
+    });
+
+    if (nightModeOption == 'auto') {
+      var data = autoThemeToggle();
+
+      // Toggle theme by local setting
+      if (data.toggleAt > themeData.autoToggleAt) {
+        themeData.autoToggleAt = data.toggleAt;
+        handleThemeToggle(data.nightShift);
+      } else {
+        handleThemeToggle(themeData.nightShift);
+      }
+    } else if (nightModeOption == 'manual') {
+      handleThemeToggle(themeData.nightShift);
+    } else {
+      var nightShift = themeData.nightShift;
+      if (nightShift === undefined) {
+        nightShift = nightModeOption === 'on';
+      }
+      handleThemeToggle(nightShift);
+    }
+  })();
+</script>
+<div id="click-to-top" class="click-to-top">
+  <i class="fa fa-arrow-up"></i>
+</div>
+<script>
+  (function () {
+    const clickToTop = document.getElementById('click-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        clickToTop.classList.add('show')
+      }else {
+        clickToTop.classList.remove('show')
+      }
+    });
+    clickToTop.addEventListener('click', () => {
+      window.smoothScrollTo(0);
+    });
+  })();
+</script>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="framework">
+  <section class="main">
+
+     <div class="post">
+  <section>
+
+
+
+
+
+
+
+
+
+<header class="post-header">
+  <h1 class="post-title p-name" itemprop="name headline">API 워터폴 제거로 전체조회 속도 개선하기</h1>
+  <h2 class="post-subtitle">Delta 조회, SSR 프리페치, ISR 적용기</h2>
+
+  <p class="post-meta">
+    <time class="dt-published" datetime="2026-05-18T00:00:00+00:00" itemprop="datePublished"><i class="fa fa-calendar"></i> May 18, 2026
+    </time>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 9 mins</span>
+  </p>
+<div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#React">#React</a><a class="post-tag" href="/TIL/tags.html#Next.js">#Next.js</a><a class="post-tag" href="/TIL/tags.html#Performance">#Performance</a><a class="post-tag" href="/TIL/tags.html#SWR">#SWR</a><a class="post-tag" href="/TIL/tags.html#SSR">#SSR</a>
+</div></header>
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="post-content e-content" itemprop="articleBody">
+
+      <h2 id="사전-개념">사전 개념</h2>
+
+<p>이 글에서 반복해서 등장하는 세 가지 개념을 먼저 정리한다.</p>
+
+<ul>
+  <li>
+<strong>SSR (Server-Side Rendering)</strong>: 서버에서 HTML을 완성해 브라우저에 보내는 방식. 클라이언트가 빈 화면을 보지 않고 곧바로 콘텐츠를 볼 수 있다. 단, 서버가 데이터를 가져와야 하므로 응답 자체가 느려질 수 있다.</li>
+  <li>
+<strong>ISR (Incremental Static Regeneration)</strong>: 정적 페이지를 빌드한 뒤 일정 시간(revalidate)이 지나면 백그라운드에서 다시 생성하는 방식. 매 요청마다 서버가 일할 필요 없으므로 응답이 빠르고, 캐시 만료 시에만 갱신된다.</li>
+  <li>
+<strong>Delta 조회</strong>: 이미 가지고 있는 데이터는 다시 요청하지 않고, 새로 필요한 데이터만(DELTA) 조회하는 방식. 전체 재조회를 피해 API 호출 횟수를 크게 줄일 수 있다.</li>
+</ul>
+
+<hr>
+
+<h2 id="문제-상황">문제 상황</h2>
+
+<p>주식 전체조회 페이지(<code class="language-plaintext highlighter-rouge">/stocks</code>, <code class="language-plaintext highlighter-rouge">/overseas-stocks</code>) 접속 시 체감 속도가 느렸다. 페이지 구성에 3개의 API가 호출되는데, 이 호출들이 <strong>직렬 워터폴</strong>로 동작하고 있었고, 스크롤로 추가 페이지를 로드할 때마다 <strong>이미 받은 데이터까지 전부 재조회</strong>하는 구조적 문제가 있었다.</p>
+
+<hr>
+
+<h2 id="원인-분석">원인 분석</h2>
+
+<h3 id="1-ssr--client-hydration-직렬-워터폴">1. SSR → Client Hydration 직렬 워터폴</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SSR: getStocks(page=0)         ──→ HTML 전송 ──→ Hydration ──→ useEffect ──→ getBatchPrices()
+     [200~500ms]                                    [100~300ms]              [200~500ms]
+</code></pre></div></div>
+
+<p>SSR에서 종목 목록만 가져오고, 시세는 클라이언트 마운트 후에야 요청된다. 시세 요청은 SSR 완료 → HTML 전송 → Hydration → useEffect 실행 이후에야 시작되므로 <strong>최소 1왕복 시간</strong>이 낭비된다.</p>
+
+<h3 id="2-스크롤-시-전체-재조회-on-폭발">2. 스크롤 시 전체 재조회 (O(N²) 폭발)</h3>
+
+<p>기존에는 SWR 키를 전체 종목코드를 join한 문자열로 생성했다:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">stableKey</span> <span class="o">=</span> <span class="nx">stockCodes</span><span class="p">.</span><span class="nf">slice</span><span class="p">().</span><span class="nf">sort</span><span class="p">().</span><span class="nf">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">,</span><span class="dl">'</span><span class="p">);</span>
+<span class="nf">useSWR</span><span class="p">([</span><span class="dl">'</span><span class="s1">batch-prices</span><span class="dl">'</span><span class="p">,</span> <span class="nx">stableKey</span><span class="p">],</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nf">getBatchPrices</span><span class="p">(</span><span class="nx">stockCodes</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>페이지가 추가될 때마다 <code class="language-plaintext highlighter-rouge">stableKey</code>가 변경 → SWR이 <strong>새 요청으로 인식</strong> → 이미 받은 종목까지 전부 재조회:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">스크롤 페이지</th>
+      <th style="text-align: center">누적 종목</th>
+      <th style="text-align: center">API 호출 횟수</th>
+      <th style="text-align: center">실제 필요 횟수</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">20</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">40</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">60</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">5</td>
+      <td style="text-align: center">100</td>
+      <td style="text-align: center">15</td>
+      <td style="text-align: center">5</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>5페이지까지 로드하면 <strong>15번</strong> chunk 요청이 발생하지만, 실제로는 5번이면 충분하다. <code class="language-plaintext highlighter-rouge">accumulatedPrices</code> 상태가 있었지만 <code class="language-plaintext highlighter-rouge">batchPrices ?? accumulatedPrices</code>에서 <code class="language-plaintext highlighter-rouge">batchPrices</code>가 우선하여 재조회를 막지 못했다.</p>
+
+<h3 id="3-batch_chunk_size--20이-너무-작음">3. BATCH_CHUNK_SIZE = 20이 너무 작음</h3>
+
+<p>100개 종목이면 5번의 POST 요청이 동시 발생. 백엔드 부하 시 429 에러 → 지수 백오프 재시도(최대 10.5초)가 연쇄 발생.</p>
+
+<h3 id="4-force-dynamic으로-매-요청마다-백엔드-히트">4. force-dynamic으로 매 요청마다 백엔드 히트</h3>
+
+<p><code class="language-plaintext highlighter-rouge">export const dynamic = 'force-dynamic'</code>으로 ISR 캐시 없이 매번 백엔드 호출.</p>
+
+<h3 id="5-fetcher-재시도-3회--403-포함">5. fetcher 재시도 3회 + 403 포함</h3>
+
+<p>재시도 상태코드에 403이 포함되어 있었고, 최대 3회 재시도로 10.5초까지 대기 가능.</p>
+
+<hr>
+
+<h2 id="적용한-개선">적용한 개선</h2>
+
+<h3 id="p0-delta-시세-조회">P0: Delta 시세 조회</h3>
+
+<p><strong>핵심 변경</strong>: 이미 가진 시세는 재조회하지 않고, 신규 종목만 API 호출.</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Before: 전체 종목을 매번 조회</span>
+<span class="nf">useSWR</span><span class="p">([</span><span class="dl">'</span><span class="s1">batch-prices</span><span class="dl">'</span><span class="p">,</span> <span class="nx">stableKey</span><span class="p">],</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nf">getBatchPrices</span><span class="p">(</span><span class="nx">stockCodes</span><span class="p">));</span>
+
+<span class="c1">// After: accumulatedPrices에 없는 종목만 delta 조회</span>
+<span class="kd">const</span> <span class="nx">newCodes</span> <span class="o">=</span> <span class="nx">stockCodes</span><span class="p">.</span><span class="nf">filter</span><span class="p">((</span><span class="nx">code</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="o">!</span><span class="nx">accumulatedPrices</span><span class="p">[</span><span class="nx">code</span><span class="p">]);</span>
+<span class="nf">useSWR</span><span class="p">([</span><span class="dl">'</span><span class="s1">batch-prices-delta</span><span class="dl">'</span><span class="p">,</span> <span class="nx">deltaKey</span><span class="p">],</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nf">getBatchPrices</span><span class="p">(</span><span class="nx">newCodes</span><span class="p">));</span>
+</code></pre></div></div>
+
+<p>상태 관리는 <code class="language-plaintext highlighter-rouge">useReducer</code>로 변경하여 filter 변경 시 reset, delta 데이터 도착 시 merge:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">type</span> <span class="nx">PriceAction</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">reset</span><span class="dl">'</span><span class="p">;</span> <span class="nl">prices</span><span class="p">:</span> <span class="nb">Record</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">MappedStockPrice</span><span class="o">&gt;</span> <span class="p">}</span>
+  <span class="o">|</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">merge</span><span class="dl">'</span><span class="p">;</span> <span class="nl">prices</span><span class="p">:</span> <span class="nb">Record</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">MappedStockPrice</span><span class="o">&gt;</span> <span class="p">};</span>
+
+<span class="kd">function</span> <span class="nf">priceReducer</span><span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">switch </span><span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="dl">'</span><span class="s1">reset</span><span class="dl">'</span><span class="p">:</span> <span class="k">return</span> <span class="nx">action</span><span class="p">.</span><span class="nx">prices</span><span class="p">;</span>
+    <span class="k">case</span> <span class="dl">'</span><span class="s1">merge</span><span class="dl">'</span><span class="p">:</span>  <span class="k">return</span> <span class="p">{</span> <span class="p">...</span><span class="nx">state</span><span class="p">,</span> <span class="p">...</span><span class="nx">action</span><span class="p">.</span><span class="nx">prices</span> <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>효과</strong>: 스크롤 시 API 호출이 페이지당 1회로 고정. 5페이지 기준 15회 → 5회 (<strong>67% 감소</strong>).</p>
+
+<h3 id="p0-ssr에서-시세-함께-프리페치">P0: SSR에서 시세 함께 프리페치</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Before: SSR에서 카탈로그만 fetch</span>
+<span class="nx">initialData</span> <span class="o">=</span> <span class="k">await</span> <span class="nf">getStocks</span><span class="p">({</span> <span class="na">page</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">size</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="p">...</span> <span class="p">});</span>
+
+<span class="c1">// After: 카탈로그 + 시세를 SSR에서 연속 fetch 후 prop 전달</span>
+<span class="nx">initialData</span> <span class="o">=</span> <span class="k">await</span> <span class="nf">getStocks</span><span class="p">({</span> <span class="na">page</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">size</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="p">...</span> <span class="p">});</span>
+<span class="k">if </span><span class="p">(</span><span class="nx">initialData</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">codes</span> <span class="o">=</span> <span class="nx">initialData</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nf">map</span><span class="p">((</span><span class="nx">item</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">item</span><span class="p">.</span><span class="nx">stockCode</span><span class="p">);</span>
+  <span class="nx">initialPrices</span> <span class="o">=</span> <span class="k">await</span> <span class="nf">getBatchPrices</span><span class="p">(</span><span class="nx">codes</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">initialPrices</code> prop을 클라이언트 컴포넌트에 전달하여, 첫 화면 로드 시 Hydration 대기 없이 시세 표시.</p>
+
+<p><strong>효과</strong>: 클라이언트 워터폴 1단계 제거, 첫 화면 시세 로딩 시간 약 <strong>500ms~1s 단축</strong>.</p>
+
+<h3 id="p1-batch_chunk_size-20--50">P1: BATCH_CHUNK_SIZE 20 → 50</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Before</span>
+<span class="kd">const</span> <span class="nx">BATCH_CHUNK_SIZE</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="c1">// After</span>
+<span class="kd">const</span> <span class="nx">BATCH_CHUNK_SIZE</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><strong>효과</strong>: 100개 종목 기준 5회 → 2회 POST 요청 (<strong>60% 감소</strong>).</p>
+
+<h3 id="p1-isr-도입">P1: ISR 도입</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Before</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">dynamic</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">force-dynamic</span><span class="dl">'</span><span class="p">;</span>
+<span class="c1">// After</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">revalidate</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>30초간 캐시된 페이지를 서브. 종목 목록은 자주 변하지 않으므로 30초면 충분.</p>
+
+<p><strong>효과</strong>: 대부분의 사용자가 캐시된 SSR 페이지를 받아 백엔드 호출 생략.</p>
+
+<h3 id="p2-fetcher-재시도-축소">P2: fetcher 재시도 축소</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Before: retries = 3, retryable = [403, 429, 502, 503]</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nf">fetcher</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">init</span><span class="p">,</span> <span class="nx">retries</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="kd">const</span> <span class="nx">retryable</span> <span class="o">=</span> <span class="p">[</span><span class="mi">403</span><span class="p">,</span> <span class="mi">429</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">];</span>
+
+<span class="c1">// After: retries = 1, retryable = [429, 502, 503]</span>
+<span class="k">export</span> <span class="k">async</span> <span class="kd">function</span> <span class="nf">fetcher</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">init</span><span class="p">,</span> <span class="nx">retries</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+<span class="kd">const</span> <span class="nx">retryable</span> <span class="o">=</span> <span class="p">[</span><span class="mi">429</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>403은 권한 문제이므로 재시도 무의미. 최대 대기 10.5초 → 1.5초로 단축.</p>
+
+<h3 id="p2-context-리렌더-최적화">P2: Context 리렌더 최적화</h3>
+
+<p><code class="language-plaintext highlighter-rouge">BatchPriceProvider</code>의 value와 hook 반환값에 <code class="language-plaintext highlighter-rouge">useMemo</code> 적용:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Provider value 메모이제이션</span>
+<span class="kd">const</span> <span class="nx">value</span> <span class="o">=</span> <span class="nf">useMemo</span><span class="p">(</span>
+  <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">({</span> <span class="nx">domestic</span><span class="p">,</span> <span class="nx">overseas</span><span class="p">,</span> <span class="nx">loadingCodes</span><span class="p">,</span> <span class="nx">errorCodes</span> <span class="p">}),</span>
+  <span class="p">[</span><span class="nx">domestic</span><span class="p">,</span> <span class="nx">overseas</span><span class="p">,</span> <span class="nx">loadingCodes</span><span class="p">,</span> <span class="nx">errorCodes</span><span class="p">]</span>
+<span class="p">);</span>
+
+<span class="c1">// 개별 hook 반환값 메모이제이션</span>
+<span class="k">export</span> <span class="kd">function</span> <span class="nf">useBatchDomesticPrice</span><span class="p">(</span><span class="nx">stockCode</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nf">useContext</span><span class="p">(</span><span class="nx">BatchPriceContext</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">domestic</span><span class="p">[</span><span class="nx">stockCode</span><span class="p">];</span>
+  <span class="kd">const</span> <span class="nx">isLoading</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">loadingCodes</span><span class="p">.</span><span class="nf">has</span><span class="p">(</span><span class="nx">stockCode</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">error</span> <span class="o">=</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">errorCodes</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="nx">stockCode</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nf">useMemo</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">({</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">isLoading</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}),</span> <span class="p">[</span><span class="nx">data</span><span class="p">,</span> <span class="nx">isLoading</span><span class="p">,</span> <span class="nx">error</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>효과</strong>: 다른 종목의 시세 업데이트 시 관련 없는 카드 컴포넌트의 불필요한 리렌더 방지.</p>
+
+<hr>
+
+<h2 id="lint-트러블슈팅">Lint 트러블슈팅</h2>
+
+<p>초기에 <code class="language-plaintext highlighter-rouge">useRef</code>로 accumulated prices를 관리하려 했으나, React 19의 <code class="language-plaintext highlighter-rouge">react-hooks/refs</code> 린트 규칙에 의해 “Cannot access refs during render” 에러 발생. 렌더 중 ref 읽기/쓰기를 금지하는 규칙.</p>
+
+<p><code class="language-plaintext highlighter-rouge">useState</code> + <code class="language-plaintext highlighter-rouge">useEffect</code> 조합도 <code class="language-plaintext highlighter-rouge">react-hooks/set-state-in-effect</code> 규칙에 걸림.</p>
+
+<p>최종적으로 <strong><code class="language-plaintext highlighter-rouge">useReducer</code></strong> 를 사용하여:</p>
+<ul>
+  <li>filter 변경 시 → <code class="language-plaintext highlighter-rouge">dispatch({ type: 'reset' })</code>
+</li>
+  <li>delta 데이터 도착 시 → <code class="language-plaintext highlighter-rouge">dispatch({ type: 'merge' })</code>
+</li>
+</ul>
+
+<p>state 업데이트가 reducer에서 이루어지므로 린트 에러 없이 안전하게 동작.</p>
+
+<hr>
+
+<h2 id="be-개선이-추가로-필요한-부분">BE 개선이 추가로 필요한 부분</h2>
+
+<p>FE 개선만으로 상당한 효과를 얻었지만, 근본적 해결을 위해서는 BE 개선도 필요:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>카탈로그 + 시세 통합 응답</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">GET /api/stocks</code> 응답에 시세 포함 → FE 시세 별도 조회 불필요 (3회 → 1회)</td>
+    </tr>
+    <tr>
+      <td>배치 최대 수 증가</td>
+      <td>POST <code class="language-plaintext highlighter-rouge">/api/stocks/prices</code>에서 50~100개 코드 한번에 수용</td>
+    </tr>
+    <tr>
+      <td>CORS 헤더 추가</td>
+      <td>FE에서 백엔드 직접 호출 가능하게 → Next.js 프록시 hop 제거</td>
+    </tr>
+    <tr>
+      <td>Redis 시세 캐싱</td>
+      <td>동일 종목 반복 조회 방지, TTL 5~10초</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="핵심-교훈">핵심 교훈</h2>
+
+<ol>
+  <li>
+<strong>SWR 키 설계가 성능을 결정한다</strong>: 전체 데이터를 join한 키는 추가 로드마다 전체 재조회를 유발. Delta 기반 키 설계가 필수.</li>
+  <li>
+<strong>SSR 프리페치는 체감 속도에 결정적</strong>: 클라이언트에서만 fetch하면 Hydration 대기시간이 반드시 발생.</li>
+  <li>
+<strong><code class="language-plaintext highlighter-rouge">useReducer</code>가 렌더 중 상태 업데이트의 안전한 대안</strong>: <code class="language-plaintext highlighter-rouge">useRef</code>는 렌더 중 접근 불가, <code class="language-plaintext highlighter-rouge">useState</code> + <code class="language-plaintext highlighter-rouge">useEffect</code>는 린트 에러. <code class="language-plaintext highlighter-rouge">useReducer</code>의 dispatch는 안전.</li>
+  <li>
+<strong>ISR로 SSR 부하 감소</strong>: <code class="language-plaintext highlighter-rouge">force-dynamic</code>은 매 요청마다 백엔드 호출. 실시간성이 덜 중요한 목록 페이지는 <code class="language-plaintext highlighter-rouge">revalidate</code>로 충분.</li>
+</ol>
+
+
+    </div>
+
+</article>
+<div class="post-nav">
+<a class="previous" href="/TIL/til/2026/04/27/TIL-34.html" title="Harness, CLAUDE.md, AGENTS.md의 역할과 차이">Harness, CLAUDE.md, AGENTS.md의 역할과 차이</a><a class="next" href="/TIL/til/2026/05/19/TIL-36.html" title="주식 조회 서비스 성능 최적화">주식 조회 서비스 성능 최적화</a>
+</div>
+<div class="post-related">
+      <div>Related Articles</div>
+      <ul>
+        <li><a class="post-link" href="/TIL/til/2025/06/05/TIL-27.html" title="주식 조회 서비스 성능 최적화">Filter</a></li>
+<li><a class="post-link" href="/TIL/til/2025/04/09/TIL-03.html" title="주식 조회 서비스 성능 최적화">SQL 기본기 다지기</a></li>
+<li><a class="post-link" href="/TIL/til/2026/05/18/TIL-35.html" title="주식 조회 서비스 성능 최적화">API 워터폴 제거로 전체조회 속도 개선하기</a></li>
+<li><a class="post-link" href="/TIL/til/2025/04/18/TIL-10.html" title="주식 조회 서비스 성능 최적화">Optional</a></li>
+</ul>
+    </div>
+<div class="post-comments"></div></section>
+</div>
+
+
+  </section>
+  <section class="sidebar" style="margin-left: 15px;">
+    <!-- Get sidebar items --><style type="text/css" media="screen">
+.post-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+</style>
+
+<div class="post-menu">
+  <div class="post-menu-title">TOC</div>
+  <div class="post-menu-content"></div>
+</div>
+
+<script>
+  function generateContent() {
+    var menu = document.querySelector(".post-menu");
+    var menuContent =  menu.querySelector(".post-menu-content");
+    var headings = document.querySelector(".post-content").querySelectorAll("h2, h3, h4, h5, h6");
+
+    // Hide menu when no headings
+    if (headings.length === 0) {
+      return menu.style.display = "none";
+    }
+
+    // Generate post menu
+    var menuHTML = '';
+    for (var i = 0; i < headings.length; i++) {
+      var h = headings[i];
+      menuHTML += (
+        '<li class="h-' + h.tagName.toLowerCase() + '">'
+        + '<a href="#h-' + h.getAttribute('id') + '">' + h.textContent + '</a></li>');
+    }
+
+    menuContent.innerHTML = '<ul>' + menuHTML + '</ul>';
+
+    // The header element
+    var header = document.querySelector('header.site-header');
+
+    function doMenuCollapse(index, over_items) {
+      var items = menuContent.firstChild.children;
+
+      if (over_items == undefined) {
+        over_items = 20;
+      }
+
+      if (items.length < over_items) {
+        return;
+      }
+
+      var activeItem = items[index];
+      var beginItem = activeItem
+      var endItem = activeItem
+      var beginIndex = index;
+      var endIndex = index + 1;
+      while (beginIndex >= 0
+        && !items[beginIndex].classList.contains('h-h2')) {
+        beginIndex -= 1;
+      }
+      while (endIndex < items.length
+        && !items[endIndex].classList.contains('h-h2')) {
+        endIndex += 1;
+      }
+      for (var i = 0; i < beginIndex; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+      for (var i = beginIndex + 1; i < endIndex; i++) {
+        item = items[i]
+        // if (!item.classList.contains('h-h2')) {
+          item.style.display = '';
+        // }
+      }
+      for (var i = endIndex; i < items.length; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+    }
+
+    // Init menu collapsed
+    doMenuCollapse(-1);
+
+    // Active the menu item
+    window.addEventListener('scroll', function (event) {
+      var lastActive = menuContent.querySelector('.active');
+      var changed = true;
+      var activeIndex = -1;
+      for (var i = headings.length - 1; i >= 0; i--) {
+        var h = headings[i];
+        var headingRect = h.getBoundingClientRect();
+        var headerRect = header.getBoundingClientRect();
+        var headerTop = Math.floor(headerRect.top);
+        var headerHeight = Math.floor(headerRect.height);
+        var headerHeight = headerTop + headerHeight + 20;
+        if (headingRect.top <= headerHeight) {
+          var id = 'h-' + h.getAttribute('id');
+          var a = menuContent.querySelector('a[href="#' + id  + '"]');
+          var curActive = a.parentNode;
+          if (curActive) {
+            curActive.classList.add('active');
+            activeIndex = i;
+          }
+          if (lastActive == curActive) {
+            changed = false;
+          }
+          break;
+        }
+      }
+      if (changed) {
+        if (lastActive) {
+          lastActive.classList.remove('active');
+        }
+        doMenuCollapse(activeIndex);
+      }
+      event.preventDefault();
+    });
+  }
+  generateContent();
+</script>
+</section>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/TIL/"></data>
+
+  <div class="wrapper">
+    <div class="site-footer-inner">
+<div>Unpublished Work <span class="copyleft">©</span> 2017-2026 KimDohwan24</div>
+      <div>Powered by <a title="Jekyll is a simple, blog-aware, static site
+      generator." href="https://jekyllrb.com/">Jekyll</a> &amp; <a title="Yat, yet
+      another theme." href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>.</div>
+      <div class="footer-col rss-subscribe">Subscribe <a href="/TIL/feed.xml">via RSS</a>
+</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

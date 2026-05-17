@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-translate-customization" content="108d9124921d80c3-80e20d618ff053c8-g4f02ec6f3dba68b7-c">
+<!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>주식 조회 서비스 성능 최적화 | DoHwan’s Study Room</title>
+<meta name="generator" content="Jekyll v4.4.1">
+<meta property="og:title" content="주식 조회 서비스 성능 최적화">
+<meta name="author" content="KimDohwan24">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="개요">
+<meta name="twitter:description" property="og:description" content="개요">
+<link rel="canonical" href="https://kimdohwan24.github.io/TIL/til/2026/05/19/TIL-36.html">
+<meta property="og:url" content="https://kimdohwan24.github.io/TIL/til/2026/05/19/TIL-36.html">
+<meta property="og:site_name" content="DoHwan’s Study Room">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-05-19T00:00:00+00:00">
+<meta property="article:modified_time" content="2026-05-19T00:00:00+00:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="주식 조회 서비스 성능 최적화">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"KimDohwan24"},"dateModified":"2026-05-19T00:00:00+00:00","datePublished":"2026-05-19T00:00:00+00:00","description":"개요","headline":"주식 조회 서비스 성능 최적화","mainEntityOfPage":{"@type":"WebPage","@id":"https://kimdohwan24.github.io/TIL/til/2026/05/19/TIL-36.html"},"url":"https://kimdohwan24.github.io/TIL/til/2026/05/19/TIL-36.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="icon" href="">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
+  <link rel="stylesheet" href="/TIL/assets/css/main.css">
+  <script src="/TIL/assets/js/main.js"></script><link type="application/atom+xml" rel="alternate" href="https://kimdohwan24.github.io/TIL/feed.xml" title="DoHwan's Study Room">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/languages/go.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+// Init highlight js
+document.addEventListener('DOMContentLoaded', function(event) {
+  var els = document.querySelectorAll('pre code')
+
+  function addLangData(block) {
+    var outer = block.parentElement.parentElement.parentElement;
+    var lang = block.getAttribute('data-lang');
+    for (var i = 0; i < outer.classList.length; i++) {
+      var cls = outer.classList[i];
+      if (cls.startsWith('language-')) {
+        lang = cls;
+        break;
+      }
+    }
+    if (!lang) {
+      cls = block.getAttribute('class');
+      lang = cls ? cls.replace('hljs ', '') : '';
+    }
+    if (lang.startsWith('language-')) {
+      lang = lang.substr(9);
+    }
+    block.setAttribute('class', 'hljs ' + lang);
+    block.parentNode.setAttribute('data-lang', lang);
+  }
+
+  function addBadge(block) {
+    var enabled = ('true' || 'true').toLowerCase();
+    if (enabled == 'true') {
+      var pre = block.parentElement;
+      pre.classList.add('badge');
+    }
+  }
+
+  function handle(block) {
+    addLangData(block);
+    addBadge(block)
+    hljs.highlightBlock(block);
+  }
+
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i];
+    handle(el);
+  }
+});
+</script>
+
+<style>
+  /* code language badge */
+  pre.badge::before {
+    content: attr(data-lang);
+    color: #fff;
+    background-color: #ff4e00;
+    padding: 0 .5em;
+    border-radius: 0 2px;
+    text-transform: uppercase;
+    text-align: center;
+    min-width: 32px;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  /* fix wrong badge display for firefox browser */
+  code > table pre::before {
+    display: none;
+  }
+</style>
+<script src="//cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/default-skin/default-skin.css" rel="stylesheet">
+<style>
+  .pswp .pswp__container .pswp__img {
+    background-color: white;
+  }
+</style>
+
+<script>
+  function initPhotoSwipe() {
+    var mainEl = document.querySelector("section.main");
+
+    var imgEls = mainEl.querySelectorAll("img:not(.emoji)");
+    imgEls.forEach((imgEl) => {
+      imgEl.outerHTML = `
+    <a class="photo-swipe"
+      href="${imgEl.src}"
+      data-width="${imgEl.getAttribute("width") || imgEl.width * 2}"
+      data-height="${imgEl.getAttribute("height") || imgEl.height * 2}"
+      data-caption="${imgEl.getAttribute("caption") || imgEl.alt}"
+      target="_blank">
+      ${imgEl.outerHTML}
+    </a>`;
+    });
+
+    // Init empty gallery array
+    var container = [];
+
+    // Loop over gallery items and push it to the array
+    var linkEls = mainEl.querySelectorAll("a.photo-swipe");
+    linkEls.forEach((link) => {
+      var item = {
+        src: link.getAttribute("href"),
+        w: link.dataset.width,
+        h: link.dataset.height,
+        title: link.dataset.caption || "",
+      };
+      container.push(item);
+    });
+
+    // Define click event on gallery item
+    linkEls.forEach((link, index) => {
+      link.addEventListener("click", (event) => {
+        // Prevent location change
+        event.preventDefault();
+
+        // Define object and gallery options
+        var pswp = document.querySelector(".pswp");
+
+        var zoomLevel = 1;
+
+        // Define object and gallery options
+        var options = {
+          index: index,
+          bgOpacity: 0.85,
+          showHideOpacity: true,
+          closeOnScroll: true,
+          maxSpreadZoom: 1,
+          getDoubleTapZoom: (isMouseClick, item) => {
+            if (item.detail) {
+              zoomLevel += item.detail.origEvent.shiftKey ? -1 : 1;
+              item.detail = undefined;
+            } else {
+              zoomLevel = zoomLevel === 1 ? 2 : 1;
+            }
+            if (zoomLevel <= 1) {
+              zoomLevel = 1;
+              setTimeout(() => pswp.classList.remove("pswp--zoomed-in"), 0);
+            }
+            return item.initialZoomLevel * zoomLevel;
+          },
+        };
+
+        // Initialize PhotoSwipe
+        var gallery = new PhotoSwipe(
+          pswp,
+          PhotoSwipeUI_Default,
+          container,
+          options
+        );
+
+        gallery.init();
+
+        // Custom zoom event
+        gallery.container.addEventListener("pswpTap", (e) => {
+          gallery.currItem.detail = e.detail;
+        });
+      });
+    });
+  }
+
+  window.addEventListener("load", initPhotoSwipe);
+</script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+</head>
+<body>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe.
+           It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg"></div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides.
+              PhotoSwipe keeps only 3 of them in the DOM to save memory.
+              Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter"></div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--share" title="Share"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip"></div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="site-header " role="banner">
+
+  <div class="wrapper">
+    <div class="site-header-inner">
+<span class="site-brand"><a class="site-brand-inner" rel="author" href="/TIL/">
+  <img class="site-favicon" title="DoHwan's Study Room" src="" onerror="this.style.display='none'">
+  DoHwan's Study Room
+</a>
+</span><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger">
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewbox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="trigger">
+<a class="page-link" href="/TIL/about.html">ABOUT</a><a class="page-link" href="/TIL/archives.html">ARCHIVES</a><a class="page-link" href="/TIL/categories.html">CATEGORIES</a><a class="page-link" href="/TIL/">HOME</a><a class="page-link" href="/TIL/tags.html">TAGS</a>
+
+
+
+
+
+
+
+
+
+<span class="page-link">
+
+
+
+<div id="google_translate_element" style="display: none;">
+</div>
+
+<span class="ct-language">
+  <ul class="list-unstyled ct-language-dropdown">
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="en">
+          
+          <img src="https://cdn.countryflags.com/thumbs/united-states-of-america/flag-400.png" title="English">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="fr">
+          
+          <img src="https://cdn.countryflags.com/thumbs/france/flag-400.png" title="French">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="zh-CN">
+          
+          <img src="https://cdn.countryflags.com/thumbs/china/flag-400.png" title="Chinese(Simple)">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ja">
+          
+          <img src="https://cdn.countryflags.com/thumbs/japan/flag-400.png" title="Japanese">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ko">
+          
+          <img src="https://cdn.countryflags.com/thumbs/south-korea/flag-400.png" title="Korean">
+          
+        </a>
+      </li>
+    
+      <li>
+        <a href="#" class="lang-select" data-lang="ru">
+          
+          <img src="https://cdn.countryflags.com/thumbs/russia/flag-400.png" title="Russian">
+          
+        </a>
+      </li>
+    
+  </ul>
+</span>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    autoDisplay: false,
+    layout: google.translate.TranslateElement.InlineLayout.VERTICAL
+  }, 'google_translate_element');
+
+  // Links to cross-origin destinations are unsafe
+  var gll = document.getElementsByClassName('goog-logo-link')[0];
+  if (gll) {
+    gll.setAttribute('rel', 'noopener');
+  }
+
+  function restoreLang() {
+    var iframe = document.getElementsByClassName('goog-te-banner-frame')[0];
+    if (!iframe) return;
+
+    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    var restore_el = innerDoc.getElementsByTagName("button");
+
+    for (var i = 0; i < restore_el.length; i++) {
+      if (restore_el[i].id.indexOf("restore") >= 0) {
+        restore_el[i].click();
+        var close_el = innerDoc.getElementsByClassName("goog-close-link");
+        close_el[0].click();
+        return;
+      }
+    }
+  }
+
+  function triggerHtmlEvent(element, eventName) {
+    var event;
+    if (document.createEvent) {
+      event = document.createEvent('HTMLEvents');
+      event.initEvent(eventName, true, true);
+      element.dispatchEvent(event);
+    } else {
+      event = document.createEventObject();
+      event.eventType = eventName;
+      element.fireEvent('on' + event.eventType, event);
+    }
+  }
+
+  var googleCombo = document.querySelector("select.goog-te-combo");
+  var langSelect = document.querySelector('.ct-language');
+  langSelect.addEventListener('click', function(event) {
+    if (!event.target) {
+      return;
+    }
+
+    var selected = document.querySelector('.ct-language .ct-language-selected');
+    if (selected) {
+      selected.classList.remove('ct-language-selected');
+    }
+
+    var target = event.target;
+    while (target && target !== langSelect ) {
+      if (target.matches('.lang-select')) {
+        break;
+      }
+      target = target.parentElement;
+    }
+
+    if (target && target.matches('.lang-select')) {
+      var lang = target.getAttribute('data-lang');
+      if (googleCombo.value == lang) {
+        restoreLang();
+      } else {
+        target.parentElement.classList.add('ct-language-selected');
+        googleCombo.value = lang;
+        triggerHtmlEvent(googleCombo, 'change');
+      }
+    }
+
+    event.preventDefault();
+  });
+}
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</span>
+</div>
+        </nav>
+</div>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    var lastScrollY = getScrollPos().y;
+    var documentElement = document.documentElement;
+
+    function storeScrollData() {
+      var y = getScrollPos().y;var scrollStatus = "";
+
+      if (y <= 0) {
+        scrollStatus = "top";
+      } else if ((window.innerHeight + y) >= document.body.offsetHeight) {
+        scrollStatus = "bottom";
+      } else {
+        var isScrollDown = (y - lastScrollY > 0) ? true : false;
+        scrollStatus = isScrollDown ? "down" : "up";
+      }
+
+      lastScrollY = y;
+      documentElement.setAttribute("data-scroll-status", scrollStatus);
+    }
+
+    window.addEventListener('scroll', function(e) {
+      storeScrollData();
+    });
+
+    storeScrollData();
+  }
+  document.addEventListener('DOMContentLoaded', initHeader);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  function hashLocate(hashValue) {
+    hashValue = hashValue.replace(/^.*#h-/, '');
+    hashValue = decodeURIComponent(hashValue);
+    var element = document.getElementById(hashValue);
+
+    if (!element) {
+      return;
+    }
+
+    var header = document.querySelector('header.site-header');
+    var headerRect = header.getBoundingClientRect();
+    var headerTop = Math.floor(headerRect.top);
+    var headerHeight = Math.floor(headerRect.height);
+    var scrollPos = getScrollPos();
+    var offsetY = element.offsetTop - (headerTop + headerHeight + 20);
+
+    if (offsetY == scrollPos.y) {
+      return;
+    }
+
+    if (headerTop == 0  && offsetY > scrollPos.y) {
+      offsetY += headerHeight + 2;
+    } else if (headerTop < 0  && offsetY < scrollPos.y) {
+      offsetY -= headerHeight - 2;
+    }
+
+    smoothScrollTo(offsetY);
+  }
+
+  // The first event occurred
+  window.addEventListener('load', function(event) {
+    if (window.location.hash) {
+      hashLocate(window.location.hash);
+    }
+  });
+
+  // The first event occurred
+  window.addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() == 'a') {
+      hashLocate(event.target.getAttribute('href'));
+    }
+  });
+</script>
+<div class="theme-toggle">
+  <input type="checkbox" id="theme-switch">
+  <label for="theme-switch">
+    <div class="toggle"></div>
+    <div class="names">
+      <p class="light">Light</p>
+      <p class="dark">Dark</p>
+    </div>
+  </label>
+</div>
+
+
+
+
+<script>
+  (function() {
+    var sw = document.getElementById('theme-switch');
+    var html = document.getElementsByTagName('html')[0];
+    var nightModeOption = ('auto' || 'auto').toLowerCase();
+    var storage = nightModeOption === 'manual'
+        ? localStorage
+        : sessionStorage;
+    var themeData = loadThemeData();
+
+    function saveThemeData(data) {
+      storage.setItem('theme', JSON.stringify(data));
+    }
+
+    function loadThemeData() {
+      var data = storage.getItem('theme');
+      try {
+        data = JSON.parse(data ? data : '');
+      } catch(e) {
+        data = { nightShift: undefined, autoToggleAt: 0 };
+        saveThemeData(data);
+      }
+      return data;
+    }
+
+    function handleThemeToggle(nightShift) {
+      themeData.nightShift = nightShift;
+      saveThemeData(themeData);
+      html.dataset.theme = nightShift ? 'dark' : 'light';
+      setTimeout(function() {
+        sw.checked = nightShift ? true : false;
+      }, 50);
+    }
+
+    function autoThemeToggle() {
+      // Next time point of theme toggle
+      var now = new Date();
+      var toggleAt = new Date();
+      var hours = now.getHours();
+      var nightShift = hours >= 19 || hours <=7;
+
+      if (nightShift) {
+        if (hours > 7) {
+          toggleAt.setDate(toggleAt.getDate() + 1);
+        }
+        toggleAt.setHours(7);
+      } else {
+        toggleAt.setHours(19);
+      }
+
+      toggleAt.setMinutes(0);
+      toggleAt.setSeconds(0);
+      toggleAt.setMilliseconds(0)
+
+      var delay = toggleAt.getTime() - now.getTime();
+
+      // auto toggle theme mode
+      setTimeout(function() {
+        handleThemeToggle(!nightShift);
+      }, delay);
+
+      return {
+        nightShift: nightShift,
+        toggleAt: toggleAt.getTime()
+      };
+    }
+
+    // Listen the theme toggle event
+    sw.addEventListener('change', function(event) {
+      handleThemeToggle(event.target.checked);
+    });
+
+    if (nightModeOption == 'auto') {
+      var data = autoThemeToggle();
+
+      // Toggle theme by local setting
+      if (data.toggleAt > themeData.autoToggleAt) {
+        themeData.autoToggleAt = data.toggleAt;
+        handleThemeToggle(data.nightShift);
+      } else {
+        handleThemeToggle(themeData.nightShift);
+      }
+    } else if (nightModeOption == 'manual') {
+      handleThemeToggle(themeData.nightShift);
+    } else {
+      var nightShift = themeData.nightShift;
+      if (nightShift === undefined) {
+        nightShift = nightModeOption === 'on';
+      }
+      handleThemeToggle(nightShift);
+    }
+  })();
+</script>
+<div id="click-to-top" class="click-to-top">
+  <i class="fa fa-arrow-up"></i>
+</div>
+<script>
+  (function () {
+    const clickToTop = document.getElementById('click-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        clickToTop.classList.add('show')
+      }else {
+        clickToTop.classList.remove('show')
+      }
+    });
+    clickToTop.addEventListener('click', () => {
+      window.smoothScrollTo(0);
+    });
+  })();
+</script>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="framework">
+  <section class="main">
+
+     <div class="post">
+  <section>
+
+
+
+
+
+
+
+
+
+<header class="post-header">
+  <h1 class="post-title p-name" itemprop="name headline">주식 조회 서비스 성능 최적화</h1>
+  <h2 class="post-subtitle">BE + FE 전체 스택 15개 항목 최적화 실전기</h2>
+
+  <p class="post-meta">
+    <time class="dt-published" datetime="2026-05-19T00:00:00+00:00" itemprop="datePublished"><i class="fa fa-calendar"></i> May 19, 2026
+    </time>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> About 22 mins</span>
+  </p>
+<div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Spring%20Boot">#Spring Boot</a><a class="post-tag" href="/TIL/tags.html#Next.js">#Next.js</a><a class="post-tag" href="/TIL/tags.html#Performance">#Performance</a><a class="post-tag" href="/TIL/tags.html#WebClient">#WebClient</a><a class="post-tag" href="/TIL/tags.html#HikariCP">#HikariCP</a><a class="post-tag" href="/TIL/tags.html#SWR">#SWR</a><a class="post-tag" href="/TIL/tags.html#React">#React</a>
+</div></header>
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="post-content e-content" itemprop="articleBody">
+
+      <h2 id="개요">개요</h2>
+
+<p>AI 뉴스 기반 주식 추천 서비스(StockAI)에서 <strong>조회 속도 저하</strong> 문제를 분석하고, BE(Spring Boot) + FE(Next.js) 전체 스택에 걸쳐 13개 최적화 항목을 도출. 순차적 병목 → 병렬화, 2왕복 → 1왕복, 중복 요청 → 캐시 재사용 등의 원칙으로 접근.</p>
+
+<hr>
+
+<h2 id="1-국내-주식-배치-가격-조회-순차--병렬">1. 국내 주식 배치 가격 조회: 순차 → 병렬</h2>
+
+<h3 id="before">Before</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>StockPriceBatchService.processChunk()
+├─ stockCode[0]: cache miss → KIS API → 125ms
+├─ stockCode[1]: cache miss → KIS API → 125ms
+├─ stockCode[2]: cache miss → KIS API → 125ms
+├─ ... (50개 순차 대기)
+└─ stockCode[49]: cache miss → KIS API → 125ms
+총 소요: ~6.25초
+</code></pre></div></div>
+
+<ul>
+  <li>
+<code class="language-plaintext highlighter-rouge">Semaphore(10)</code>, <code class="language-plaintext highlighter-rouge">RateLimiter(8.0/sec)</code>로 동시성 제어는 있으나 for문 안에서 순차 <code class="language-plaintext highlighter-rouge">acquire()</code> 후 동기 호출</li>
+  <li>해외 주식(<code class="language-plaintext highlighter-rouge">OverseasStockPriceBatchService</code>)은 이미 <code class="language-plaintext highlighter-rouge">@Async</code> + <code class="language-plaintext highlighter-rouge">CompletableFuture</code> 병렬 패턴인데 국내만 누락</li>
+</ul>
+
+<h3 id="after">After</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>StockPriceBatchService.processChunk()
+├─ 1차: 캐시 조회 (cache hit 즉시 반환)
+└─ 2차: cache miss 항목만 CompletableFuture.allOf() 병렬 dispatch
+    ├─ Future[0]: @Async → KIS API
+    ├─ Future[1]: @Async → KIS API
+    ├─ ... (Semaphore=10, 최대 10개 동시)
+    └─ Future[49]: @Async → KIS API
+총 소요: ~6.25초 (50개 ÷ 8 TPS), 하지만 스레드는 블록하지 않음
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>동시성 제어 도구(Semaphore, RateLimiter)와 호출 방식(동기/비동기)은 독립적</strong> — 제어 도구가 있다고 병렬이 되는 건 아님. <code class="language-plaintext highlighter-rouge">@Async</code> + <code class="language-plaintext highlighter-rouge">CompletableFuture</code>로 스레드에 작업을 분산해야 Semaphore가 의미 있음</li>
+  <li>RateLimiter 초당 8건 제약이 병목 → 50건 처리에 <strong>최소 50÷8 ≈ 6.25초</strong> 필요. Semaphore=10으로 10개 스레드가 동시에 acquire()해도 RateLimiter가 8 TPS로 직렬화하므로, 시간 단축은 RateLimiter 한도 완화 전제</li>
+  <li>병렬화의 진짜 이점은 <strong>스레드 블록 해제</strong> — 순차 코드에서는 호출 스레드가 6.25초 내내 점유되지만, <code class="language-plaintext highlighter-rouge">@Async</code>에서는 Future를 반환 후 스레드가 즉시 해제됨</li>
+</ul>
+
+<h3 id="효과">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>50종목 배치 응답 시간</td>
+      <td>~6.25초 (호출 스레드 점유)</td>
+      <td>~6.25초 (RateLimiter 한도)</td>
+    </tr>
+    <tr>
+      <td>KIS API 호출 방식</td>
+      <td>순차 동기 block</td>
+      <td>병렬 비동기 (스레드 논블록)</td>
+    </tr>
+    <tr>
+      <td>호출 스레드 점유 시간</td>
+      <td>~6.25초</td>
+      <td>즉시 반환 (Future 위임)</td>
+    </tr>
+    <tr>
+      <td>타임아웃 처리</td>
+      <td>없음</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">allOf().get(20s)</code> + cancel</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="2-oauth-webclient-매번-생성--싱글톤-재사용">2. OAuth WebClient: 매번 생성 → 싱글톤 재사용</h2>
+
+<h3 id="before-1">Before</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="nc">WebClient</span> <span class="nf">getOAuthClient</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nc">WebClient</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>
+            <span class="o">.</span><span class="na">baseUrl</span><span class="o">(</span><span class="n">kisConfig</span><span class="o">.</span><span class="na">getOauthUrl</span><span class="o">())</span>
+            <span class="o">.</span><span class="na">build</span><span class="o">();</span>  <span class="c1">// 매 호출 시 새 인스턴스</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+<code class="language-plaintext highlighter-rouge">WebClient.builder().build()</code>는 내부적으로 <strong>새 Reactor Netty ConnectionProvider</strong> 생성</li>
+  <li>커넥션 풀 생성 비용 + TCP handshake + SSL 협상이 매 토큰 갱신마다 발생</li>
+  <li>KIS 토큰은 하루에도 수십 번 갱신 가능 (TTL 만료, 회수 등)</li>
+</ul>
+
+<h3 id="after-1">After</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// WebClientConfig.java</span>
+<span class="nd">@Bean</span><span class="o">(</span><span class="s">"kisOAuthWebClient"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">WebClient</span> <span class="nf">kisOAuthWebClient</span><span class="o">(</span><span class="nc">KisConfig</span> <span class="n">kisConfig</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">HttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="nc">HttpClient</span><span class="o">.</span><span class="na">create</span><span class="o">()</span>
+            <span class="o">.</span><span class="na">option</span><span class="o">(</span><span class="nc">ChannelOption</span><span class="o">.</span><span class="na">CONNECT_TIMEOUT_MILLIS</span><span class="o">,</span> <span class="mi">5000</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">responseTimeout</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="na">ofSeconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+    <span class="k">return</span> <span class="nc">WebClient</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>
+            <span class="o">.</span><span class="na">baseUrl</span><span class="o">(</span><span class="n">kisConfig</span><span class="o">.</span><span class="na">getOauthUrl</span><span class="o">())</span>
+            <span class="o">.</span><span class="na">clientConnector</span><span class="o">(</span><span class="k">new</span> <span class="nc">ReactorClientHttpConnector</span><span class="o">(</span><span class="n">httpClient</span><span class="o">))</span>
+            <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-1">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>WebClient는 무상태(stateless)이지만 내부 ConnectionProvider는 상태ful</strong> — <code class="language-plaintext highlighter-rouge">build()</code>마다 새 커넥션 풀이 생성되고, 기존 풀의 커넥션은 close되지 않은 채 방치됨 (메모리 leak 가능)</li>
+  <li>Spring에서 HTTP 클라이언트 Bean은 <strong>반드시 싱글톤</strong>으로 관리해야 커넥션 재사용이 가능</li>
+  <li>위 코드에서는 명시적 <code class="language-plaintext highlighter-rouge">ConnectionProvider</code> 없이 <code class="language-plaintext highlighter-rouge">HttpClient.create()</code>를 사용하므로 <strong>기본 풀(무제한 idle)이 적용됨</strong> — Section 3의 커넥션 풀 설정을 OAuth용 WebClient에도 동일하게 적용해야 stale connection 문제가 발생하지 않음</li>
+</ul>
+
+<h3 id="효과-1">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>토큰 발급 시 커넥션 생성</td>
+      <td>매번 (TCP+SSL ~100ms)</td>
+      <td>풀에서 재사용 (~1ms)</td>
+    </tr>
+    <tr>
+      <td>메모리 누수 위험</td>
+      <td>누적 ConnectionProvider</td>
+      <td>단일 인스턴스</td>
+    </tr>
+    <tr>
+      <td>stale connection 위험</td>
+      <td>높음 (기본 풀 사용 시)</td>
+      <td>낮음 (명시적 풀 설정 시)</td>
+    </tr>
+    <tr>
+      <td>타임아웃 보장</td>
+      <td>없음</td>
+      <td>connect 5s, response 5s</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="3-webclient-커넥션-풀-설정">3. WebClient 커넥션 풀 설정</h2>
+
+<h3 id="before-2">Before</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reactor Netty 기본 ConnectionProvider:
+- maxConnections: 500 (ConnectionProvider.pool 생성 시)
+- maxIdleTime: 무한 (idle 커넥션 정리 없음)
+- maxLifeTime: 무한
+- evictInBackground: 없음
+</code></pre></div></div>
+
+<ul>
+  <li>500개 커넥션이 필요 없는 서비스인데 기본값 사용</li>
+  <li>idle 커넥션이 영구 생존 → DB/대상 서버에서 timeout이 발생해도 클라이언트는 모름 → stale connection 에러</li>
+</ul>
+
+<h3 id="after-2">After</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">ConnectionProvider</span> <span class="n">provider</span> <span class="o">=</span> <span class="nc">ConnectionProvider</span><span class="o">.</span><span class="na">builder</span><span class="o">(</span><span class="s">"kis-pool"</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">maxConnections</span><span class="o">(</span><span class="mi">100</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">pendingAcquireMaxCount</span><span class="o">(</span><span class="mi">500</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">pendingAcquireTimeout</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="na">ofSeconds</span><span class="o">(</span><span class="mi">10</span><span class="o">))</span>
+    <span class="o">.</span><span class="na">maxIdleTime</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="na">ofSeconds</span><span class="o">(</span><span class="mi">30</span><span class="o">))</span>
+    <span class="o">.</span><span class="na">maxLifeTime</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="na">ofSeconds</span><span class="o">(</span><span class="mi">60</span><span class="o">))</span>
+    <span class="o">.</span><span class="na">evictInBackground</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="na">ofSeconds</span><span class="o">(</span><span class="mi">30</span><span class="o">))</span>
+    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-2">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>maxIdleTime과 maxLifeTime의 차이</strong> — idleTime은 마지막 사용 후 경과, lifeTime은 커넥션 생성 후 경과. 둘 다 설정해야 오래된 커넥션이 정리됨</li>
+  <li>
+<code class="language-plaintext highlighter-rouge">evictInBackground</code>는 별도 스레드에서 주기적으로 정리. 없으면 커넥션이 다음 요청 시점에야 close됨</li>
+  <li>KIS API는 1초당 8건 제한이므로 100개 커넥션으로 충분. 과도한 풀 크기는 리소스 낭비</li>
+</ul>
+
+<h3 id="효과-2">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>maxConnections</td>
+      <td>500</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <td>idle 커넥션 정리</td>
+      <td>없음</td>
+      <td>30초</td>
+    </tr>
+    <tr>
+      <td>stale connection 위험</td>
+      <td>높음</td>
+      <td>낮음 (60초 lifeTime + evictInBackground)</td>
+    </tr>
+    <tr>
+      <td>메모리 사용</td>
+      <td>불필요한 커넥션 유지</td>
+      <td>적정 수준 유지</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="4-카탈로그--가격-통합-2왕복--1왕복">4. 카탈로그 + 가격 통합: 2왕복 → 1왕복</h2>
+
+<h3 id="before-3">Before</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FE (Server Component)
+  ├─ 1st: GET /api/stocks?page=0 → 종목 목록 [{stockCode, name, sector...}]
+  │         응답에 가격 없음 (또는 캐시에 없으면 withoutPrice)
+  └─ 2nd: POST /api/stocks/prices → {005930: {price:...}, 000660: {price:...}}
+            ↑ 1st 응답의 stockCode 목록이 필요 → 반드시 순차
+
+왕복: 2회 (waterfall)
+</code></pre></div></div>
+
+<ul>
+  <li>BE에 이미 <code class="language-plaintext highlighter-rouge">StockCatalogWithPriceResponse</code> DTO와 <code class="language-plaintext highlighter-rouge">enrichWithPrice()</code> 메서드가 존재</li>
+  <li>But <strong>캐시에 없는 가격은 <code class="language-plaintext highlighter-rouge">withoutPrice</code>로 반환</strong> → FE가 별도 batch 호출 필수</li>
+</ul>
+
+<h3 id="after-3">After</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FE (Server Component)
+  └─ 1st: GET /api/stocks?page=0 → {stockCode, name, sector, price, changeRate...}
+           enrichWithPrice()에서 캐시 miss 시 StockPriceService로 실시간 조회
+           (조회 결과는 @Cacheable에 의해 캐시에도 저장됨)
+
+왕복: 1회
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-3">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>Backend-Driven Enrichment 원칙</strong> — 클라이언트가 조합해야 할 데이터는 서버에서 미리 합쳐서 반환하는 것이 네트워크 왕복을 줄이는 근본적 해결책</li>
+  <li>
+<code class="language-plaintext highlighter-rouge">enrichWithPrice()</code>에서 “캐시에 없으면 빈 값 반환”은 <strong>안전하지만 비효율적</strong> — 실시간 조회로 채워도 <code class="language-plaintext highlighter-rouge">@Cacheable</code>에 의해 후속 요청은 캐시 hit가 됨</li>
+  <li>다수의 cache miss가 한꺼번에 발생할 수 있으므로 <strong>배치 병렬화 선행 필수</strong>
+</li>
+</ul>
+
+<h3 id="효과-3">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SSR 시 HTTP 왕복</td>
+      <td>2회 (waterfall)</td>
+      <td>1회</td>
+    </tr>
+    <tr>
+      <td>FE→BE 요청 수</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>TTFB (캐시 hit 시)</td>
+      <td>~200ms</td>
+      <td>~100ms</td>
+    </tr>
+    <tr>
+      <td>TTFB (캐시 miss 시)</td>
+      <td>~6.5초+</td>
+      <td>~1.5초 (배치 병렬화 후)</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="5-hikaricp-커넥션-풀-튜닝">5. HikariCP 커넥션 풀 튜닝</h2>
+
+<h3 id="before-4">Before</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Spring Boot 기본 HikariCP:
+- maximumPoolSize: 10
+- minimumIdle: 10
+- connectionTimeout: 30000ms (30초)
+- leakDetectionThreshold: 0 (비활성)
+</code></pre></div></div>
+
+<ul>
+  <li>10개 풀로 고부하 시 커넥션 대기 발생 가능</li>
+  <li>30초 타임아웃은 너무 김 → 장애 시 장시간 응답 지연</li>
+  <li>커넥션 누수 감지 없음</li>
+</ul>
+
+<h3 id="after-4">After</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">spring.datasource.hikari</span><span class="pi">:</span>
+  <span class="na">maximum-pool-size</span><span class="pi">:</span> <span class="m">20</span>
+  <span class="na">minimum-idle</span><span class="pi">:</span> <span class="m">5</span>
+  <span class="na">idle-timeout</span><span class="pi">:</span> <span class="m">300000</span>       <span class="c1"># 5분</span>
+  <span class="na">max-lifetime</span><span class="pi">:</span> <span class="m">600000</span>       <span class="c1"># 10분</span>
+  <span class="na">connection-timeout</span><span class="pi">:</span> <span class="m">5000</span>   <span class="c1"># 5초</span>
+  <span class="na">leak-detection-threshold</span><span class="pi">:</span> <span class="m">10000</span>  <span class="c1"># 10초</span>
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-4">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>maximumPoolSize는 “동시 연결 수”가 아니라 “풀의 최대 크기”</strong> — 10개가 다 사용 중이면 11번째 요청은 대기. 서비스의 동시 DB 쿼리 수(동시 가격 조회 + 카탈로그 + 인증 등)를 기준으로 설정해야 함</li>
+  <li>
+<code class="language-plaintext highlighter-rouge">connection-timeout=5000</code>은 “5초 내 커넥션 획득 실패 시 예외” → 30초 동안 스레드가 블록되는 것 방지</li>
+  <li>
+<code class="language-plaintext highlighter-rouge">leak-detection-threshold=10000</code>은 커넥션을 10초 이상 반납하지 않으면 WARN 로그 → 버그 조기 발견</li>
+  <li>
+<strong><code class="language-plaintext highlighter-rouge">max-lifetime=10분</code>은 MySQL <code class="language-plaintext highlighter-rouge">wait_timeout</code>(기본 28800초=8시간)보다 짧게 설정하는 원칙에는 맞으나, 지나치게 공격적</strong> — 풀 전체 커넥션이 10분마다 교체되어 불필요한 TCP 재연결 발생. 보통 5~30분 사이가 적절하며, MySQL의 <code class="language-plaintext highlighter-rouge">wait_timeout</code>과 <code class="language-plaintext highlighter-rouge">interactive_timeout</code>을 확인 후 그보다 2~3분 짧게 설정하는 것이 권장됨</li>
+</ul>
+
+<h3 id="효과-4">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>최대 동시 DB 커넥션</td>
+      <td>10</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>장애 시 응답 지연</td>
+      <td>최대 30초 블록</td>
+      <td>5초 타임아웃</td>
+    </tr>
+    <tr>
+      <td>커넥션 누수 감지</td>
+      <td>없음</td>
+      <td>10초 경고</td>
+    </tr>
+    <tr>
+      <td>idle 최소 유지</td>
+      <td>10 (불필요한 유지)</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="6-balancesummary-중복-호출-통합">6. Balance/Summary 중복 호출 통합</h2>
+
+<h3 id="before-5">Before</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/account/balance       → kisApiClient.getBalance() → output1
+GET /api/account/balance/summary → kisApiClient.getBalance() → output2
+                                                          ↑ 같은 KIS API 2회 호출
+</code></pre></div></div>
+
+<ul>
+  <li>클라이언트가 두 API를 연속 호출하면 동일한 KIS API 요청이 2번 발생</li>
+  <li>KIS API는 초당 호출 제한이 있어 중복 호출이 제한 소모</li>
+</ul>
+
+<h3 id="after-5">After</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>getBalanceFull() → kisApiClient.getBalance() 1회 호출
+  ├─ getBalance():      캐시된 응답에서 output1 추출
+  └─ getBalanceSummary(): 캐시된 응답에서 output2 추출
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-5">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>같은 외부 API를 여러 서비스 메서드에서 호출할 때 캐시 또는 통합이 필요</strong> — 응답의 다른 부분(output1 vs output2)만 필요하더라도, 요청 자체는 동일하므로 1회만 호출</li>
+  <li>KIS API의 <code class="language-plaintext highlighter-rouge">getBalance()</code>는 무거운 호출 (잔고 전체 조회). TTL 10초 캐시면 충분 (실시간성 요구 낮음)</li>
+</ul>
+
+<h3 id="효과-5">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KIS API 호출</td>
+      <td>2회/요청</td>
+      <td>1회/요청</td>
+    </tr>
+    <tr>
+      <td>초당 호출 제한 소모</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>응답 시간 (2번째)</td>
+      <td>~300ms</td>
+      <td>캐시 hit &lt;5ms</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="7-db-인덱스-sector-단일-컬럼">7. DB 인덱스: sector 단일 컬럼</h2>
+
+<h3 id="before-6">Before</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 복합 인덱스만 존재</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_stocks_market_type_sector</span> <span class="k">ON</span> <span class="n">stocks</span> <span class="p">(</span><span class="n">market_type</span><span class="p">,</span> <span class="n">sector</span><span class="p">);</span>
+
+<span class="c1">-- findBySector() 쿼리:</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">stocks</span> <span class="k">WHERE</span> <span class="n">sector</span> <span class="o">=</span> <span class="s1">'반도체'</span>
+<span class="c1">-- → 복합 인덱스의 선행 컬럼(market_type)이 조건에 없으므로 인덱스 미사용 → Seq Scan</span>
+</code></pre></div></div>
+
+<h3 id="after-6">After</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_stocks_sector</span> <span class="k">ON</span> <span class="n">stocks</span> <span class="p">(</span><span class="n">sector</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-6">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>복합 인덱스의 최 좌선 원칙(Leftmost Prefix Rule)</strong> — <code class="language-plaintext highlighter-rouge">(A, B)</code> 인덱스는 <code class="language-plaintext highlighter-rouge">WHERE A=?</code>와 <code class="language-plaintext highlighter-rouge">WHERE A=? AND B=?</code>에만 사용 가능. <code class="language-plaintext highlighter-rouge">WHERE B=?</code>는 인덱스를 타지 않음</li>
+  <li>단일 컬럼 인덱스 추가는 디스크 공간을 약간 차지하지만, 필터 전용 쿼리의 성능은 극적으로 개선</li>
+</ul>
+
+<h3 id="효과-6">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+<code class="language-plaintext highlighter-rouge">findBySector()</code> 실행 계획</td>
+      <td>Seq Scan</td>
+      <td>Index Scan</td>
+    </tr>
+    <tr>
+      <td>2000행 기준 조회 시간</td>
+      <td>~15ms</td>
+      <td>~1ms</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="8-circuit-breaker-fallback-장애-전파--graceful-degradation">8. Circuit Breaker Fallback: 장애 전파 → Graceful Degradation</h2>
+
+<h3 id="before-7">Before</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="nc">StockPriceResponse</span> <span class="nf">getStockPriceFallback</span><span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="s">"Circuit open"</span><span class="o">);</span>  <span class="c1">// 호출부로 예외 전파</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>CB가 열리면 모든 가격 조회가 500 에러</li>
+  <li>프론트엔드는 에러 표시 또는 빈 값</li>
+</ul>
+
+<h3 id="after-7">After</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="nc">StockPriceResponse</span> <span class="n">lastGoodResponse</span><span class="o">;</span>  <span class="c1">// 마지막 정상 응답 캐시</span>
+
+<span class="kd">private</span> <span class="nc">StockPriceResponse</span> <span class="nf">getStockPriceFallback</span><span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">StockPriceResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StockPriceResponse</span><span class="o">();</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">lastGoodResponse</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">lastGoodResponse</span><span class="o">;</span>           <span class="c1">// stale data라도 반환</span>
+        <span class="n">response</span><span class="o">.</span><span class="na">setError</span><span class="o">(</span><span class="s">"CIRCUIT_OPEN_STALE"</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">response</span><span class="o">.</span><span class="na">setError</span><span class="o">(</span><span class="s">"CIRCUIT_OPEN"</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-7">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>Circuit Breaker의 목적은 “장애 격리”</strong> — fallback에서 예외를 throw하면 격리가 아니라 형태만 바뀐 장애 전파</li>
+  <li>호출부가 이미 <code class="language-plaintext highlighter-rouge">error</code> 필드를 체크하는 구조(<code class="language-plaintext highlighter-rouge">if (price.getError() == null)</code>)라면, fallback이 에러 DTO를 반환하는 것이 자연스러운 흐름</li>
+  <li>사용자는 “일시적 오류” 메시지를 보는 대신 “가격 정보 없음”으로 부드럽게 저하</li>
+  <li>
+<strong>Stale Data 전략</strong> — CB가 열리기 직전의 마지막 정상 응답을 반환하면, 사용자는 0이나 빈 값 대신 “마지막으로 확인된 가격”을 볼 수 있어 UX가 크게 개선됨. 단, 데이터가 오래될 수 있으므로 FE에서 <code class="language-plaintext highlighter-rouge">error</code> 필드로 표시 필요</li>
+</ul>
+
+<h3 id="효과-7">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CB open 시 FE 응답</td>
+      <td>500 에러 (화면 깨짐)</td>
+      <td>정상 응답 + 에러 표시 (또는 stale data)</td>
+    </tr>
+    <tr>
+      <td>연쇄 장애</td>
+      <td>가능</td>
+      <td>차단</td>
+    </tr>
+    <tr>
+      <td>UX</td>
+      <td>전체 페이지 에러</td>
+      <td>개별 종목 가격 숨김 또는 마지막 가격 표시</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="9-fe-카탈로그-waterfall-제거">9. FE 카탈로그 Waterfall 제거</h2>
+
+<h3 id="before-8">Before</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Server Component:
+  const catalog = await getStocks(...)      // ~200ms
+  const prices = await getBatchPrices(codes) // ~6s (전체 cache miss 시)
+  // 총: ~6.2초 (순차)
+</code></pre></div></div>
+
+<h3 id="after-8">After</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Server Component:
+  const catalog = await getStocks(...)  // 이미 가격 포함 (~200ms + 실시간 조회)
+  const prices = catalog에서 추출       // 0ms (추출만)
+  // 총: ~200ms (캐시 hit) or ~1.5s (miss)
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-8">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>Server Component에서의 waterfall은 TTFB에 직접 영향</strong> — CSR에서는 병렬 useSWR이 가능하지만, SSR에서는 <code class="language-plaintext highlighter-rouge">await</code>의 순차 실행이 불가피</li>
+  <li>해결책은 “FE에서 병렬화”가 아니라 <strong>“BE에서 합쳐서 보내기”</strong> — 근원적 해결</li>
+  <li>후속 페이지(infinite scroll)의 delta 조회는 유지: SSR은 첫 페이지만 담당</li>
+</ul>
+
+<h3 id="효과-8">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SSR HTTP 왕복</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>TTFB (cache hit)</td>
+      <td>~400ms</td>
+      <td>~200ms</td>
+    </tr>
+    <tr>
+      <td>TTFB (cache miss)</td>
+      <td>~6.5초</td>
+      <td>~1.5초</td>
+    </tr>
+    <tr>
+      <td>FE 복잡도</td>
+      <td>서버에서 batch 호출 필요</td>
+      <td>initialData에서 바로 추출</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="10-tradepanel-raw-fetch--swr-전환">10. TradePanel raw fetch → SWR 전환</h2>
+
+<h3 id="before-9">Before</h3>
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nf">getHoldings</span><span class="p">().</span><span class="nf">then</span><span class="p">(</span><span class="nx">setUserHolding</span><span class="p">).</span><span class="k">catch</span><span class="p">(...);</span>
+<span class="p">},</span> <span class="p">[</span><span class="nx">isAuthenticated</span><span class="p">,</span> <span class="nx">stockCode</span><span class="p">]);</span>
+<span class="c1">// 페이지 이동 시마다 재요청, dedup 없음</span>
+</code></pre></div></div>
+
+<h3 id="after-9">After</h3>
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">holdings</span> <span class="p">}</span> <span class="o">=</span> <span class="nf">useSWR</span><span class="p">(</span>
+  <span class="nx">isAuthenticated</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">user-holdings</span><span class="dl">'</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="nx">getHoldings</span><span class="p">,</span>
+  <span class="p">{</span> <span class="na">dedupingInterval</span><span class="p">:</span> <span class="mi">5000</span> <span class="p">}</span>
+<span class="p">);</span>
+<span class="c1">// 동일 key면 dedup, Dashboard와 캐시 공유</span>
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-9">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>raw fetch + useEffect는 SWR의 dedup, 캐시, 재검증 이점을 모두 포기하는 것</strong> — 동일한 API를 다른 컴포넌트에서 다른 전략으로 호출하면 중복 요청 발생</li>
+  <li>SWR key를 통일하면 여러 컴포넌트가 같은 캐시를 공유 → 네트워크 요청 1회로 N개 컴포넌트 업데이트</li>
+</ul>
+
+<h3 id="효과-9">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>페이지 이동 시 holdings 요청</td>
+      <td>매번</td>
+      <td>dedup (10s 내 중복 제거)</td>
+    </tr>
+    <tr>
+      <td>Dashboard ↔ 상세 페이지 캐시</td>
+      <td>공유 안됨</td>
+      <td>동일 key로 공유</td>
+    </tr>
+    <tr>
+      <td>주문 후 갱신</td>
+      <td>수동 fetch</td>
+      <td><code class="language-plaintext highlighter-rouge">mutate('user-holdings')</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="11-렌더-중-dispatch--useeffect">11. 렌더 중 dispatch → useEffect</h2>
+
+<h3 id="before-10">Before</h3>
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span><span class="p">(</span><span class="nx">deltaPrices</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nf">dispatch</span><span class="p">({</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">merge</span><span class="dl">'</span><span class="p">,</span> <span class="na">prices</span><span class="p">:</span> <span class="nx">deltaPrices</span> <span class="p">});</span>
+<span class="p">}</span>
+<span class="c1">// 렌더 함수 본문 내에서 state 변경 → React가 두 번 렌더링함</span>
+</code></pre></div></div>
+
+<ul>
+  <li>SWR이 <code class="language-plaintext highlighter-rouge">deltaPrices</code>를 갱신 → 리렌더 1회 + dispatch로 reducer 상태 변경 → 리렌더 1회 = <strong>동일 데이터에 2회 렌더</strong>
+</li>
+</ul>
+
+<h3 id="after-10">After</h3>
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">if </span><span class="p">(</span><span class="nx">deltaPrices</span><span class="p">)</span> <span class="nf">dispatch</span><span class="p">({</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">merge</span><span class="dl">'</span><span class="p">,</span> <span class="na">prices</span><span class="p">:</span> <span class="nx">deltaPrices</span> <span class="p">});</span>
+<span class="p">},</span> <span class="p">[</span><span class="nx">deltaPrices</span><span class="p">]);</span>
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-10">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>React에서 렌더 중 state 변경은 “바로 다시 렌더”를 트리거</strong> — <code class="language-plaintext highlighter-rouge">useEffect</code>는 렌더 완료 후 실행되므로, SWR 갱신 → 리렌더(데이터 반영) → useEffect에서 dispatch → 리렌더(가격 반영)이 되지만, 첫 리렌더에서 이전 가격을 보여주므로 깜빡임이 줄어듦</li>
+  <li>더 근본적으로는 <code class="language-plaintext highlighter-rouge">accumulatedPrices</code>를 <code class="language-plaintext highlighter-rouge">useMemo</code>로 계산하면 dispatch 없이 합성 가능:</li>
+</ul>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">accumulatedPrices</span> <span class="o">=</span> <span class="nf">useMemo</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">merged</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span><span class="nx">initialPrices</span> <span class="p">};</span>
+  <span class="k">if </span><span class="p">(</span><span class="nx">deltaPrices</span><span class="p">)</span> <span class="nb">Object</span><span class="p">.</span><span class="nf">assign</span><span class="p">(</span><span class="nx">merged</span><span class="p">,</span> <span class="nx">deltaPrices</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">merged</span><span class="p">;</span>
+<span class="p">},</span> <span class="p">[</span><span class="nx">initialPrices</span><span class="p">,</span> <span class="nx">deltaPrices</span><span class="p">]);</span>
+</code></pre></div></div>
+
+<p>이렇게 하면 reducer와 dispatch를 완전히 제거할 수 있으며, 리렌더도 SWR 갱신 시 1회만 발생함</p>
+
+<h3 id="효과-10">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>배치 가격 도착 시 리렌더</td>
+      <td>2회</td>
+      <td>1회</td>
+    </tr>
+    <tr>
+      <td>렌더 중 state 변경 경고</td>
+      <td>가능</td>
+      <td>없음</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="12-price-badge-retry-범위-축소">12. Price Badge retry 범위 축소</h2>
+
+<h3 id="before-11">Before</h3>
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">mutate</span><span class="p">(</span>
+  <span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Array</span><span class="p">.</span><span class="nf">isArray</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">batch-prices</span><span class="dl">'</span><span class="p">,</span>
+  <span class="kc">undefined</span><span class="p">,</span>
+  <span class="p">{</span> <span class="na">revalidate</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}</span>
+<span class="p">);</span>
+<span class="c1">// → batch-prices로 시작하는 모든 SWR key 재검증</span>
+</code></pre></div></div>
+
+<ul>
+  <li>1개 종목 에러 → 전체 배치 재요청</li>
+</ul>
+
+<h3 id="after-11">After</h3>
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 해당 종목 단건 API로 대체</span>
+<span class="kd">const</span> <span class="nx">retryPrice</span> <span class="o">=</span> <span class="k">await</span> <span class="nf">getStockPrice</span><span class="p">(</span><span class="nx">stockCode</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-11">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>SWR mutate의 필터 매칭은 편리하지만 비용이 큼</strong> — prefix 매칭으로 수십 개 key를 재검증하면, 정상 가격까지 불필요하게 다시 fetch</li>
+  <li>에러 발생 종목만 단건 API로 조회하는 것이 네트워크 비용 최소</li>
+</ul>
+
+<h3 id="효과-11">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>retry 시 재요청 범위</td>
+      <td>전체 배치 (50종목)</td>
+      <td>실패 1종목</td>
+    </tr>
+    <tr>
+      <td>네트워크 비용</td>
+      <td>POST + 50종목 응답</td>
+      <td>GET + 1종목 응답</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="13-캔들-데이터-swr-전환">13. 캔들 데이터 SWR 전환</h2>
+
+<h3 id="before-12">Before</h3>
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">[</span><span class="nx">state</span><span class="p">,</span> <span class="nx">dispatch</span><span class="p">]</span> <span class="o">=</span> <span class="nf">useReducer</span><span class="p">(</span><span class="nx">reducer</span><span class="p">,</span> <span class="nx">initialState</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">fetchCandleData</span> <span class="o">=</span> <span class="nf">useCallback</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nf">dispatch</span><span class="p">({</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">FETCH_START</span><span class="dl">'</span> <span class="p">});</span>
+  <span class="nf">getDailyCandles</span><span class="p">({...}).</span><span class="nf">then</span><span class="p">(</span><span class="nx">d</span> <span class="o">=&gt;</span> <span class="nf">dispatch</span><span class="p">({</span><span class="na">type</span><span class="p">:</span><span class="dl">'</span><span class="s1">FETCH_CANDLES_SUCCESS</span><span class="dl">'</span><span class="p">,</span> <span class="na">payload</span><span class="p">:</span> <span class="nx">d</span><span class="p">}));</span>
+<span class="p">},</span> <span class="p">[...]);</span>
+
+<span class="nf">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nf">fetchCandleData</span><span class="p">();</span> <span class="p">},</span> <span class="p">[</span><span class="nx">fetchCandleData</span><span class="p">]);</span>
+</code></pre></div></div>
+
+<h3 id="after-12">After</h3>
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">candles</span><span class="p">,</span> <span class="na">isLoading</span><span class="p">:</span> <span class="nx">candlesLoading</span> <span class="p">}</span> <span class="o">=</span> <span class="nf">useSWR</span><span class="p">(</span>
+  <span class="nx">stockCode</span> <span class="p">?</span> <span class="p">[</span><span class="dl">'</span><span class="s1">daily-candles</span><span class="dl">'</span><span class="p">,</span> <span class="nx">stockCode</span><span class="p">,</span> <span class="nx">period</span><span class="p">,</span> <span class="nx">startDate</span><span class="p">,</span> <span class="nx">endDate</span><span class="p">]</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="p">()</span> <span class="o">=&gt;</span> <span class="nf">getDailyCandles</span><span class="p">({</span><span class="nx">stockCode</span><span class="p">,</span> <span class="nx">period</span><span class="p">,</span> <span class="nx">startDate</span><span class="p">,</span> <span class="nx">endDate</span><span class="p">}),</span>
+  <span class="p">{</span> <span class="na">revalidateOnFocus</span><span class="p">:</span> <span class="kc">false</span> <span class="p">}</span>
+<span class="p">);</span>
+
+<span class="kd">const</span> <span class="p">{</span> <span class="na">data</span><span class="p">:</span> <span class="nx">minuteCandles</span> <span class="p">}</span> <span class="o">=</span> <span class="nf">useSWR</span><span class="p">(</span>
+  <span class="nx">viewMode</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">minute</span><span class="dl">'</span> <span class="o">&amp;&amp;</span> <span class="nx">stockCode</span> <span class="p">?</span> <span class="p">[</span><span class="dl">'</span><span class="s1">minute-candles</span><span class="dl">'</span><span class="p">,</span> <span class="nx">stockCode</span><span class="p">]</span> <span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="p">()</span> <span class="o">=&gt;</span> <span class="nf">getMinuteCandles</span><span class="p">(</span><span class="nx">stockCode</span><span class="p">),</span>
+  <span class="p">{</span> <span class="na">revalidateOnFocus</span><span class="p">:</span> <span class="kc">false</span> <span class="p">}</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="핵심-인사이트-12">핵심 인사이트</h3>
+<ul>
+  <li>
+<strong>로딩/에러/데이터 상태 관리는 SWR이 이미 제공</strong> — <code class="language-plaintext highlighter-rouge">useReducer</code>로 직접 관리하면 코드 중복 + 버그 가능성 증가</li>
+  <li>SWR key에 파라미터를 포함하면 파라미터 변경 시 자동 재요청 → <code class="language-plaintext highlighter-rouge">useCallback</code> 의존성 관리 불필요</li>
+  <li>
+<code class="language-plaintext highlighter-rouge">viewMode === 'minute'</code> 조건부 key(null이면 fetch 안 함)로 불필요한 API 호출 방지</li>
+</ul>
+
+<h3 id="효과-12">효과</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>지표</th>
+      <th>Before</th>
+      <th>After</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>상태 관리 코드</td>
+      <td>~30행 (reducer + action types)</td>
+      <td>제거</td>
+    </tr>
+    <tr>
+      <td>캐시/dedup</td>
+      <td>없음</td>
+      <td>SWR 자동</td>
+    </tr>
+    <tr>
+      <td>period 변경 시 재요청</td>
+      <td>수동 useCallback 관리</td>
+      <td>key 변경으로 자동</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="종합-효과-요약">종합 효과 요약</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>시나리오</th>
+      <th>Before</th>
+      <th>After</th>
+      <th>개선율</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>카탈로그 첫 로드 (cache hit)</td>
+      <td>2왕복 ~400ms</td>
+      <td>1왕복 ~200ms</td>
+      <td><strong>50%↓</strong></td>
+    </tr>
+    <tr>
+      <td>카탈로그 첫 로드 (cache miss)</td>
+      <td>2왕복 ~6.5초</td>
+      <td>1왕복 ~6.25초 (RateLimiter 한도)</td>
+      <td><strong>4%↓ + 요청 절반</strong></td>
+    </tr>
+    <tr>
+      <td>국내 배치 가격 50종목</td>
+      <td>~6.25초 (순차, 스레드 점유)</td>
+      <td>~6.25초 (병렬, 스레드 논블록)</td>
+      <td><strong>스레드 가용성↑</strong></td>
+    </tr>
+    <tr>
+      <td>KIS 토큰 발급 커넥션 오버헤드</td>
+      <td>~100ms/회</td>
+      <td>~1ms/회</td>
+      <td><strong>99%↓</strong></td>
+    </tr>
+    <tr>
+      <td>Balance+Summary 동시 요청</td>
+      <td>KIS API 2회</td>
+      <td>1회+캐시</td>
+      <td><strong>50%↓</strong></td>
+    </tr>
+    <tr>
+      <td>CB open 시 사용자 경험</td>
+      <td>500 에러 (전체 장애)</td>
+      <td>stale data + 에러 표시</td>
+      <td><strong>가용성↑</strong></td>
+    </tr>
+    <tr>
+      <td>배치 가격 도착 시 리렌더</td>
+      <td>2회</td>
+      <td>1회</td>
+      <td><strong>50%↓</strong></td>
+    </tr>
+    <tr>
+      <td>종목 상세 페이지 이동</td>
+      <td>holdings 중복 요청</td>
+      <td>SWR dedup</td>
+      <td><strong>중복 제거</strong></td>
+    </tr>
+    <tr>
+      <td>badge retry 네트워크 비용</td>
+      <td>50종목 재요청</td>
+      <td>1종목 단건</td>
+      <td><strong>98%↓</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="핵심-교훈-3가지">핵심 교훈 3가지</h3>
+<ol>
+  <li>
+<strong>서버에서 합쳐서 보내면 클라이언트 waterfall은 사라진다</strong> — FE 최적화보다 BE 응답 구조 개선이 근본적</li>
+  <li>
+<strong>동시성 제어 ≠ 병렬 처리</strong> — Semaphore와 RateLimiter는 제한일 뿐, <code class="language-plaintext highlighter-rouge">@Async</code>가 있어야 스레드가 분산됨</li>
+  <li>
+<strong>캐시 전략은 “miss 시 어떻게 채울 것인가”까지 설계해야 한다</strong> — hit만 최적화하면 miss 경로가 새 병목이 됨</li>
+</ol>
+
+<hr>
+
+<h2 id="추가-고려-항목">추가 고려 항목</h2>
+
+<h3 id="14-cache-stampede-방지">14. Cache Stampede 방지</h3>
+
+<p>다수의 cache miss가 동시에 발생하면, 여러 스레드가 동일 키에 대해 외부 API를 중복 호출함.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// @Cacheable만 사용 시: 10개 스레드가 동시에 getStockPrice("005930") 호출 → KIS API 10회</span>
+<span class="c1">// 해결: @Cacheable + CacheLoader 또는 stampede guard</span>
+<span class="nd">@Cacheable</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"stockPrice"</span><span class="o">,</span> <span class="n">key</span> <span class="o">=</span> <span class="s">"#stockCode"</span><span class="o">,</span> <span class="n">sync</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">StockPriceResponse</span> <span class="nf">getStockPrice</span><span class="o">(</span><span class="nc">String</span> <span class="n">stockCode</span><span class="o">)</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Spring의 <code class="language-plaintext highlighter-rouge">sync = true</code>는 같은 키에 대해 <strong>1개 스레드만 로드</strong>하고 나머지는 대기 → 중복 API 호출 방지</li>
+  <li>대규모 트래픽에서는 분산 락(Redis) 또는 <code class="language-plaintext highlighter-rouge">Caffeine</code>의 <code class="language-plaintext highlighter-rouge">RefreshAfterWrite</code>도 고려</li>
+</ul>
+
+<h3 id="15-fe-error-boundary-적용">15. FE Error Boundary 적용</h3>
+
+<p>CB fallback이 정상 응답을 반환하더라도, FE 렌더링 중 예외(예: stale data의 null 필드 접근)가 발생하면 전체 페이지가 깨질 수 있음.</p>
+
+<div class="language-tsx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">&lt;</span><span class="nc">ErrorBoundary</span> <span class="na">fallback</span><span class="p">=</span><span class="si">{</span><span class="p">&lt;</span><span class="nc">StockCardSkeleton</span> <span class="p">/&gt;</span><span class="si">}</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nc">StockCard</span> <span class="na">stock</span><span class="p">=</span><span class="si">{</span><span class="nx">stock</span><span class="si">}</span> <span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nc">ErrorBoundary</span><span class="p">&gt;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>개별 종목 카드 단위로 Error Boundary를 감싸면, 한 종목의 렌더 에러가 전체 목록에 영향을 주지 않음</li>
+  <li>SSR에서는 Next.js의 <code class="language-plaintext highlighter-rouge">error.tsx</code>로 페이지 레벨 대응</li>
+</ul>
+
+
+    </div>
+
+</article>
+<div class="post-nav">
+<a class="previous" href="/TIL/til/2026/05/18/TIL-35.html" title="API 워터폴 제거로 전체조회 속도 개선하기">API 워터폴 제거로 전체조회 속도 개선하기...</a><span></span>
+</div>
+<div class="post-related">
+      <div>Related Articles</div>
+      <ul>
+        <li><a class="post-link" href="/TIL/til/2025/06/13/TIL-30.html" title="">JPQL</a></li>
+<li><a class="post-link" href="/TIL/til/2025/04/21/TIL-12.html" title="">Generic</a></li>
+<li><a class="post-link" href="/TIL/til/2025/04/17/TIL-09.html" title="">예외처리 ( Exception )</a></li>
+<li><a class="post-link" href="/TIL/programmers/2025/02/03/Programmers-02.html" title="">Programmers [02]</a></li>
+</ul>
+    </div>
+<div class="post-comments"></div></section>
+</div>
+
+
+  </section>
+  <section class="sidebar" style="margin-left: 15px;">
+    <!-- Get sidebar items --><style type="text/css" media="screen">
+.post-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+</style>
+
+<div class="post-menu">
+  <div class="post-menu-title">TOC</div>
+  <div class="post-menu-content"></div>
+</div>
+
+<script>
+  function generateContent() {
+    var menu = document.querySelector(".post-menu");
+    var menuContent =  menu.querySelector(".post-menu-content");
+    var headings = document.querySelector(".post-content").querySelectorAll("h2, h3, h4, h5, h6");
+
+    // Hide menu when no headings
+    if (headings.length === 0) {
+      return menu.style.display = "none";
+    }
+
+    // Generate post menu
+    var menuHTML = '';
+    for (var i = 0; i < headings.length; i++) {
+      var h = headings[i];
+      menuHTML += (
+        '<li class="h-' + h.tagName.toLowerCase() + '">'
+        + '<a href="#h-' + h.getAttribute('id') + '">' + h.textContent + '</a></li>');
+    }
+
+    menuContent.innerHTML = '<ul>' + menuHTML + '</ul>';
+
+    // The header element
+    var header = document.querySelector('header.site-header');
+
+    function doMenuCollapse(index, over_items) {
+      var items = menuContent.firstChild.children;
+
+      if (over_items == undefined) {
+        over_items = 20;
+      }
+
+      if (items.length < over_items) {
+        return;
+      }
+
+      var activeItem = items[index];
+      var beginItem = activeItem
+      var endItem = activeItem
+      var beginIndex = index;
+      var endIndex = index + 1;
+      while (beginIndex >= 0
+        && !items[beginIndex].classList.contains('h-h2')) {
+        beginIndex -= 1;
+      }
+      while (endIndex < items.length
+        && !items[endIndex].classList.contains('h-h2')) {
+        endIndex += 1;
+      }
+      for (var i = 0; i < beginIndex; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+      for (var i = beginIndex + 1; i < endIndex; i++) {
+        item = items[i]
+        // if (!item.classList.contains('h-h2')) {
+          item.style.display = '';
+        // }
+      }
+      for (var i = endIndex; i < items.length; i++) {
+        item = items[i]
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+    }
+
+    // Init menu collapsed
+    doMenuCollapse(-1);
+
+    // Active the menu item
+    window.addEventListener('scroll', function (event) {
+      var lastActive = menuContent.querySelector('.active');
+      var changed = true;
+      var activeIndex = -1;
+      for (var i = headings.length - 1; i >= 0; i--) {
+        var h = headings[i];
+        var headingRect = h.getBoundingClientRect();
+        var headerRect = header.getBoundingClientRect();
+        var headerTop = Math.floor(headerRect.top);
+        var headerHeight = Math.floor(headerRect.height);
+        var headerHeight = headerTop + headerHeight + 20;
+        if (headingRect.top <= headerHeight) {
+          var id = 'h-' + h.getAttribute('id');
+          var a = menuContent.querySelector('a[href="#' + id  + '"]');
+          var curActive = a.parentNode;
+          if (curActive) {
+            curActive.classList.add('active');
+            activeIndex = i;
+          }
+          if (lastActive == curActive) {
+            changed = false;
+          }
+          break;
+        }
+      }
+      if (changed) {
+        if (lastActive) {
+          lastActive.classList.remove('active');
+        }
+        doMenuCollapse(activeIndex);
+      }
+      event.preventDefault();
+    });
+  }
+  generateContent();
+</script>
+</section>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/TIL/"></data>
+
+  <div class="wrapper">
+    <div class="site-footer-inner">
+<div>Unpublished Work <span class="copyleft">©</span> 2017-2026 KimDohwan24</div>
+      <div>Powered by <a title="Jekyll is a simple, blog-aware, static site
+      generator." href="https://jekyllrb.com/">Jekyll</a> &amp; <a title="Yat, yet
+      another theme." href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>.</div>
+      <div class="footer-col rss-subscribe">Subscribe <a href="/TIL/feed.xml">via RSS</a>
+</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
