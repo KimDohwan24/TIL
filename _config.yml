@@ -208,6 +208,7 @@ yat:
 
 # Build settings
 # highlighter: none
+future: true
 markdown: kramdown
 kmarkdown:
   input: GFM
