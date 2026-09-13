@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>JSON Web Token | DoHwan’s Study Room</title>
+<meta name="generator" content="Jekyll v4.4.1">
+<meta property="og:title" content="JSON Web Token">
+<meta name="author" content="김도환">
+<meta property="og:locale" content="ko_KR">
+<meta name="description" content="JWT">
+<meta name="twitter:description" property="og:description" content="JWT">
+<link rel="canonical" href="https://kimdohwan24.github.io/TIL/til/2025/05/26/TIL-25.html">
+<meta property="og:url" content="https://kimdohwan24.github.io/TIL/til/2025/05/26/TIL-25.html">
+<meta property="og:site_name" content="DoHwan’s Study Room">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2025-05-26T00:00:00+09:00">
+<meta property="article:modified_time" content="2025-05-26T00:00:00+09:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JSON Web Token">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"김도환"},"dateModified":"2025-05-26T00:00:00+09:00","datePublished":"2025-05-26T00:00:00+09:00","description":"JWT","headline":"JSON Web Token","mainEntityOfPage":{"@type":"WebPage","@id":"https://kimdohwan24.github.io/TIL/til/2025/05/26/TIL-25.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://kimdohwan24.github.io/TIL/assets/images/favicon.svg"},"name":"김도환"},"url":"https://kimdohwan24.github.io/TIL/til/2025/05/26/TIL-25.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="icon" type="image/svg+xml" href="/TIL/assets/images/favicon.svg">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
+  <link rel="stylesheet" href="/TIL/assets/css/main.css">
+  <script src="/TIL/assets/js/main.js" defer></script><link type="application/atom+xml" rel="alternate" href="https://kimdohwan24.github.io/TIL/feed.xml" title="DoHwan's Study Room">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.hljs) return;
+
+    var blocks = document.querySelectorAll('pre code');
+
+    function addLanguageData(block) {
+      var outer = block.parentElement.parentElement.parentElement;
+      var lang = block.getAttribute('data-lang') || '';
+
+      for (var i = 0; i < outer.classList.length; i++) {
+        var className = outer.classList[i];
+        if (className.indexOf('language-') === 0) {
+          lang = className;
+          break;
+        }
+      }
+
+      if (!lang) {
+        var classNames = block.getAttribute('class');
+        lang = classNames ? classNames.replace('hljs ', '') : '';
+      }
+
+      if (lang.indexOf('language-') === 0) {
+        lang = lang.slice(9);
+      }
+
+      block.className = ('hljs ' + lang).trim();
+      block.parentNode.setAttribute('data-lang', lang || 'text');
+    }
+
+    function addBadge(block) {
+      var enabled = ('true' || 'true').toLowerCase();
+      if (enabled === 'true') {
+        block.parentElement.classList.add('badge');
+      }
+    }
+
+    for (var i = 0; i < blocks.length; i++) {
+      var block = blocks[i];
+      addLanguageData(block);
+      addBadge(block);
+      window.hljs.highlightElement(block);
+    }
+  });
+</script>
+
+<style>
+  pre.badge::before {
+    content: attr(data-lang);
+    color: #fff;
+    background-color: #ff4e00;
+    padding: 0 .5em;
+    border-radius: 0 2px;
+    text-transform: uppercase;
+    text-align: center;
+    min-width: 32px;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  code > table pre::before {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="site-header " role="banner">
+
+  <div class="wrapper">
+    <div class="site-header-inner">
+<span class="site-brand"><a class="site-brand-inner" rel="author" href="/TIL/"><img class="site-favicon" src="/TIL/assets/images/favicon.svg" alt="">DoHwan's Study Room
+</a>
+</span><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" aria-label="메뉴 열기">
+          <label for="nav-trigger">
+            <span class="menu-icon" aria-hidden="true">
+              <svg viewbox="0 0 18 15" width="18px" height="15px" focusable="false">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="trigger">
+<a class="page-link" href="/TIL/">홈</a><a class="page-link" href="/TIL/archives.html">아카이브</a><a class="page-link" href="/TIL/categories.html">카테고리</a><a class="page-link" href="/TIL/tags.html">태그</a><a class="page-link" href="/TIL/about.html">소개</a>
+
+
+
+
+</div>
+        </nav>
+</div>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    var lastScrollY = getScrollPos().y;
+    var documentElement = document.documentElement;
+
+    function storeScrollData() {
+      var y = getScrollPos().y;var scrollStatus = "";
+
+      if (y <= 0) {
+        scrollStatus = "top";
+      } else if ((window.innerHeight + y) >= document.body.offsetHeight) {
+        scrollStatus = "bottom";
+      } else {
+        var isScrollDown = (y - lastScrollY > 0) ? true : false;
+        scrollStatus = isScrollDown ? "down" : "up";
+      }
+
+      lastScrollY = y;
+      documentElement.setAttribute("data-scroll-status", scrollStatus);
+    }
+
+    window.addEventListener('scroll', storeScrollData, { passive: true });
+
+    storeScrollData();
+  }
+  document.addEventListener('DOMContentLoaded', initHeader);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  function hashLocate(hashValue) {
+    hashValue = hashValue.replace(/^.*#h-/, '');
+    hashValue = decodeURIComponent(hashValue);
+    var element = document.getElementById(hashValue);
+
+    if (!element) {
+      return;
+    }
+
+    var header = document.querySelector('header.site-header');
+    var headerRect = header.getBoundingClientRect();
+    var headerTop = Math.floor(headerRect.top);
+    var headerHeight = Math.floor(headerRect.height);
+    var scrollPos = getScrollPos();
+    var offsetY = element.offsetTop - (headerTop + headerHeight + 20);
+
+    if (offsetY == scrollPos.y) {
+      return;
+    }
+
+    if (headerTop == 0  && offsetY > scrollPos.y) {
+      offsetY += headerHeight + 2;
+    } else if (headerTop < 0  && offsetY < scrollPos.y) {
+      offsetY -= headerHeight - 2;
+    }
+
+    smoothScrollTo(offsetY);
+  }
+
+  // The first event occurred
+  window.addEventListener('load', function(event) {
+    if (window.location.hash) {
+      hashLocate(window.location.hash);
+    }
+  });
+
+  // The first event occurred
+  window.addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() == 'a') {
+      hashLocate(event.target.getAttribute('href'));
+    }
+  });
+</script>
+<div class="theme-toggle">
+  <input type="checkbox" id="theme-switch" aria-label="Toggle dark mode">
+  <label for="theme-switch">
+    <div class="toggle"></div>
+    <div class="names">
+      <p class="light">Light</p>
+      <p class="dark">Dark</p>
+    </div>
+  </label>
+</div>
+
+
+
+
+<script>
+  (function() {
+    var sw = document.getElementById('theme-switch');
+    var html = document.getElementsByTagName('html')[0];
+    var nightModeOption = ('manual' || 'auto').toLowerCase();
+    var storage = nightModeOption === 'manual'
+        ? localStorage
+        : sessionStorage;
+    var themeData = loadThemeData();
+
+    function saveThemeData(data) {
+      storage.setItem('theme', JSON.stringify(data));
+    }
+
+    function loadThemeData() {
+      var data = storage.getItem('theme');
+      try {
+        data = JSON.parse(data ? data : '');
+      } catch(e) {
+        data = { nightShift: undefined, autoToggleAt: 0 };
+        saveThemeData(data);
+      }
+      return data;
+    }
+
+    function handleThemeToggle(nightShift) {
+      themeData.nightShift = nightShift;
+      saveThemeData(themeData);
+      html.dataset.theme = nightShift ? 'dark' : 'light';
+      setTimeout(function() {
+        sw.checked = nightShift ? true : false;
+      }, 50);
+    }
+
+    function autoThemeToggle() {
+      // Next time point of theme toggle
+      var now = new Date();
+      var toggleAt = new Date();
+      var hours = now.getHours();
+      var nightShift = hours >= 19 || hours <=7;
+
+      if (nightShift) {
+        if (hours > 7) {
+          toggleAt.setDate(toggleAt.getDate() + 1);
+        }
+        toggleAt.setHours(7);
+      } else {
+        toggleAt.setHours(19);
+      }
+
+      toggleAt.setMinutes(0);
+      toggleAt.setSeconds(0);
+      toggleAt.setMilliseconds(0)
+
+      var delay = toggleAt.getTime() - now.getTime();
+
+      // auto toggle theme mode
+      setTimeout(function() {
+        handleThemeToggle(!nightShift);
+      }, delay);
+
+      return {
+        nightShift: nightShift,
+        toggleAt: toggleAt.getTime()
+      };
+    }
+
+    // Listen the theme toggle event
+    sw.addEventListener('change', function(event) {
+      handleThemeToggle(event.target.checked);
+    });
+
+    if (nightModeOption == 'auto') {
+      var data = autoThemeToggle();
+
+      // Toggle theme by local setting
+      if (data.toggleAt > themeData.autoToggleAt) {
+        themeData.autoToggleAt = data.toggleAt;
+        handleThemeToggle(data.nightShift);
+      } else {
+        handleThemeToggle(themeData.nightShift);
+      }
+    } else if (nightModeOption == 'manual') {
+      handleThemeToggle(themeData.nightShift);
+    } else {
+      var nightShift = themeData.nightShift;
+      if (nightShift === undefined) {
+        nightShift = nightModeOption === 'on';
+      }
+      handleThemeToggle(nightShift);
+    }
+  })();
+</script>
+<button id="click-to-top" class="click-to-top" type="button" aria-label="페이지 상단으로 이동">
+  <i class="fa fa-arrow-up" aria-hidden="true"></i>
+</button>
+<script>
+  (function () {
+    var clickToTop = document.getElementById('click-to-top');
+    if (!clickToTop) return;
+
+    window.addEventListener('scroll', function () {
+      clickToTop.classList.toggle('show', window.scrollY > 100);
+    }, { passive: true });
+
+    clickToTop.addEventListener('click', function () {
+      window.smoothScrollTo(0);
+    });
+  })();
+</script>
+<main class="page-content" aria-label="본문">
+      <div class="wrapper">
+        <div class="framework">
+  <section class="main">
+
+     <div class="post">
+  <section>
+
+
+
+
+
+
+
+
+
+<header class="post-header">
+  <h1 class="post-title p-name" itemprop="name headline">JSON Web Token</h1>
+  <h2 class="post-subtitle">JWT</h2>
+
+  <p class="post-meta">
+    <time class="dt-published" datetime="2025-05-26T00:00:00+09:00" itemprop="datePublished"><i class="fa fa-calendar"></i> 2025년 05월 26일
+    </time>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> 11분 읽기</span>
+  </p>
+<div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Security">#Security</a><a class="post-tag" href="/TIL/tags.html#JWT">#JWT</a><a class="post-tag" href="/TIL/tags.html#Authentication">#Authentication</a>
+</div></header>
+<article class="post h-entry" itemscope itemtype="https://schema.org/BlogPosting">
+
+    <div class="post-content e-content" itemprop="articleBody">
+
+      <h2 id="json-web-token">Json Web Token</h2>
+<ul>
+  <li>사용자 인증 및 권한 부여에 널리 사용되는 토큰 기반 인증 방식이다.</li>
+  <li>클라이언트와 서버 간에 정보를 안전하게 전달하기 위한 <code class="language-plaintext highlighter-rouge">JSON</code> 기반의 암호화된 토큰이다.</li>
+  <li>JWT는 세 파트로 나누어지며, 각 파트는 점(.)으로 구분하여 표현한다.</li>
+</ul>
+
+<p>1) Header ( 헤더 ) : 해시 암호화 알고리즘과 토큰의 타입으로 구성</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+</code></pre></div></div>
+<ul>
+  <li>alg: 서명에 사용할 알고리즘 (예: HMAC SHA256)</li>
+  <li>typ: 토큰의 타입, 일반적으로 “JWT”</li>
+</ul>
+
+<p>2) Payload ( 페이로드 ) : 내용, 즉 토큰에 담을 클레임(claim) 정보를 포함</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "sub": "user123",
+  "name": "홍길동",
+  "role": "USER",
+  "exp": 1717032200
+}
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">실제 데이터(클레임)</code>을 담고있는 부분</p>
+  </li>
+  <li>
+    <p>주요 클레임 :</p>
+    <ol>
+      <li>iss(issuer) : 발행자</li>
+      <li>exp(expiration time) : 만료시간</li>
+      <li>sub(subject) : 제목</li>
+      <li>iat(issued At) : 발행 시간</li>
+      <li>jti(JWT ID) : 토큰의 고유 식별자</li>
+      <li>사용자 정의 클레임 ( 예 : role , email 등..)</li>
+    </ol>
+  </li>
+</ul>
+
+<p>3) Signature ( 서명 ) : 서명</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HMACSHA256(
+  base64UrlEncode(header) + "." + base64UrlEncode(payload),
+  secret
+)
+</code></pre></div></div>
+
+<ul>
+  <li>서명은 토큰의 위변조 여부를 검증하는 데 사용됨</li>
+  <li>비밀 키(secret)를 사용해 생성</li>
+  <li>서명을 통해 서버는 Token이 변조되지 않았음을 확인할 수 있다.</li>
+</ul>
+
+<h3 id="jwt-동작-방식">JWT 동작 방식</h3>
+<ol>
+  <li>클라이언트의 로그인 요청</li>
+  <li>로그인에 성공했다면 Header, Payload에 <code class="language-plaintext highlighter-rouge">Secret Key</code>를 사용하여 Signature를 만든다
+    <ul>
+      <li>이후 Base64로 Encoding한다</li>
+      <li>일반적으로 Cookie에 담아 클라이언트에게 JWT를 발급한다.</li>
+    </ul>
+  </li>
+  <li>발급받은 JWT를 저장 후 서버에 요청할 때 <code class="language-plaintext highlighter-rouge">Authorization</code> Header에 JWT를 담아 보낸다</li>
+  <li>서버에서 JWT의 유효성 검사를 통해 통과한다면 인증에 성공하여 요청을 처리해준다.
+    <ul>
+      <li>JWT 만료, 위변조 여부를 검사한다.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="jwt의-유효성-검사">JWT의 유효성 검사</h3>
+<ol>
+  <li>A의 JWT를 B가 탈취</li>
+  <li>B가 탈취한 JWT를 임의로 수정</li>
+  <li>B가 수정한 JWT로 Server에 요청</li>
+  <li>서버는 Signature를 사용하여 유효성 검사(Signature 불일치)
+    <ul>
+      <li>Header, Payload를 서버의 Secret Key값을 이용해 Signature를 다시 만들어 비교한다.</li>
+      <li>임의로 조작된 데이터를 판별할 수 있다.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="jwt-장단점">JWT 장단점</h3>
+
+<ul>
+  <li>장점
+    <ol>
+      <li>Signature로 서버의 보안성이 증가한다.</li>
+      <li>Token 자체가 필요한 정보(유저 및 검증 정보)들을 모두 가지고 있다.</li>
+      <li>서버는 인증 정보와 관련된 별도의 저장소를 사용하지 않는다.</li>
+      <li>서버의 수평 확장성(Scale Out)이 높아진다.</li>
+      <li>Cookie가 없는 다른 환경에서도 인증/인가를 적용할 수 있다.</li>
+      <li>DB를 조회하지 않아도 된다.</li>
+    </ol>
+  </li>
+  <li>단점
+    <ol>
+      <li>Payload는 암호화 된 것이 아니라 민감한 정보를 다루지 못한다.</li>
+      <li>Token의 길이가 길어서 트래픽이 증가하면 네트워크에 부하가 증가한다.</li>
+      <li>클라이언트 측에서 Token을 관리하기 때문에 탈취당하면 대처하기 어렵다.</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="jwt-vs-session">JWT vs Session</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th><strong>JWT (JSON Web Token)</strong></th>
+      <th><strong>Session (세션 기반 인증)</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>저장 위치</strong></td>
+      <td>클라이언트 (주로 브라우저의 LocalStorage나 Cookie)</td>
+      <td>서버 (메모리, DB 등)</td>
+    </tr>
+    <tr>
+      <td><strong>서버 상태</strong></td>
+      <td>Stateless (무상태)</td>
+      <td>Stateful (서버가 상태를 기억함)</td>
+    </tr>
+    <tr>
+      <td><strong>확장성</strong></td>
+      <td>높음 (서버 간 상태 공유 불필요)</td>
+      <td>낮음 (분산 서버에서는 세션 공유 필요)</td>
+    </tr>
+    <tr>
+      <td><strong>속도</strong></td>
+      <td>일반적으로 빠름 (DB 조회 없음)</td>
+      <td>느릴 수 있음 (세션 조회 필요)</td>
+    </tr>
+    <tr>
+      <td><strong>무효화</strong></td>
+      <td>어려움 (토큰 유효기간 동안 유효)</td>
+      <td>쉬움 (서버에서 세션 삭제)</td>
+    </tr>
+    <tr>
+      <td><strong>보안</strong></td>
+      <td>토큰이 탈취되면 만료 전까지 사용 가능</td>
+      <td>세션 ID 탈취 시 위험하지만 제어 가능</td>
+    </tr>
+    <tr>
+      <td><strong>저장 용량</strong></td>
+      <td>클라이언트에 모든 정보 포함 (무거울 수 있음)</td>
+      <td>서버에 정보 저장, 클라이언트는 세션ID만 보관</td>
+    </tr>
+    <tr>
+      <td><strong>권한/정보 포함</strong></td>
+      <td>포함 가능 (ex. role, email 등)</td>
+      <td>일반적으로 별도로 DB에서 조회</td>
+    </tr>
+    <tr>
+      <td><strong>토큰 만료 처리</strong></td>
+      <td>클라이언트 토큰 자체에 <code class="language-plaintext highlighter-rouge">exp</code> 내장</td>
+      <td>서버에서 세션 만료 시간 관리</td>
+    </tr>
+    <tr>
+      <td><strong>사용 예</strong></td>
+      <td>모바일/SPA/API 서버, 마이크로서비스</td>
+      <td>전통적인 웹 앱, 내부 시스템</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="jwt를-그럼-언제-사용할까">JWT를 그럼 언제 사용할까?</h3>
+<ul>
+  <li>마이크로서비스 아키텍처 또는 서버리스 환경</li>
+  <li>API 서버 간 확장성이 중요할 때</li>
+  <li>모바일 앱 또는 SPA(Single Page Application)에서 인증을 처리할 때</li>
+  <li>세션 공유가 어려운 분산 시스템</li>
+</ul>
+
+<h3 id="session은-언제">Session은 언제?</h3>
+<ul>
+  <li>보안이 더 중요하고 서버 제어가 쉬운 환경</li>
+  <li>사용자 수가 적고 단일 서버 또는 간단한 구조</li>
+  <li>서버에서 인증 정보를 쉽게 무효화하거나 추적해야 할 때</li>
+  <li>전통적인 웹 애플리케이션에서 로그인/로그아웃을 구현할 때</li>
+</ul>
+
+<h3 id="결론">결론</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>상황</th>
+      <th>추천 방식</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>빠른 확장성과 API 중심의 서비스</td>
+      <td><strong>JWT</strong></td>
+    </tr>
+    <tr>
+      <td>간단한 시스템, 보안 중심 웹 서비스</td>
+      <td><strong>Session</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="token의-유형">Token의 유형</h2>
+<ol>
+  <li>Access Token
+    <ul>
+      <li>사용자 인증 후 서버가 발급하는 유저 정보가 담긴 토큰이다.</li>
+      <li>유효 기간 동안 API나 리소스에 접근할 때 사용한다.</li>
+    </ul>
+  </li>
+  <li>Refresh Token
+    <ul>
+      <li>Access Token은 보안을 위해 짧은 수명을 가진다</li>
+      <li>Access Token이 만료된 경우 재발급 받기 위해 사용한다.</li>
+      <li>주로 데이터베이스에 유저 정보와 같이 저장한다.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="access-token-refresh-token-인증">Access Token, Refresh Token 인증</h3>
+<ol>
+  <li>클라이언트의 로그인 요청</li>
+  <li>로그인에 성공했다면 Header, Payload에 <code class="language-plaintext highlighter-rouge">Secret Key</code>를 사용하여 Signature를 만든다.</li>
+  <li>발급받은 JWT를 저장 후 서버에 요청할 때 <code class="language-plaintext highlighter-rouge">Authorization</code> Header에 JWT(<code class="language-plaintext highlighter-rouge">Access Token</code>)를 담아 보낸다.</li>
+  <li>서버에서 JWT의 유효성 검사를 통해 통과한다면 인증에 성공하여 요청을 처리해준다.</li>
+  <li>
+<code class="language-plaintext highlighter-rouge">Access Token</code>이 만료 되었다면 <code class="language-plaintext highlighter-rouge">Refresh Token</code> 으로 토큰 재발급을 요청한다.</li>
+  <li>서버로부터 <code class="language-plaintext highlighter-rouge">Access Token</code>을 재발급 받는다.</li>
+</ol>
+
+
+    </div>
+
+</article>
+<div class="post-nav">
+<a class="previous" href="/TIL/til/2025/05/21/TIL-24.html" title="Cookie, Session, Token">Cookie, Session, Token</a><a class="next" href="/TIL/til/2025/05/26/TIL-26.html" title="SOLID 원칙">SOLID 원칙</a>
+</div>
+<div class="post-related">
+      <h2>최근 글</h2>
+      <ul>
+<li><a class="post-link" href="/TIL/til/2026/05/19/TIL-36.html" title="주식 조회 서비스 성능 최적화">주식 조회 서비스 성능 최적화</a></li>
+<li><a class="post-link" href="/TIL/til/2026/05/18/TIL-35.html" title="API 워터폴 제거로 전체조회 속도 개선하기">API 워터폴 제거로 전체조회 속도 개선하기</a></li>
+<li><a class="post-link" href="/TIL/til/2026/04/27/TIL-34.html" title="Harness, CLAUDE.md, AGENTS.md의 역할과 차이">Harness, CLAUDE.md, AGENTS.md의 역할과 차이</a></li>
+<li><a class="post-link" href="/TIL/til/2026/04/25/TIL-33.html" title="Harness란">Harness란</a></li>
+</ul>
+    </div>
+<div class="post-comments"></div></section>
+</div>
+
+
+  </section>
+  <section class="sidebar" style="margin-left: 15px;">
+    <!-- Get sidebar items --><style type="text/css" media="screen">
+.post-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+</style>
+
+<div class="post-menu">
+  <div class="post-menu-title">목차</div>
+  <div class="post-menu-content"></div>
+</div>
+
+<script>
+  function generateContent() {
+    var menu = document.querySelector(".post-menu");
+    var menuContent =  menu.querySelector(".post-menu-content");
+    var headings = document.querySelector(".post-content").querySelectorAll("h2, h3, h4, h5, h6");
+
+    // Hide menu when no headings
+    if (headings.length === 0) {
+      return menu.style.display = "none";
+    }
+
+    // Generate post menu
+    var menuHTML = '';
+    for (var i = 0; i < headings.length; i++) {
+      var h = headings[i];
+      menuHTML += (
+        '<li class="h-' + h.tagName.toLowerCase() + '">'
+        + '<a href="#h-' + h.getAttribute('id') + '">' + h.textContent + '</a></li>');
+    }
+
+    menuContent.innerHTML = '<ul>' + menuHTML + '</ul>';
+
+    // The header element
+    var header = document.querySelector('header.site-header');
+
+    function doMenuCollapse(index, over_items) {
+      var items = menuContent.firstChild.children;
+
+      if (over_items == undefined) {
+        over_items = 20;
+      }
+
+      if (items.length < over_items) {
+        return;
+      }
+
+      var activeItem = items[index];
+      var beginItem = activeItem
+      var endItem = activeItem
+      var beginIndex = index;
+      var endIndex = index + 1;
+      while (beginIndex >= 0
+        && !items[beginIndex].classList.contains('h-h2')) {
+        beginIndex -= 1;
+      }
+      while (endIndex < items.length
+        && !items[endIndex].classList.contains('h-h2')) {
+        endIndex += 1;
+      }
+      for (var i = 0; i < beginIndex; i++) {
+        var item = items[i];
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+      for (var i = beginIndex + 1; i < endIndex; i++) {
+        var item = items[i];
+        item.style.display = '';
+      }
+      for (var i = endIndex; i < items.length; i++) {
+        var item = items[i];
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+    }
+
+    // Init menu collapsed
+    doMenuCollapse(-1);
+
+    // Active the menu item
+    window.addEventListener('scroll', function () {
+      var lastActive = menuContent.querySelector('.active');
+      var changed = true;
+      var activeIndex = -1;
+      for (var i = headings.length - 1; i >= 0; i--) {
+        var h = headings[i];
+        var headingRect = h.getBoundingClientRect();
+        var headerRect = header.getBoundingClientRect();
+        var headerTop = Math.floor(headerRect.top);
+        var headerHeight = Math.floor(headerRect.height);
+        var headerBottom = headerTop + headerHeight + 20;
+        if (headingRect.top <= headerBottom) {
+          var id = 'h-' + h.getAttribute('id');
+          var a = menuContent.querySelector('a[href="#' + id  + '"]');
+          var curActive = a.parentNode;
+          if (curActive) {
+            curActive.classList.add('active');
+            activeIndex = i;
+          }
+          if (lastActive == curActive) {
+            changed = false;
+          }
+          break;
+        }
+      }
+      if (changed) {
+        if (lastActive) {
+          lastActive.classList.remove('active');
+        }
+        doMenuCollapse(activeIndex);
+      }
+    }, { passive: true });
+  }
+  generateContent();
+</script>
+</section>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/TIL/"></data>
+
+  <div class="wrapper">
+    <div class="site-footer-inner">
+<div>© 2025-2026 김도환</div>
+      <div>
+<a title="Jekyll" href="https://jekyllrb.com/">Jekyll</a>과 <a title="Yat Theme" href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>로 만들었습니다.</div>
+      <div class="footer-col rss-subscribe"><a href="/TIL/feed.xml">RSS 구독</a></div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
