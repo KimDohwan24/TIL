@@ -15,11 +15,15 @@
 
     {%- include extensions/click-to-top.html -%}
 
-    <main class="page-content" aria-label="Content">
+    <main class="page-content" aria-label="본문">
       <div class="wrapper">
         {{ content }}
       </div>
     </main>
+
+    {%- if page.layout == 'post' and page.photo_swipe -%}
+    {%- include extensions/photo-swipe.html -%}
+    {%- endif -%}
 
     {%- include views/footer.html -%}
 

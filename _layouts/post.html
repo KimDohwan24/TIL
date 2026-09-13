@@ -44,13 +44,13 @@ sidebar:
     {%- endif -%}
 
     {%- assign result = hidden | where_exp: "item", "item == 'related_posts'" -%}
-    {%- if result.size == 0 -%}
+    {%- assign recent_posts = site.posts | where_exp: "candidate", "candidate.url != page.url" | slice: 0, 4 -%}
+    {%- if result.size == 0 and recent_posts.size > 0 -%}
     <div class="post-related">
-      <div>Related Articles</div>
+      <h2>최근 글</h2>
       <ul>
-        {% assign posts = site[page.collection] | sample:4 %}
-        {%- for post in posts -%}
-        <li><a class="post-link" href="{{post.url | relative_url}}" title="{{ page.next.title | escape }}">{{ post.title | escape | truncatewords: 12 }}</a></li>
+        {%- for post in recent_posts -%}
+        <li><a class="post-link" href="{{ post.url | relative_url }}" title="{{ post.title | escape }}">{{ post.title | escape | truncatewords: 12 }}</a></li>
         {%- endfor -%}
       </ul>
     </div>

@@ -7,7 +7,7 @@
 </style>
 
 <div class="post-menu">
-  <div class="post-menu-title">TOC</div>
+  <div class="post-menu-title">목차</div>
   <div class="post-menu-content"></div>
 </div>
 
@@ -61,19 +61,17 @@
         endIndex += 1;
       }
       for (var i = 0; i < beginIndex; i++) {
-        item = items[i]
+        var item = items[i];
         if (!item.classList.contains('h-h2')) {
           item.style.display = 'none';
         }
       }
       for (var i = beginIndex + 1; i < endIndex; i++) {
-        item = items[i]
-        // if (!item.classList.contains('h-h2')) {
-          item.style.display = '';
-        // }
+        var item = items[i];
+        item.style.display = '';
       }
       for (var i = endIndex; i < items.length; i++) {
-        item = items[i]
+        var item = items[i];
         if (!item.classList.contains('h-h2')) {
           item.style.display = 'none';
         }
@@ -84,7 +82,7 @@
     doMenuCollapse(-1);
 
     // Active the menu item
-    window.addEventListener('scroll', function (event) {
+    window.addEventListener('scroll', function () {
       var lastActive = menuContent.querySelector('.active');
       var changed = true;
       var activeIndex = -1;
@@ -94,8 +92,8 @@
         var headerRect = header.getBoundingClientRect();
         var headerTop = Math.floor(headerRect.top);
         var headerHeight = Math.floor(headerRect.height);
-        var headerHeight = headerTop + headerHeight + 20;
-        if (headingRect.top <= headerHeight) {
+        var headerBottom = headerTop + headerHeight + 20;
+        if (headingRect.top <= headerBottom) {
           var id = 'h-' + h.getAttribute('id');
           var a = menuContent.querySelector('a[href="#' + id  + '"]');
           var curActive = a.parentNode;
@@ -115,8 +113,7 @@
         }
         doMenuCollapse(activeIndex);
       }
-      event.preventDefault();
-    });
+    }, { passive: true });
   }
   generateContent();
 </script>

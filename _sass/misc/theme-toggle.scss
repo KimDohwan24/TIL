@@ -47,7 +47,15 @@
   }
 
   [type="checkbox"] {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  [type="checkbox"]:focus-visible ~ label {
+    outline: 3px solid $brand-color;
+    outline-offset: 3px;
   }
 
   /* Toggle */

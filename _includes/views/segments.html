@@ -8,14 +8,20 @@
 
 <div class="page-segments">
   <ul class="page-segments-list">
-    {% for key in keys %}
-    <h2 id="{{ key }}" class="segment-name">{{ key }}</h2>
-      {% assign items = site.posts | where: field, key %}
-      {% for item in items %}
-        {% if item != nil %}
-        <li> {% include views/post-item.html %} </li>
-        {% endif %}
-      {% endfor %}
-    {% endfor %}
+    {%- for key in keys -%}
+    {%- assign label = key -%}
+    {%- if key == 'programmers' -%}
+      {%- assign label = 'Programmers' -%}
+    {%- endif -%}
+    <li class="page-segment">
+      <h2 id="{{ key | escape }}" class="segment-name">{{ label }}</h2>
+      <ul class="page-segment-posts" aria-label="{{ label | escape }} 글 목록">
+        {%- assign items = site.posts | where: field, key -%}
+        {%- for item in items -%}
+        <li>{% include views/post-item.html %}</li>
+        {%- endfor -%}
+      </ul>
+    </li>
+    {%- endfor -%}
   </ul>
 </div>

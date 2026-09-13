@@ -1,4 +1,4 @@
 home:
-  heading: "Traces of study"
-  subheading: "Let's do our best."
-  banner: "Your image url"
+  heading: "개발하며 기록한 배움"
+  subheading: "김도환의 개발 학습 기록"
+  banner: "/assets/images/banners/home.jpeg"

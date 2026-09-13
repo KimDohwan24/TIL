@@ -2,8 +2,9 @@
 layout: post
 title: Programmers [08]
 subtitle: 프로그래머스 문제풀이
+description: "프로그래머스 문제풀이"
 categories: programmers
-tags: [programmers,Lv.1]
+tags: [Programmers, Lv.1]
 ---
 
 ## 프로그래머스 문제풀이 

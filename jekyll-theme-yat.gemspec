@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 Gem::Specification.new do |spec|
-  spec.name          = "jekyll-theme-yat"
-  spec.version       = "1.10.0"
-  spec.authors       = ["jeffreytse"]
-  spec.email         = ["hello@jeffreytse.net"]
+  spec.name          = "dohwan-study-room"
+  spec.version       = "0.1.0"
+  spec.authors       = ["김도환"]
+  spec.email         = ["ehghks18@gmail.com"]
 
-  spec.summary       = "Yet another theme for elegant writers with modern flat style and beautiful night/dark mode."
-  spec.homepage      = "https://github.com/jeffreytse/jekyll-theme-yat"
+  spec.summary       = "김도환의 개발 학습 기록 블로그"
+  spec.homepage      = "https://github.com/KimDohwan24/TIL"
   spec.license       = "MIT"
 
   spec.metadata["plugin_type"] = "theme"

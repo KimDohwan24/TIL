@@ -147,6 +147,19 @@ html {
     top: 0;
     text-align: left;
 
+    .nav-trigger {
+      display: block;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .nav-trigger:focus-visible + label[for="nav-trigger"] {
+      outline: 3px solid $brand-color;
+      outline-offset: 3px;
+    }
+
     label[for="nav-trigger"] {
       display: block;
       z-index: 2;
@@ -285,23 +298,6 @@ html {
 
     a {
       text-decoration: none;
-
-      &:after {
-        content: 'NEW';
-        position: absolute;
-        margin-left: 8px;
-        margin-top: 3px;
-        padding: 0px 3px;
-        background-color: $brand-color;
-        color: #fff;
-        font-size: 10px;
-        font-weight: 600;
-        border-radius: 2px;
-      }
-
-      &:visited:after {
-        background-color: #fff;
-      }
     }
   }
 
@@ -457,10 +453,10 @@ html {
   }
 
   .post-related {
-    &>*:first-child {
+    h2 {
       @include relative-font-size(1.425);
       color: #333;
-      margin-bottom: 14px;
+      margin: 0 0 14px;
     }
 
     ul {
@@ -475,23 +471,6 @@ html {
         &:hover {
           color: #333;
         }
-
-        &:after {
-          content: 'NEW';
-          position: absolute;
-          margin-left: 8px;
-          margin-top: 3px;
-          padding: 0px 3px;
-          background-color: $brand-color;
-          color: #fff;
-          font-size: 10px;
-          font-weight: 600;
-          border-radius: 2px;
-        }
-
-        &:visited:after {
-          background-color: #fff;
-        }
       }
     }
   }
@@ -499,6 +478,23 @@ html {
 
 .post-comments {
   padding-top: 25px;
+}
+
+
+/**
+ * Not found page
+ */
+.not-found {
+  max-width: 600px;
+  margin: 48px auto;
+  text-align: center;
+
+  h1 {
+    margin: 0 0 24px;
+    font-size: 4em;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
 }
 
 
@@ -713,9 +709,14 @@ html {
  * Segments page
  */
 .page-segments {
-  .page-segments-list {
+  .page-segments-list,
+  .page-segment-posts {
     margin-left: 0;
     list-style: none;
+  }
+
+  .page-segment-posts {
+    margin-bottom: 0;
   }
 
   .segment-name {
@@ -725,15 +726,15 @@ html {
 
     @include relative-font-size(1.6);
 
-    &:not(:first-child) {
-      margin-top: 28px;
-    }
-
     &:hover:before {
       content: '#';
       left: -1em;
       position: absolute;
     }
+  }
+
+  .page-segment + .page-segment .segment-name {
+    margin-top: 28px;
   }
 
   .post-meta {
@@ -750,23 +751,6 @@ html {
 
     &:hover {
       color: #000;
-    }
-
-    &:after {
-      content: 'NEW';
-      position: absolute;
-      margin-left: 8px;
-      margin-top: 3px;
-      padding: 0px 3px;
-      background-color: $brand-color;
-      color: #fff;
-      font-size: 10px;
-      font-weight: 600;
-      border-radius: 2px;
-    }
-
-    &:visited:after {
-      background-color: #fff;
     }
   }
 }

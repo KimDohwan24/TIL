@@ -9,13 +9,23 @@
   border-radius: 32px;
   right: 60px;
   bottom: 48px;
+  border: 0;
+  padding: 0;
+  font: inherit;
   background: white;
   cursor: pointer;
+  visibility: hidden;
+  pointer-events: none;
   opacity: 0;
   transform: translateY(10px);
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
   font-size: 24px;
   user-select: none;
+
+  &:focus-visible {
+    outline: 3px solid $brand-color;
+    outline-offset: 3px;
+  }
 
   @include media-query(1024px) {
     width: 48px;
@@ -35,6 +45,8 @@
 }
 
 .click-to-top.show {
+  visibility: visible;
+  pointer-events: auto;
   opacity: 1;
   transform: translateY(0);
 }
