@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>낚시 게임에서 만난 MySQL 데드락 4건과 락 순서 통일 | DoHwan’s Study Room</title>
+<meta name="generator" content="Jekyll v4.4.1">
+<meta property="og:title" content="낚시 게임에서 만난 MySQL 데드락 4건과 락 순서 통일">
+<meta name="author" content="김도환">
+<meta property="og:locale" content="ko_KR">
+<meta name="description" content="동시 가입, 구역 개방, 미끼 구매·던지기, 판매에서 난 InnoDB 데드락을 반복 동시성 테스트로 재현하고 해결한 과정을 정리했습니다.">
+<meta name="twitter:description" property="og:description" content="동시 가입, 구역 개방, 미끼 구매·던지기, 판매에서 난 InnoDB 데드락을 반복 동시성 테스트로 재현하고 해결한 과정을 정리했습니다.">
+<link rel="canonical" href="https://kimdohwan24.github.io/TIL/til/2026/11/08/TIL-38.html">
+<meta property="og:url" content="https://kimdohwan24.github.io/TIL/til/2026/11/08/TIL-38.html">
+<meta property="og:site_name" content="DoHwan’s Study Room">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-11-08T00:00:00+09:00">
+<meta property="article:modified_time" content="2026-11-08T00:00:00+09:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="낚시 게임에서 만난 MySQL 데드락 4건과 락 순서 통일">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"김도환"},"dateModified":"2026-11-08T00:00:00+09:00","datePublished":"2026-11-08T00:00:00+09:00","description":"동시 가입, 구역 개방, 미끼 구매·던지기, 판매에서 난 InnoDB 데드락을 반복 동시성 테스트로 재현하고 해결한 과정을 정리했습니다.","headline":"낚시 게임에서 만난 MySQL 데드락 4건과 락 순서 통일","mainEntityOfPage":{"@type":"WebPage","@id":"https://kimdohwan24.github.io/TIL/til/2026/11/08/TIL-38.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://kimdohwan24.github.io/TIL/assets/images/favicon.svg"},"name":"김도환"},"url":"https://kimdohwan24.github.io/TIL/til/2026/11/08/TIL-38.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="icon" type="image/svg+xml" href="/TIL/assets/images/favicon.svg">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
+  <link rel="stylesheet" href="/TIL/assets/css/main.css">
+  <script src="/TIL/assets/js/main.js" defer></script><link type="application/atom+xml" rel="alternate" href="https://kimdohwan24.github.io/TIL/feed.xml" title="DoHwan's Study Room">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.hljs) return;
+
+    var blocks = document.querySelectorAll('pre code');
+
+    function addLanguageData(block) {
+      var outer = block.parentElement.parentElement.parentElement;
+      var lang = block.getAttribute('data-lang') || '';
+
+      for (var i = 0; i < outer.classList.length; i++) {
+        var className = outer.classList[i];
+        if (className.indexOf('language-') === 0) {
+          lang = className;
+          break;
+        }
+      }
+
+      if (!lang) {
+        var classNames = block.getAttribute('class');
+        lang = classNames ? classNames.replace('hljs ', '') : '';
+      }
+
+      if (lang.indexOf('language-') === 0) {
+        lang = lang.slice(9);
+      }
+
+      block.className = ('hljs ' + lang).trim();
+      block.parentNode.setAttribute('data-lang', lang || 'text');
+    }
+
+    function addBadge(block) {
+      var enabled = ('true' || 'true').toLowerCase();
+      if (enabled === 'true') {
+        block.parentElement.classList.add('badge');
+      }
+    }
+
+    for (var i = 0; i < blocks.length; i++) {
+      var block = blocks[i];
+      addLanguageData(block);
+      addBadge(block);
+      window.hljs.highlightElement(block);
+    }
+  });
+</script>
+
+<style>
+  pre.badge::before {
+    content: attr(data-lang);
+    color: #fff;
+    background-color: #ff4e00;
+    padding: 0 .5em;
+    border-radius: 0 2px;
+    text-transform: uppercase;
+    text-align: center;
+    min-width: 32px;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  code > table pre::before {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="site-header " role="banner">
+
+  <div class="wrapper">
+    <div class="site-header-inner">
+<span class="site-brand"><a class="site-brand-inner" rel="author" href="/TIL/"><img class="site-favicon" src="/TIL/assets/images/favicon.svg" alt="">DoHwan's Study Room
+</a>
+</span><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" aria-label="메뉴 열기">
+          <label for="nav-trigger">
+            <span class="menu-icon" aria-hidden="true">
+              <svg viewbox="0 0 18 15" width="18px" height="15px" focusable="false">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="trigger">
+<a class="page-link" href="/TIL/">홈</a><a class="page-link" href="/TIL/archives.html">아카이브</a><a class="page-link" href="/TIL/categories.html">카테고리</a><a class="page-link" href="/TIL/tags.html">태그</a><a class="page-link" href="/TIL/about.html">소개</a>
+
+
+
+
+</div>
+        </nav>
+</div>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    var lastScrollY = getScrollPos().y;
+    var documentElement = document.documentElement;
+
+    function storeScrollData() {
+      var y = getScrollPos().y;var scrollStatus = "";
+
+      if (y <= 0) {
+        scrollStatus = "top";
+      } else if ((window.innerHeight + y) >= document.body.offsetHeight) {
+        scrollStatus = "bottom";
+      } else {
+        var isScrollDown = (y - lastScrollY > 0) ? true : false;
+        scrollStatus = isScrollDown ? "down" : "up";
+      }
+
+      lastScrollY = y;
+      documentElement.setAttribute("data-scroll-status", scrollStatus);
+    }
+
+    window.addEventListener('scroll', storeScrollData, { passive: true });
+
+    storeScrollData();
+  }
+  document.addEventListener('DOMContentLoaded', initHeader);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  function hashLocate(hashValue) {
+    hashValue = hashValue.replace(/^.*#h-/, '');
+    hashValue = decodeURIComponent(hashValue);
+    var element = document.getElementById(hashValue);
+
+    if (!element) {
+      return;
+    }
+
+    var header = document.querySelector('header.site-header');
+    var headerRect = header.getBoundingClientRect();
+    var headerTop = Math.floor(headerRect.top);
+    var headerHeight = Math.floor(headerRect.height);
+    var scrollPos = getScrollPos();
+    var offsetY = element.offsetTop - (headerTop + headerHeight + 20);
+
+    if (offsetY == scrollPos.y) {
+      return;
+    }
+
+    if (headerTop == 0  && offsetY > scrollPos.y) {
+      offsetY += headerHeight + 2;
+    } else if (headerTop < 0  && offsetY < scrollPos.y) {
+      offsetY -= headerHeight - 2;
+    }
+
+    smoothScrollTo(offsetY);
+  }
+
+  // The first event occurred
+  window.addEventListener('load', function(event) {
+    if (window.location.hash) {
+      hashLocate(window.location.hash);
+    }
+  });
+
+  // The first event occurred
+  window.addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() == 'a') {
+      hashLocate(event.target.getAttribute('href'));
+    }
+  });
+</script>
+<div class="theme-toggle">
+  <input type="checkbox" id="theme-switch" aria-label="Toggle dark mode">
+  <label for="theme-switch">
+    <div class="toggle"></div>
+    <div class="names">
+      <p class="light">Light</p>
+      <p class="dark">Dark</p>
+    </div>
+  </label>
+</div>
+
+
+
+
+<script>
+  (function() {
+    var sw = document.getElementById('theme-switch');
+    var html = document.getElementsByTagName('html')[0];
+    var nightModeOption = ('manual' || 'auto').toLowerCase();
+    var storage = nightModeOption === 'manual'
+        ? localStorage
+        : sessionStorage;
+    var themeData = loadThemeData();
+
+    function saveThemeData(data) {
+      storage.setItem('theme', JSON.stringify(data));
+    }
+
+    function loadThemeData() {
+      var data = storage.getItem('theme');
+      try {
+        data = JSON.parse(data ? data : '');
+      } catch(e) {
+        data = { nightShift: undefined, autoToggleAt: 0 };
+        saveThemeData(data);
+      }
+      return data;
+    }
+
+    function handleThemeToggle(nightShift) {
+      themeData.nightShift = nightShift;
+      saveThemeData(themeData);
+      html.dataset.theme = nightShift ? 'dark' : 'light';
+      setTimeout(function() {
+        sw.checked = nightShift ? true : false;
+      }, 50);
+    }
+
+    function autoThemeToggle() {
+      // Next time point of theme toggle
+      var now = new Date();
+      var toggleAt = new Date();
+      var hours = now.getHours();
+      var nightShift = hours >= 19 || hours <=7;
+
+      if (nightShift) {
+        if (hours > 7) {
+          toggleAt.setDate(toggleAt.getDate() + 1);
+        }
+        toggleAt.setHours(7);
+      } else {
+        toggleAt.setHours(19);
+      }
+
+      toggleAt.setMinutes(0);
+      toggleAt.setSeconds(0);
+      toggleAt.setMilliseconds(0)
+
+      var delay = toggleAt.getTime() - now.getTime();
+
+      // auto toggle theme mode
+      setTimeout(function() {
+        handleThemeToggle(!nightShift);
+      }, delay);
+
+      return {
+        nightShift: nightShift,
+        toggleAt: toggleAt.getTime()
+      };
+    }
+
+    // Listen the theme toggle event
+    sw.addEventListener('change', function(event) {
+      handleThemeToggle(event.target.checked);
+    });
+
+    if (nightModeOption == 'auto') {
+      var data = autoThemeToggle();
+
+      // Toggle theme by local setting
+      if (data.toggleAt > themeData.autoToggleAt) {
+        themeData.autoToggleAt = data.toggleAt;
+        handleThemeToggle(data.nightShift);
+      } else {
+        handleThemeToggle(themeData.nightShift);
+      }
+    } else if (nightModeOption == 'manual') {
+      handleThemeToggle(themeData.nightShift);
+    } else {
+      var nightShift = themeData.nightShift;
+      if (nightShift === undefined) {
+        nightShift = nightModeOption === 'on';
+      }
+      handleThemeToggle(nightShift);
+    }
+  })();
+</script>
+<button id="click-to-top" class="click-to-top" type="button" aria-label="페이지 상단으로 이동">
+  <i class="fa fa-arrow-up" aria-hidden="true"></i>
+</button>
+<script>
+  (function () {
+    var clickToTop = document.getElementById('click-to-top');
+    if (!clickToTop) return;
+
+    window.addEventListener('scroll', function () {
+      clickToTop.classList.toggle('show', window.scrollY > 100);
+    }, { passive: true });
+
+    clickToTop.addEventListener('click', function () {
+      window.smoothScrollTo(0);
+    });
+  })();
+</script>
+<main class="page-content" aria-label="본문">
+      <div class="wrapper">
+        <div class="framework">
+  <section class="main">
+
+     <div class="post">
+  <section>
+
+
+
+
+
+
+
+
+
+<header class="post-header">
+  <h1 class="post-title p-name" itemprop="name headline">낚시 게임에서 만난 MySQL 데드락 4건과 락 순서 통일</h1>
+  <h2 class="post-subtitle">유니크 인덱스 S 락부터 판매 흐름의 역순 락까지, 재현하고 고친 기록</h2>
+
+  <p class="post-meta">
+    <time class="dt-published" datetime="2026-11-08T00:00:00+09:00" itemprop="datePublished"><i class="fa fa-calendar"></i> 2026년 11월 08일
+    </time>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> 22분 읽기</span>
+  </p>
+<div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#Spring%20Boot">#Spring Boot</a><a class="post-tag" href="/TIL/tags.html#MySQL">#MySQL</a><a class="post-tag" href="/TIL/tags.html#InnoDB">#InnoDB</a><a class="post-tag" href="/TIL/tags.html#Deadlock">#Deadlock</a><a class="post-tag" href="/TIL/tags.html#Concurrency">#Concurrency</a><a class="post-tag" href="/TIL/tags.html#Testcontainers">#Testcontainers</a>
+</div></header>
+<article class="post h-entry" itemscope itemtype="https://schema.org/BlogPosting">
+
+    <div class="post-content e-content" itemprop="articleBody">
+
+      <h2 id="들어가며">들어가며</h2>
+
+<p>낚시 게임 서버(Spring Boot + MySQL 8.4)를 만들면서 데드락을 네 번 만났다. 네 번 모두 “가끔 실패하는 테스트”로 시작했다. 한 번 더 돌리면 통과해서 넘어가기 쉬웠지만, 실제 서비스에서는 같은 계정으로 요청이 겹칠 때 그대로 터질 문제였다.</p>
+
+<p>이 글은 각각 어떻게 재현했고, 원인이 무엇이었고, 어떤 방법을 고르고 무엇을 버렸는지 정리한 기록이다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>번호</th>
+      <th>상황</th>
+      <th>원인 한 줄</th>
+      <th>결과</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>같은 닉네임 동시 가입 (#29, PR #36)</td>
+      <td>유니크 인덱스 S 락끼리 X 락을 기다림</td>
+      <td>50라운드 중 2~3번 나던 500 → 0번</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>구역 개방 동시 요청 (PR #38)</td>
+      <td>INSERT를 먼저 해서 S 락 경쟁</td>
+      <td>락 충돌 168건 → 0건</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>미끼 구매 ↔ 던지기 (PR #40)</td>
+      <td>두 흐름의 락 순서가 반대</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">users</code>를 먼저 잠그도록 통일</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>판매 (PR #42)</td>
+      <td>판매만 <code class="language-plaintext highlighter-rouge">catches</code> → <code class="language-plaintext highlighter-rouge">users</code> 순서</td>
+      <td>락 실패 9건 → 0건</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="1-동시-가입에서-가끔-나던-500">1. 동시 가입에서 가끔 나던 500</h2>
+
+<h3 id="문제">문제</h3>
+
+<p>같은 닉네임으로 20명이 동시에 가입하면 한 명만 성공하고 19명은 <code class="language-plaintext highlighter-rouge">409 NICKNAME_DUPLICATED</code>를 받아야 한다. 이 테스트가 전체 테스트 첫 실행에서 한 번 실패했다. 19명 중 16명만 <code class="language-plaintext highlighter-rouge">NICKNAME_DUPLICATED</code>였고, 로그에 <code class="language-plaintext highlighter-rouge">Deadlock found when trying to get lock</code>이 3건 있었다. 다시 돌리면 통과했다.</p>
+
+<h3 id="재현">재현</h3>
+
+<p>“가끔”이라서 한 번 돌려서는 못 잡는다. 임시 테스트를 만들어 같은 닉네임 <code class="language-plaintext highlighter-rouge">register</code>를 20스레드가 <code class="language-plaintext highlighter-rouge">CountDownLatch</code>로 동시에 출발하게 하고, 이를 50라운드(라운드마다 <code class="language-plaintext highlighter-rouge">users</code> 삭제) 반복했다. Testcontainers MySQL 8.4 위에서 돌렸다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>라운드 실패</th>
+      <th>요청 실패(500)</th>
+      <th>예외</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>고치기 전 1회차</td>
+      <td>2 / 50</td>
+      <td>4 / 1000</td>
+      <td><code class="language-plaintext highlighter-rouge">CannotAcquireLockException</code></td>
+    </tr>
+    <tr>
+      <td>고치기 전 2회차</td>
+      <td>3 / 50</td>
+      <td>7 / 1000</td>
+      <td><code class="language-plaintext highlighter-rouge">CannotAcquireLockException</code></td>
+    </tr>
+    <tr>
+      <td>고친 뒤 1회차</td>
+      <td>0 / 50</td>
+      <td>0 / 1000</td>
+      <td>없음 (OK 50, NICKNAME_DUPLICATED 950)</td>
+    </tr>
+    <tr>
+      <td>고친 뒤 2회차</td>
+      <td>0 / 50</td>
+      <td>0 / 1000</td>
+      <td>없음 (OK 50, NICKNAME_DUPLICATED 950)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>한 라운드가 실패할 확률이 4~6% 정도라서, 회귀 테스트는 한 테스트 안에서 20라운드를 돌리게 했다.</p>
+
+<h3 id="원인">원인</h3>
+
+<p><code class="language-plaintext highlighter-rouge">SHOW ENGINE INNODB STATUS</code>의 <code class="language-plaintext highlighter-rouge">LATEST DETECTED DEADLOCK</code>을 보면 다음과 같다(발췌).</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*** (1) TRANSACTION: 2462  insert into users (...)
+*** (1) HOLDS THE LOCK(S):   index uk_users_nickname  lock mode S
+*** (1) WAITING FOR:         index uk_users_nickname  lock_mode X insert intention waiting
+*** (2) TRANSACTION: 2461  insert into users (...)
+*** (2) HOLDS THE LOCK(S):   index uk_users_nickname  lock mode S
+*** (2) WAITING FOR:         index uk_users_nickname  lock_mode X insert intention waiting
+*** WE ROLL BACK TRANSACTION (2)
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>시점</th>
+      <th>트랜잭션 A</th>
+      <th>트랜잭션 B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>유니크 인덱스 중복 검사: S 락 획득</td>
+      <td>중복 검사: S 락 획득 (S끼리는 호환)</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>삽입하려고 X(insert intention) 요청 → B의 S 때문에 대기</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td> </td>
+      <td>X(insert intention) 요청 → A의 S 때문에 대기</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>서로 상대의 S가 풀리길 기다림 = 순환 대기</td>
+      <td>InnoDB가 한쪽을 롤백</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>희생된 트랜잭션은 Spring이 <code class="language-plaintext highlighter-rouge">CannotAcquireLockException</code>으로 바꿔 던진다. 그런데 기존 코드는 <code class="language-plaintext highlighter-rouge">DataIntegrityViolationException</code>만 <code class="language-plaintext highlighter-rouge">NICKNAME_DUPLICATED</code>로 바꿨고, 나머지는 <code class="language-plaintext highlighter-rouge">Exception</code> 핸들러가 500으로 응답했다. 데드락 자체는 InnoDB의 정상 동작이었고, <strong>락 실패를 어떻게 다루느냐</strong>가 버그였다.</p>
+
+<h3 id="고른-해결과-버린-대안">고른 해결과 버린 대안</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>안</th>
+      <th>장점</th>
+      <th>단점</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>A. 락 예외를 잡아 재조회 → 있으면 <code class="language-plaintext highlighter-rouge">NICKNAME_DUPLICATED</code>
+</td>
+      <td>코드가 짧다</td>
+      <td>승자가 아직 커밋 전이면 재조회가 빈손이라 판단이 틀린다. 같은 트랜잭션은 이미 롤백 표시라 쓸 수 없다</td>
+    </tr>
+    <tr>
+      <td><strong>B. 트랜잭션 밖에서 재시도 (선택)</strong></td>
+      <td>재시도 때 선행 SELECT가 커밋된 승자를 보고 정확히 <code class="language-plaintext highlighter-rouge">NICKNAME_DUPLICATED</code>를 낸다</td>
+      <td>루프와 설정이 늘고, 최악 지연이 조금 늘어난다(20ms × 2)</td>
+    </tr>
+    <tr>
+      <td>C. 락 실패를 공통 409로만 응답</td>
+      <td>가장 단순하다</td>
+      <td>사용자에게 정답은 “이미 사용 중”인데 “다시 시도”가 보인다</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>가입은 짧고 되풀이해도 안전하다(실패한 시도는 롤백되어 흔적이 없다). 그래서 B를 골랐고, C는 안전망으로 같이 뒀다. 재시도를 다 써도 락 실패면 409 <code class="language-plaintext highlighter-rouge">CONFLICT</code>를 준다.</p>
+
+<p>구현에서 신경 쓴 점은 두 가지다.</p>
+
+<ul>
+  <li>바깥 <code class="language-plaintext highlighter-rouge">UserService.register</code>는 트랜잭션이 없고, 시도 한 번은 <strong>별도 빈</strong> <code class="language-plaintext highlighter-rouge">SignupTransaction.attempt</code>의 <code class="language-plaintext highlighter-rouge">@Transactional</code>로 감쌌다. 같은 클래스 안에서 <code class="language-plaintext highlighter-rouge">this.attempt()</code>로 부르면 프록시를 거치지 않아 <code class="language-plaintext highlighter-rouge">@Transactional</code>이 적용되지 않는다. 또 재시도 루프가 트랜잭션 안에 있으면 롤백 표시된 트랜잭션을 다시 쓰게 된다.</li>
+  <li>재시도는 <code class="language-plaintext highlighter-rouge">spring-retry</code> 없이 직접 쓴 루프다. 대상 예외가 <code class="language-plaintext highlighter-rouge">PessimisticLockingFailureException</code> 하나이고, 횟수(<code class="language-plaintext highlighter-rouge">max-attempts=3</code>)와 대기(<code class="language-plaintext highlighter-rouge">backoff=20ms</code>)가 설정값이라 의존성을 늘릴 이유가 없었다.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">GlobalExceptionHandler</code>에는 <code class="language-plaintext highlighter-rouge">PessimisticLockingFailureException</code> → 409 <code class="language-plaintext highlighter-rouge">CONFLICT</code>를 추가했다. 응답에는 내부 메시지를 담지 않는다. 덕분에 다른 동시성 API에서 락 실패가 새도 500이 아니라 409가 된다. 다만 실제로 데드락이 재현된 곳은 이때까지 가입뿐이었다.</p>
+
+<hr>
+
+<h2 id="2-구역-개방-insert가-먼저냐-골드-차감이-먼저냐">2. 구역 개방: INSERT가 먼저냐, 골드 차감이 먼저냐</h2>
+
+<h3 id="문제-1">문제</h3>
+
+<p>낚싯대 강화와 골드로 구역을 여는 기능(PR #37)에서, 같은 계정으로 12개 요청을 동시에 보내자 <code class="language-plaintext highlighter-rouge">Deadlock found when trying to get lock</code>이 났다. API에서는 409 <code class="language-plaintext highlighter-rouge">CONFLICT</code>로 바뀌어 나가서 결과(골드 1번 차감, 구역 1번 열림)는 맞았다. 하지만 정상적인 패배 응답인 <code class="language-plaintext highlighter-rouge">ZONE_ALREADY_UNLOCKED</code>가 아니라 일반 충돌로 나가고, 서버 로그에 데드락 경고가 쌓였다. 불필요한 데드락이다.</p>
+
+<h3 id="원인-1">원인</h3>
+
+<p>기존 순서는 <code class="language-plaintext highlighter-rouge">user_zones</code> INSERT → 골드 차감이었다. 같은 <code class="language-plaintext highlighter-rouge">(user_id, zone_id)</code>를 동시에 INSERT하면 InnoDB는 중복 키를 만난 요청에게 그 인덱스 레코드의 S 락을 걸고 기다리게 한다. 여러 요청이 S 락을 같이 쥔 채 앞 요청이 롤백되면, 모두 X 락으로 올리려다 서로를 기다린다. 1번의 가입 데드락과 같은 종류다.</p>
+
+<h3 id="고른-해결과-버린-대안-1">고른 해결과 버린 대안</h3>
+
+<p><strong>골드 차감(<code class="language-plaintext highlighter-rouge">users</code> 행 UPDATE, X 락)을 먼저</strong> 하도록 순서를 바꿨다. 동시 요청이 <code class="language-plaintext highlighter-rouge">users</code> 행의 X 락에서 한 줄로 서서 하나씩 들어오므로 INSERT 경쟁 자체가 생기지 않는다. 먼저 들어온 요청이 커밋하면 뒤 요청은 <code class="language-plaintext highlighter-rouge">user_zones</code>에서 PK 중복을 만나 <code class="language-plaintext highlighter-rouge">ZONE_ALREADY_UNLOCKED</code>(409)가 된다. 예외로 트랜잭션이 롤백되니 그 요청의 골드 차감도 함께 취소되고, 골드는 한 번만 빠진다.</p>
+
+<p>버린 대안은 INSERT 실패를 재시도하는 방법이다. 락 순서를 맞추면 데드락이 아예 없어서 재시도가 필요 없다.</p>
+
+<h3 id="결과">결과</h3>
+
+<p>동시 개방 테스트를 20라운드 반복으로 바꾸고, 테스트가 락 충돌을 허용하던 부분을 없앴다(실패 코드는 <code class="language-plaintext highlighter-rouge">ZONE_ALREADY_UNLOCKED</code>만 허용).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>20라운드 중 락 충돌</th>
+      <th>테스트</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>수정 전 (INSERT 먼저)</td>
+      <td>168건</td>
+      <td>실패</td>
+    </tr>
+    <tr>
+      <td>수정 후 (골드 차감 먼저)</td>
+      <td>0건 (2회 실행 모두)</td>
+      <td>통과</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="3-미끼-구매와-던지기-서로-반대로-잠그기">3. 미끼 구매와 던지기: 서로 반대로 잠그기</h2>
+
+<h3 id="문제-2">문제</h3>
+
+<p>미끼 구매와 던지기를 같은 계정에서 섞어 돌리는 테스트(<code class="language-plaintext highlighter-rouge">ShopConcurrencyTest</code>)에서 데드락이 났다.</p>
+
+<h3 id="원인-2">원인</h3>
+
+<ul>
+  <li>미끼 구매: <code class="language-plaintext highlighter-rouge">users</code>(골드 차감) → <code class="language-plaintext highlighter-rouge">user_baits</code>
+</li>
+  <li>던지기: <code class="language-plaintext highlighter-rouge">user_baits</code>(개수 차감) → <code class="language-plaintext highlighter-rouge">bite_sessions</code> INSERT. 이때 FK 검사가 <code class="language-plaintext highlighter-rouge">users</code> 행에 공유 락을 건다.</li>
+</ul>
+
+<p>한쪽은 <code class="language-plaintext highlighter-rouge">users</code> → <code class="language-plaintext highlighter-rouge">user_baits</code>, 다른 쪽은 <code class="language-plaintext highlighter-rouge">user_baits</code> → <code class="language-plaintext highlighter-rouge">users</code>. 순서가 반대라서 서로를 기다렸다.</p>
+
+<h3 id="해결">해결</h3>
+
+<p>던지기에서 미끼를 쓰기 전에 <code class="language-plaintext highlighter-rouge">SELECT id FROM users WHERE id=? FOR UPDATE</code>(<code class="language-plaintext highlighter-rouge">UserService.lockForUpdate</code>, 전파 속성 <code class="language-plaintext highlighter-rouge">MANDATORY</code>)로 <code class="language-plaintext highlighter-rouge">users</code>를 먼저 잠그게 했다. <strong>락 순서를 <code class="language-plaintext highlighter-rouge">users</code> → <code class="language-plaintext highlighter-rouge">user_baits</code>로 통일</strong>한 것이다. 이 락은 미끼를 쓸 때만 건다. 테스트에서는 이 흐름이 데드락 없이 돈다.</p>
+
+<p>여기서 “데드락이 나면 재시도하자”가 아니라 “순서를 맞추자”가 기본 방침이 됐다. 순서가 같으면 서로 기다릴 일이 없고, 사용자가 한 번 누른 구매를 서버가 다시 돌리지도 않는다.</p>
+
+<hr>
+
+<h2 id="4-락-순서를-표로-만들었더니-판매만-거꾸로였다">4. 락 순서를 표로 만들었더니 판매만 거꾸로였다</h2>
+
+<h3 id="문제-3">문제</h3>
+
+<p>세 번을 겪고 나니 “다음은 어디서 날까”가 걱정이었다. 그래서 모든 흐름이 어떤 순서로 락을 잡는지 코드를 읽어 표로 정리했다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>흐름</th>
+      <th>잠그는 순서 (X=쓰기 락, S=FK 검사 공유 락)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>포획 제출</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">bite_sessions</code>(X) → <code class="language-plaintext highlighter-rouge">catches</code> INSERT(users S) → <code class="language-plaintext highlighter-rouge">user_collection</code> upsert → <code class="language-plaintext highlighter-rouge">fish_records</code>(X)</td>
+    </tr>
+    <tr>
+      <td>수확·먹이</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">aquarium_slots</code>(X, 칸 번호 순) → <code class="language-plaintext highlighter-rouge">users</code>(X)</td>
+    </tr>
+    <tr>
+      <td>판매 (수정 전)</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">catches</code>(X) → <code class="language-plaintext highlighter-rouge">users</code>(X)</td>
+    </tr>
+    <tr>
+      <td>배치·빼기</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">aquarium_slots</code>·<code class="language-plaintext highlighter-rouge">catches</code>(X) → <code class="language-plaintext highlighter-rouge">users</code>(X)</td>
+    </tr>
+    <tr>
+      <td>강화</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">users</code>(X) → <code class="language-plaintext highlighter-rouge">user_upgrade_stacks</code> → <code class="language-plaintext highlighter-rouge">upgrade_logs</code>
+</td>
+    </tr>
+    <tr>
+      <td>구역 개방</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">users</code>(X) → <code class="language-plaintext highlighter-rouge">user_zones</code> INSERT</td>
+    </tr>
+    <tr>
+      <td>릴·미끼 구매</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">users</code>(X) → <code class="language-plaintext highlighter-rouge">user_baits</code>
+</td>
+    </tr>
+    <tr>
+      <td>던지기</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">users</code>(X) → <code class="language-plaintext highlighter-rouge">user_baits</code> → <code class="language-plaintext highlighter-rouge">bite_sessions</code> INSERT</td>
+    </tr>
+    <tr>
+      <td>칸 확장</td>
+      <td>
+<code class="language-plaintext highlighter-rouge">users</code>(X)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>판매만 <code class="language-plaintext highlighter-rouge">catches</code> → <code class="language-plaintext highlighter-rouge">users</code> 순서였다. 나머지는 <code class="language-plaintext highlighter-rouge">users</code>를 먼저 잡거나, 포획 제출처럼 <code class="language-plaintext highlighter-rouge">users</code>의 S 락을 쥐고 있었다.</p>
+
+<h3 id="재현-1">재현</h3>
+
+<p>표는 읽어서 만든 것이라 맞는지 모른다. 그래서 <code class="language-plaintext highlighter-rouge">LockOrderConcurrencyTest</code>를 만들었다. 한 계정에 포획 3, 판매 2, 수확, 먹이, 빼기, 강화, 구역 개방, 릴, 미끼, 칸 확장, 던지기를 동시에 보내고, 다른 계정의 포획도 같이 돌린다. 이를 15라운드 반복한다.</p>
+
+<p>수정 전에는 3회 모두 <strong>락 실패 9건</strong>이었다(판매 6~8건, 구역 개방·미끼 구매·칸 확장 각 0~1건).</p>
+
+<h3 id="해결과-결과">해결과 결과</h3>
+
+<p><code class="language-plaintext highlighter-rouge">AquariumService.sell</code>이 시작할 때 <code class="language-plaintext highlighter-rouge">lockForUpdate(userId)</code>로 <code class="language-plaintext highlighter-rouge">users</code>를 먼저 잠그게 했다(던지기·구매와 같은 방식). 수정 후 5회 모두 락 실패 <strong>0건</strong>이다.</p>
+
+<p>한 가지 주의할 점이 있다. 이 결과가 보장하는 범위는 테스트가 돌린 흐름의 조합까지다. 표가 맞아 보인다고 “역순이 없다”고 말할 수는 없고, 새 흐름이 생기면 표와 테스트에 추가해야 한다.</p>
+
+<hr>
+
+<h2 id="배운-점">배운 점</h2>
+
+<ul>
+  <li>데드락은 InnoDB의 정상 동작이다. 버그는 대개 <strong>그 예외를 어떻게 처리하느냐</strong>, 그리고 <strong>락을 어떤 순서로 잡느냐</strong>에 있다.</li>
+  <li>“가끔 실패”는 반복해서 재현해야 고쳤는지 알 수 있다. 라운드 반복과 동시 출발(<code class="language-plaintext highlighter-rouge">CountDownLatch</code>)이 가장 쓸모 있었다.</li>
+  <li>재시도는 최후의 수단이다. 락 순서를 맞추면 데드락이 사라져서 재시도가 필요 없다. 재시도를 쓴 곳은 순서를 바꿀 수 없던 유니크 INSERT(가입)뿐이다.</li>
+  <li>락 순서는 코드에서 흩어져 보이지 않으니, 표로 한 번 모아 보면 거꾸로 가는 흐름이 보인다. 그리고 그 표를 믿기 전에 테스트로 확인해야 한다.</li>
+  <li>락 실패가 500으로 새지 않도록 공통 핸들러(409)를 두는 것은 안전망으로 값이 싸다.</li>
+</ul>
+
+
+    </div>
+
+</article>
+<div class="post-nav">
+<a class="previous" href="/TIL/til/2026/09/22/TIL-37.html" title="챗봇을 만들며 이해한 LangChain과 RAG">챗봇을 만들며 이해한 LangChain과 RAG</a><a class="next" href="/TIL/til/2026/11/15/TIL-39.html" title="통합 테스트 3분 30초를 1분으로 줄인 과정">통합 테스트 3분 30초를 1분으로 줄인...</a>
+</div>
+<div class="post-related">
+      <h2>최근 글</h2>
+      <ul>
+<li><a class="post-link" href="/TIL/til/2026/11/17/TIL-40.html" title="낚시 게임 화면 버그 4건, 눈으로만 봐서는 안 보이던 것들">낚시 게임 화면 버그 4건, 눈으로만 봐서는 안 보이던 것들</a></li>
+<li><a class="post-link" href="/TIL/til/2026/11/15/TIL-39.html" title="통합 테스트 3분 30초를 1분으로 줄인 과정">통합 테스트 3분 30초를 1분으로 줄인 과정</a></li>
+<li><a class="post-link" href="/TIL/til/2026/09/22/TIL-37.html" title="챗봇을 만들며 이해한 LangChain과 RAG">챗봇을 만들며 이해한 LangChain과 RAG</a></li>
+<li><a class="post-link" href="/TIL/til/2026/05/19/TIL-36.html" title="주식 조회 서비스 성능 최적화">주식 조회 서비스 성능 최적화</a></li>
+</ul>
+    </div>
+<div class="post-comments"></div></section>
+</div>
+
+
+  </section>
+  <section class="sidebar" style="margin-left: 15px;">
+    <!-- Get sidebar items --><style type="text/css" media="screen">
+.post-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+</style>
+
+<div class="post-menu">
+  <div class="post-menu-title">목차</div>
+  <div class="post-menu-content"></div>
+</div>
+
+<script>
+  function generateContent() {
+    var menu = document.querySelector(".post-menu");
+    var menuContent =  menu.querySelector(".post-menu-content");
+    var headings = document.querySelector(".post-content").querySelectorAll("h2, h3, h4, h5, h6");
+
+    // Hide menu when no headings
+    if (headings.length === 0) {
+      return menu.style.display = "none";
+    }
+
+    // Generate post menu
+    var menuHTML = '';
+    for (var i = 0; i < headings.length; i++) {
+      var h = headings[i];
+      menuHTML += (
+        '<li class="h-' + h.tagName.toLowerCase() + '">'
+        + '<a href="#h-' + h.getAttribute('id') + '">' + h.textContent + '</a></li>');
+    }
+
+    menuContent.innerHTML = '<ul>' + menuHTML + '</ul>';
+
+    // The header element
+    var header = document.querySelector('header.site-header');
+
+    function doMenuCollapse(index, over_items) {
+      var items = menuContent.firstChild.children;
+
+      if (over_items == undefined) {
+        over_items = 20;
+      }
+
+      if (items.length < over_items) {
+        return;
+      }
+
+      var activeItem = items[index];
+      var beginItem = activeItem
+      var endItem = activeItem
+      var beginIndex = index;
+      var endIndex = index + 1;
+      while (beginIndex >= 0
+        && !items[beginIndex].classList.contains('h-h2')) {
+        beginIndex -= 1;
+      }
+      while (endIndex < items.length
+        && !items[endIndex].classList.contains('h-h2')) {
+        endIndex += 1;
+      }
+      for (var i = 0; i < beginIndex; i++) {
+        var item = items[i];
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+      for (var i = beginIndex + 1; i < endIndex; i++) {
+        var item = items[i];
+        item.style.display = '';
+      }
+      for (var i = endIndex; i < items.length; i++) {
+        var item = items[i];
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+    }
+
+    // Init menu collapsed
+    doMenuCollapse(-1);
+
+    // Active the menu item
+    window.addEventListener('scroll', function () {
+      var lastActive = menuContent.querySelector('.active');
+      var changed = true;
+      var activeIndex = -1;
+      for (var i = headings.length - 1; i >= 0; i--) {
+        var h = headings[i];
+        var headingRect = h.getBoundingClientRect();
+        var headerRect = header.getBoundingClientRect();
+        var headerTop = Math.floor(headerRect.top);
+        var headerHeight = Math.floor(headerRect.height);
+        var headerBottom = headerTop + headerHeight + 20;
+        if (headingRect.top <= headerBottom) {
+          var id = 'h-' + h.getAttribute('id');
+          var a = menuContent.querySelector('a[href="#' + id  + '"]');
+          var curActive = a.parentNode;
+          if (curActive) {
+            curActive.classList.add('active');
+            activeIndex = i;
+          }
+          if (lastActive == curActive) {
+            changed = false;
+          }
+          break;
+        }
+      }
+      if (changed) {
+        if (lastActive) {
+          lastActive.classList.remove('active');
+        }
+        doMenuCollapse(activeIndex);
+      }
+    }, { passive: true });
+  }
+  generateContent();
+</script>
+</section>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/TIL/"></data>
+
+  <div class="wrapper">
+    <div class="site-footer-inner">
+<div>© 2025-2026 김도환</div>
+      <div>
+<a title="Jekyll" href="https://jekyllrb.com/">Jekyll</a>과 <a title="Yat Theme" href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>로 만들었습니다.</div>
+      <div class="footer-col rss-subscribe"><a href="/TIL/feed.xml">RSS 구독</a></div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

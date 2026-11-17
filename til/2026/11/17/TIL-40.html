@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Begin Jekyll SEO tag v2.9.0 -->
+<title>낚시 게임 화면 버그 4건, 눈으로만 봐서는 안 보이던 것들 | DoHwan’s Study Room</title>
+<meta name="generator" content="Jekyll v4.4.1">
+<meta property="og:title" content="낚시 게임 화면 버그 4건, 눈으로만 봐서는 안 보이던 것들">
+<meta name="author" content="김도환">
+<meta property="og:locale" content="ko_KR">
+<meta name="description" content="바닐라 JS ES 모듈 게임 화면에서 만난 import 오류, TypeError, scale과 vw 이중 축소, MutationObserver로 푼 모바일 배율 문제를 정리했습니다.">
+<meta name="twitter:description" property="og:description" content="바닐라 JS ES 모듈 게임 화면에서 만난 import 오류, TypeError, scale과 vw 이중 축소, MutationObserver로 푼 모바일 배율 문제를 정리했습니다.">
+<link rel="canonical" href="https://kimdohwan24.github.io/TIL/til/2026/11/17/TIL-40.html">
+<meta property="og:url" content="https://kimdohwan24.github.io/TIL/til/2026/11/17/TIL-40.html">
+<meta property="og:site_name" content="DoHwan’s Study Room">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-11-17T00:00:00+09:00">
+<meta property="article:modified_time" content="2026-11-17T00:00:00+09:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="낚시 게임 화면 버그 4건, 눈으로만 봐서는 안 보이던 것들">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"김도환"},"dateModified":"2026-11-17T00:00:00+09:00","datePublished":"2026-11-17T00:00:00+09:00","description":"바닐라 JS ES 모듈 게임 화면에서 만난 import 오류, TypeError, scale과 vw 이중 축소, MutationObserver로 푼 모바일 배율 문제를 정리했습니다.","headline":"낚시 게임 화면 버그 4건, 눈으로만 봐서는 안 보이던 것들","mainEntityOfPage":{"@type":"WebPage","@id":"https://kimdohwan24.github.io/TIL/til/2026/11/17/TIL-40.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://kimdohwan24.github.io/TIL/assets/images/favicon.svg"},"name":"김도환"},"url":"https://kimdohwan24.github.io/TIL/til/2026/11/17/TIL-40.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="icon" type="image/svg+xml" href="/TIL/assets/images/favicon.svg">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-noto-sans@0.0.72/index.min.css">
+  <link rel="stylesheet" href="/TIL/assets/css/main.css">
+  <script src="/TIL/assets/js/main.js" defer></script><link type="application/atom+xml" rel="alternate" href="https://kimdohwan24.github.io/TIL/feed.xml" title="DoHwan's Study Room">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.hljs) return;
+
+    var blocks = document.querySelectorAll('pre code');
+
+    function addLanguageData(block) {
+      var outer = block.parentElement.parentElement.parentElement;
+      var lang = block.getAttribute('data-lang') || '';
+
+      for (var i = 0; i < outer.classList.length; i++) {
+        var className = outer.classList[i];
+        if (className.indexOf('language-') === 0) {
+          lang = className;
+          break;
+        }
+      }
+
+      if (!lang) {
+        var classNames = block.getAttribute('class');
+        lang = classNames ? classNames.replace('hljs ', '') : '';
+      }
+
+      if (lang.indexOf('language-') === 0) {
+        lang = lang.slice(9);
+      }
+
+      block.className = ('hljs ' + lang).trim();
+      block.parentNode.setAttribute('data-lang', lang || 'text');
+    }
+
+    function addBadge(block) {
+      var enabled = ('true' || 'true').toLowerCase();
+      if (enabled === 'true') {
+        block.parentElement.classList.add('badge');
+      }
+    }
+
+    for (var i = 0; i < blocks.length; i++) {
+      var block = blocks[i];
+      addLanguageData(block);
+      addBadge(block);
+      window.hljs.highlightElement(block);
+    }
+  });
+</script>
+
+<style>
+  pre.badge::before {
+    content: attr(data-lang);
+    color: #fff;
+    background-color: #ff4e00;
+    padding: 0 .5em;
+    border-radius: 0 2px;
+    text-transform: uppercase;
+    text-align: center;
+    min-width: 32px;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+  }
+
+  code > table pre::before {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="site-header " role="banner">
+
+  <div class="wrapper">
+    <div class="site-header-inner">
+<span class="site-brand"><a class="site-brand-inner" rel="author" href="/TIL/"><img class="site-favicon" src="/TIL/assets/images/favicon.svg" alt="">DoHwan's Study Room
+</a>
+</span><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" aria-label="메뉴 열기">
+          <label for="nav-trigger">
+            <span class="menu-icon" aria-hidden="true">
+              <svg viewbox="0 0 18 15" width="18px" height="15px" focusable="false">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+              </svg>
+            </span>
+          </label>
+
+          <div class="trigger">
+<a class="page-link" href="/TIL/">홈</a><a class="page-link" href="/TIL/archives.html">아카이브</a><a class="page-link" href="/TIL/categories.html">카테고리</a><a class="page-link" href="/TIL/tags.html">태그</a><a class="page-link" href="/TIL/about.html">소개</a>
+
+
+
+
+</div>
+        </nav>
+</div>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    var lastScrollY = getScrollPos().y;
+    var documentElement = document.documentElement;
+
+    function storeScrollData() {
+      var y = getScrollPos().y;var scrollStatus = "";
+
+      if (y <= 0) {
+        scrollStatus = "top";
+      } else if ((window.innerHeight + y) >= document.body.offsetHeight) {
+        scrollStatus = "bottom";
+      } else {
+        var isScrollDown = (y - lastScrollY > 0) ? true : false;
+        scrollStatus = isScrollDown ? "down" : "up";
+      }
+
+      lastScrollY = y;
+      documentElement.setAttribute("data-scroll-status", scrollStatus);
+    }
+
+    window.addEventListener('scroll', storeScrollData, { passive: true });
+
+    storeScrollData();
+  }
+  document.addEventListener('DOMContentLoaded', initHeader);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+  function hashLocate(hashValue) {
+    hashValue = hashValue.replace(/^.*#h-/, '');
+    hashValue = decodeURIComponent(hashValue);
+    var element = document.getElementById(hashValue);
+
+    if (!element) {
+      return;
+    }
+
+    var header = document.querySelector('header.site-header');
+    var headerRect = header.getBoundingClientRect();
+    var headerTop = Math.floor(headerRect.top);
+    var headerHeight = Math.floor(headerRect.height);
+    var scrollPos = getScrollPos();
+    var offsetY = element.offsetTop - (headerTop + headerHeight + 20);
+
+    if (offsetY == scrollPos.y) {
+      return;
+    }
+
+    if (headerTop == 0  && offsetY > scrollPos.y) {
+      offsetY += headerHeight + 2;
+    } else if (headerTop < 0  && offsetY < scrollPos.y) {
+      offsetY -= headerHeight - 2;
+    }
+
+    smoothScrollTo(offsetY);
+  }
+
+  // The first event occurred
+  window.addEventListener('load', function(event) {
+    if (window.location.hash) {
+      hashLocate(window.location.hash);
+    }
+  });
+
+  // The first event occurred
+  window.addEventListener('click', function(event) {
+    if (event.target.tagName.toLowerCase() == 'a') {
+      hashLocate(event.target.getAttribute('href'));
+    }
+  });
+</script>
+<div class="theme-toggle">
+  <input type="checkbox" id="theme-switch" aria-label="Toggle dark mode">
+  <label for="theme-switch">
+    <div class="toggle"></div>
+    <div class="names">
+      <p class="light">Light</p>
+      <p class="dark">Dark</p>
+    </div>
+  </label>
+</div>
+
+
+
+
+<script>
+  (function() {
+    var sw = document.getElementById('theme-switch');
+    var html = document.getElementsByTagName('html')[0];
+    var nightModeOption = ('manual' || 'auto').toLowerCase();
+    var storage = nightModeOption === 'manual'
+        ? localStorage
+        : sessionStorage;
+    var themeData = loadThemeData();
+
+    function saveThemeData(data) {
+      storage.setItem('theme', JSON.stringify(data));
+    }
+
+    function loadThemeData() {
+      var data = storage.getItem('theme');
+      try {
+        data = JSON.parse(data ? data : '');
+      } catch(e) {
+        data = { nightShift: undefined, autoToggleAt: 0 };
+        saveThemeData(data);
+      }
+      return data;
+    }
+
+    function handleThemeToggle(nightShift) {
+      themeData.nightShift = nightShift;
+      saveThemeData(themeData);
+      html.dataset.theme = nightShift ? 'dark' : 'light';
+      setTimeout(function() {
+        sw.checked = nightShift ? true : false;
+      }, 50);
+    }
+
+    function autoThemeToggle() {
+      // Next time point of theme toggle
+      var now = new Date();
+      var toggleAt = new Date();
+      var hours = now.getHours();
+      var nightShift = hours >= 19 || hours <=7;
+
+      if (nightShift) {
+        if (hours > 7) {
+          toggleAt.setDate(toggleAt.getDate() + 1);
+        }
+        toggleAt.setHours(7);
+      } else {
+        toggleAt.setHours(19);
+      }
+
+      toggleAt.setMinutes(0);
+      toggleAt.setSeconds(0);
+      toggleAt.setMilliseconds(0)
+
+      var delay = toggleAt.getTime() - now.getTime();
+
+      // auto toggle theme mode
+      setTimeout(function() {
+        handleThemeToggle(!nightShift);
+      }, delay);
+
+      return {
+        nightShift: nightShift,
+        toggleAt: toggleAt.getTime()
+      };
+    }
+
+    // Listen the theme toggle event
+    sw.addEventListener('change', function(event) {
+      handleThemeToggle(event.target.checked);
+    });
+
+    if (nightModeOption == 'auto') {
+      var data = autoThemeToggle();
+
+      // Toggle theme by local setting
+      if (data.toggleAt > themeData.autoToggleAt) {
+        themeData.autoToggleAt = data.toggleAt;
+        handleThemeToggle(data.nightShift);
+      } else {
+        handleThemeToggle(themeData.nightShift);
+      }
+    } else if (nightModeOption == 'manual') {
+      handleThemeToggle(themeData.nightShift);
+    } else {
+      var nightShift = themeData.nightShift;
+      if (nightShift === undefined) {
+        nightShift = nightModeOption === 'on';
+      }
+      handleThemeToggle(nightShift);
+    }
+  })();
+</script>
+<button id="click-to-top" class="click-to-top" type="button" aria-label="페이지 상단으로 이동">
+  <i class="fa fa-arrow-up" aria-hidden="true"></i>
+</button>
+<script>
+  (function () {
+    var clickToTop = document.getElementById('click-to-top');
+    if (!clickToTop) return;
+
+    window.addEventListener('scroll', function () {
+      clickToTop.classList.toggle('show', window.scrollY > 100);
+    }, { passive: true });
+
+    clickToTop.addEventListener('click', function () {
+      window.smoothScrollTo(0);
+    });
+  })();
+</script>
+<main class="page-content" aria-label="본문">
+      <div class="wrapper">
+        <div class="framework">
+  <section class="main">
+
+     <div class="post">
+  <section>
+
+
+
+
+
+
+
+
+
+<header class="post-header">
+  <h1 class="post-title p-name" itemprop="name headline">낚시 게임 화면 버그 4건, 눈으로만 봐서는 안 보이던 것들</h1>
+  <h2 class="post-subtitle">import 하나로 전체 로딩 실패, 없는 속성, 두 번 줄어드는 화면, 새로 그려지는 요소</h2>
+
+  <p class="post-meta">
+    <time class="dt-published" datetime="2026-11-17T00:00:00+09:00" itemprop="datePublished"><i class="fa fa-calendar"></i> 2026년 11월 17일
+    </time>
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <span class="post-reading-time left-vsplit"><i class="fa fa-clock-o"></i> 15분 읽기</span>
+  </p>
+<div class="post-tags">
+<a class="post-tag" href="/TIL/tags.html#JavaScript">#JavaScript</a><a class="post-tag" href="/TIL/tags.html#ES%20Modules">#ES Modules</a><a class="post-tag" href="/TIL/tags.html#CSS">#CSS</a><a class="post-tag" href="/TIL/tags.html#MutationObserver">#MutationObserver</a><a class="post-tag" href="/TIL/tags.html#Debugging">#Debugging</a>
+</div></header>
+<article class="post h-entry" itemscope itemtype="https://schema.org/BlogPosting">
+
+    <div class="post-content e-content" itemprop="articleBody">
+
+      <h2 id="들어가며">들어가며</h2>
+
+<p>낚시 게임 화면은 프레임워크 없이 바닐라 JS(ES 모듈)와 CSS로 만들었다. 서버를 붙이고 직접 플레이해 보니 서버 테스트로는 볼 수 없는 버그가 네 개 나왔다. 공통점은 <strong>고칠 줄은 쉬운데, 왜 그렇게 보이는지 찾기가 어려웠다</strong>는 점이다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>번호</th>
+      <th>증상</th>
+      <th>원인 한 줄</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1 (PR #31)</td>
+      <td>시작 화면까지 안 뜸</td>
+      <td>없는 이름을 import한 줄 하나</td>
+    </tr>
+    <tr>
+      <td>2 (PR #55)</td>
+      <td>미니게임 뒤 카메라·안내가 안 돌아옴</td>
+      <td>없는 속성을 읽어 TypeError</td>
+    </tr>
+    <tr>
+      <td>3 (PR #60)</td>
+      <td>PC 좁은 창에서 글자가 꺾임</td>
+      <td>scale과 vw로 두 번 줄어듦</td>
+    </tr>
+    <tr>
+      <td>4 (PR #71)</td>
+      <td>모바일에서 장면이 잘림</td>
+      <td>옛 요소에만 배율을 걸고 있었음</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="1-import-한-줄-때문에-모듈-전체가-안-뜬-경우">1. import 한 줄 때문에 모듈 전체가 안 뜬 경우</h2>
+
+<h3 id="문제">문제</h3>
+
+<p>화면을 실제 서버에 연결하던 중, 브라우저에서 시작 화면조차 뜨지 않았다.</p>
+
+<h3 id="원인">원인</h3>
+
+<p><code class="language-plaintext highlighter-rouge">aquarium-screen.js</code>가 <code class="language-plaintext highlighter-rouge">aquarium-api.js</code>에서 <code class="language-plaintext highlighter-rouge">calculateFishBaseHourlyIncome</code>을 import하는데, <code class="language-plaintext highlighter-rouge">aquarium-api.js</code>는 이 함수를 export하지 않았다. ES 모듈은 import 이름이 <strong>하나라도</strong> 없으면 모듈 전체를 불러오지 못한다(SyntaxError). <code class="language-plaintext highlighter-rouge">index.html</code>이 모든 화면을 import하니, 수조 화면의 오류가 시작 화면까지 막았다. 이 줄은 수조 화면을 처음 만든 커밋부터 있었다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">node --check</code>는 파일 하나의 문법만 보기 때문에 이 오류를 잡지 못한다.</p>
+
+<h3 id="해결">해결</h3>
+
+<p>그 함수는 파일 안에서 한 번도 쓰이지 않았다. export를 새로 만드는 대신 import를 지웠다.</p>
+
+<h3 id="재발-방지">재발 방지</h3>
+
+<p>static JS 35개 파일의 <code class="language-plaintext highlighter-rouge">import { ... } from</code>을 모두 따라가서 이름이 실제 export와 맞는지 대조하는 스크립트를 만들었다. 고치기 전 불일치는 1건, 고친 뒤 0건이다. 앞으로 화면 PR은 <code class="language-plaintext highlighter-rouge">node --check</code>와 함께 이 대조를 리뷰 단계에서 한다.</p>
+
+<hr>
+
+<h2 id="2-결과-카드는-떴는데-뒤처리가-안-된-경우">2. 결과 카드는 떴는데 뒤처리가 안 된 경우</h2>
+
+<h3 id="문제-1">문제</h3>
+
+<p>미니게임이 끝난 뒤 다음 판을 시작하면 카메라가 바다 쪽에 머문 채였고, 안내 문구에 “입질이 왔다!”가 남아 있었다.</p>
+
+<h3 id="원인-1">원인</h3>
+
+<p>미니게임이 끝나면 <code class="language-plaintext highlighter-rouge">resetToReady()</code>가 불리는데, 이 함수가 <code class="language-plaintext highlighter-rouge">this.theme.rulerSegments[0].name</code>을 읽었다. 구역 테마 객체에는 <code class="language-plaintext highlighter-rouge">rulerSegments</code>가 없다. 거리 구간은 <code class="language-plaintext highlighter-rouge">ZONE_SEGMENTS_DATA</code>에 있고 <code class="language-plaintext highlighter-rouge">calculateRulerSegments(zoneId, maxDistance)</code>로 만든다. <code class="language-plaintext highlighter-rouge">render()</code>는 이 함수를 쓰는데 <code class="language-plaintext highlighter-rouge">resetToReady()</code>만 테마에서 바로 꺼내려 했다. 그래서 그 줄에서 TypeError가 나 함수가 멈췄다.</p>
+
+<p>결과 카드는 그 전에 이미 떠서 겉으로는 잘 도는 것처럼 보였다. 바로 다음 줄의 문구 되돌리기와 카메라 복귀(<code class="language-plaintext highlighter-rouge">animateCameraTo(0)</code>)가 실행되지 않은 것이다.</p>
+
+<h3 id="해결-1">해결</h3>
+
+<p><code class="language-plaintext highlighter-rouge">calculateRulerSegments(this.zoneId, this.maxDistance)[0].name</code>으로 한 줄만 바꿨다. <code class="language-plaintext highlighter-rouge">render()</code>와 같은 계산 함수 하나만 쓰게 한 이유는, 구간 이름이 낚싯대 단계(최대 비거리)에 따라 폭이 바뀌어서 테마에 복사해 두면 두 곳이 어긋나기 때문이다.</p>
+
+<h3 id="결과">결과</h3>
+
+<p>헤드리스 Chrome으로 낚시터에서 두 판을 연달아 돌려(던지기 → 입질 → 미니게임 → 결과 카드 닫기) 전후를 비교했다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>확인</th>
+      <th>고치기 전</th>
+      <th>고친 뒤</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>미니게임 뒤 콘솔 오류</td>
+      <td>1판에서 TypeError</td>
+      <td>없음</td>
+    </tr>
+    <tr>
+      <td>안내 문구</td>
+      <td>“입질이 왔다!”가 남음</td>
+      <td>돌아옴</td>
+    </tr>
+    <tr>
+      <td>카메라</td>
+      <td>-260px에 머묾</td>
+      <td>0px</td>
+    </tr>
+    <tr>
+      <td>2판 시작 안내</td>
+      <td>“입질이 왔다!”로 시작</td>
+      <td>정상</td>
+    </tr>
+    <tr>
+      <td>합계</td>
+      <td>4 통과 / 6 실패</td>
+      <td>10 통과 / 0 실패</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="3-같은-화면을-두-번-줄인-경우">3. 같은 화면을 두 번 줄인 경우</h2>
+
+<h3 id="문제-2">문제</h3>
+
+<p>PC에서 창을 좁히면 도감·기록관 창 안의 글자가 두 줄로 꺾이고 탭이 가로 스크롤로 밀렸다. 화면이 작을수록 심했다.</p>
+
+<h3 id="원인-2">원인</h3>
+
+<p>이 게임은 PC에서 1280×800 장면을 통째로 그리고 창 크기에 맞게 <code class="language-plaintext highlighter-rouge">transform: scale()</code>로 줄인다(<code class="language-plaintext highlighter-rouge">viewport-scaler.js</code>). 그런데 장면 안의 창들이 <code class="language-plaintext highlighter-rouge">max-width: 95vw</code>처럼 <strong>브라우저 창 폭</strong>을 기준으로 크기를 제한했다. <code class="language-plaintext highlighter-rouge">vw</code>는 줄이기 전의 실제 창 폭이다. 860px 창에서는 1120px짜리 도감 창이 먼저 817px(95% × 860)로 좁아졌고, 그다음 장면 전체가 또 줄어들었다.</p>
+
+<h3 id="해결-2">해결</h3>
+
+<p>장면 안 창 6곳(도감, 기록관, 부두 창, 낚시터 거리 막대, 결과 카드, 윤슬 말풍선)의 제한 단위를 <code class="language-plaintext highlighter-rouge">vw</code>·<code class="language-plaintext highlighter-rouge">vh</code>에서 <code class="language-plaintext highlighter-rouge">%</code>로 바꿨다. 숫자(95·94·92·90)는 그대로다. 이 창들의 부모는 장면 크기 그대로인 요소라서 <code class="language-plaintext highlighter-rouge">%</code>는 “장면의 95%”가 된다. 설계 크기 그대로 그려지고, 축소는 <code class="language-plaintext highlighter-rouge">viewport-scaler</code>가 한 번만 한다. 모바일에서 창이 화면을 넘지 않게 막는 원래 목적도 유지된다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">pixel-ui.css</code>의 <code class="language-plaintext highlighter-rouge">100vw</code>·<code class="language-plaintext highlighter-rouge">100vh</code> 3곳은 바꾸지 않았다. 장면 바깥의 뷰포트 루트, 모바일 셸, 세로 안내 덮개라서 브라우저 창 기준이 맞다. 그리고 “장면 안에서는 <code class="language-plaintext highlighter-rouge">vw</code>·<code class="language-plaintext highlighter-rouge">vh</code>를 쓰지 않는다”는 규칙을 두었다.</p>
+
+<h3 id="결과-1">결과</h3>
+
+<p>창의 장면 기준 폭(<code class="language-plaintext highlighter-rouge">offsetWidth</code>, 축소 전 px)을 쟀다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>크기</th>
+      <th>창</th>
+      <th>고치기 전</th>
+      <th>고친 뒤</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PC 1280×800</td>
+      <td>도감 / 기록관 / 부두</td>
+      <td>1120 / 1120 / 860</td>
+      <td>같음</td>
+    </tr>
+    <tr>
+      <td>PC 860×600</td>
+      <td>도감 / 기록관 / 부두</td>
+      <td>817 / 817 / 817</td>
+      <td>1120 / 1120 / 860</td>
+    </tr>
+    <tr>
+      <td>PC 860×600</td>
+      <td>기록관 탭 줄</td>
+      <td>가로 스크롤, 제목 2줄</td>
+      <td>한 줄, 스크롤 없음</td>
+    </tr>
+    <tr>
+      <td>모바일 844×390</td>
+      <td>도감 / 기록관 / 부두</td>
+      <td>802 / 624 / 802</td>
+      <td>같음</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2 id="4-다시-그릴-때마다-새로-생기는-요소에-배율을-걸던-경우">4. 다시 그릴 때마다 새로 생기는 요소에 배율을 걸던 경우</h2>
+
+<h3 id="문제-3">문제</h3>
+
+<p>모바일에서 가운데 1280×800 장면이 줄지 않고 그대로 잘려 보였다. 낚시터만 장면이 18px 아래로 밀리기도 했다.</p>
+
+<h3 id="원인-1-요소를-한-번만-찾았다">원인 1: 요소를 한 번만 찾았다</h3>
+
+<p><code class="language-plaintext highlighter-rouge">ViewportScaler</code>는 생성될 때(첫 화면을 그리기 전) <code class="language-plaintext highlighter-rouge">.mobile-scene-scaler</code>를 한 번 찾아 <code class="language-plaintext highlighter-rouge">this.scene</code>에 보관했다. 그런데 화면 컨트롤러는 그릴 때마다 <code class="language-plaintext highlighter-rouge">innerHTML</code>로 새 장면 요소를 만든다. 스케일러는 이미 문서에서 빠진 옛 요소에만 배율을 걸고 있었다.</p>
+
+<h3 id="해결-1">해결 1</h3>
+
+<p>요소를 보관하지 않고, 배율을 적용할 때마다 새로 찾는다. 그리고 <code class="language-plaintext highlighter-rouge">#gameScreen</code>의 자식 변화를 <code class="language-plaintext highlighter-rouge">MutationObserver</code>로 지켜보다가, 새 장면 요소가 생기면 크기 변화가 없어도 배율을 다시 적용한다.</p>
+
+<p>대안은 각 화면의 render 끝에 “배율 다시 적용”을 하나씩 넣는 것이었다. 하지만 화면이 7개라 빠뜨리기 쉽고, 새 화면을 만들 때마다 또 기억해야 한다. 스케일러가 한 곳에서 지켜보면 끝난다. 배율이 이미 맞으면 아무것도 하지 않아서 다시 그릴 때마다 일이 늘지도 않는다.</p>
+
+<h3 id="원인-2와-해결-2-낚시터의-18px">원인 2와 해결 2: 낚시터의 18px</h3>
+
+<p>낚시터 왼쪽 띠에 미끼 버튼 6개가 들어가 띠가 화면보다 길어졌다(426px). grid 행이 그 높이로 늘어나 가운데 장면이 함께 밀렸다. 행 높이를 화면 높이로 고정하고(<code class="language-plaintext highlighter-rouge">grid-template-rows: 100%</code>), 띠는 넘치면 띠 안에서만 스크롤하게 했다.</p>
+
+<h3 id="결과-2">결과</h3>
+
+<p>모바일 844×390(터치)에서 띠 사이 영역은 x 110~734, y 0~390이다. 고치기 전에는 장면이 그 영역을 넘쳤다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>화면</th>
+      <th>고치기 전 장면 위치 (left, top, right, bottom)</th>
+      <th>고친 뒤</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>광장</td>
+      <td>-218, -205, 1062, 595 (배율 없음)</td>
+      <td>110, 0, 734, 390 (scale 0.4875)</td>
+    </tr>
+    <tr>
+      <td>낚시터</td>
+      <td>-218, -187, 1062, 613</td>
+      <td>110, 0, 734, 390</td>
+    </tr>
+    <tr>
+      <td>수조관·공방·용품점</td>
+      <td>-218, -205, 1062, 595</td>
+      <td>110, 0, 734, 390</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>PC 1280×800은 그대로이고, 콘솔 오류는 0이다.</p>
+
+<hr>
+
+<h2 id="배운-점">배운 점</h2>
+
+<ul>
+  <li>ES 모듈의 import 오류는 파일 하나를 검사해서는 안 보인다. 여러 파일에 걸친 규칙은 <strong>여러 파일을 따라가는 검사</strong>가 필요하다.</li>
+  <li>예외가 난 함수의 앞부분만 보이는 증상(결과 카드는 뜬다)은 정상처럼 보인다. 이런 버그는 다음 단계의 상태를 확인해야 잡힌다.</li>
+  <li>확대·축소를 한 곳에서 하는 구조라면, 그 안쪽에서는 뷰포트 단위(<code class="language-plaintext highlighter-rouge">vw</code>, <code class="language-plaintext highlighter-rouge">vh</code>)를 쓰지 않는다. 기준이 둘이 되면 두 번 줄어든다.</li>
+  <li>다시 그려지는 DOM 요소는 참조를 들고 있지 말고, 쓸 때 찾거나 변화를 관찰한다.</li>
+  <li>화면 버그는 “고치기 전/후를 같은 조건에서 숫자로” 비교해 두면 확신이 생긴다. 헤드리스 Chrome으로 위치와 크기를 재는 스크립트가 쓸모 있었다.</li>
+</ul>
+
+
+    </div>
+
+</article>
+<div class="post-nav">
+<a class="previous" href="/TIL/til/2026/11/15/TIL-39.html" title="통합 테스트 3분 30초를 1분으로 줄인 과정">통합 테스트 3분 30초를 1분으로 줄인...</a><span></span>
+</div>
+<div class="post-related">
+      <h2>최근 글</h2>
+      <ul>
+<li><a class="post-link" href="/TIL/til/2026/11/15/TIL-39.html" title="통합 테스트 3분 30초를 1분으로 줄인 과정">통합 테스트 3분 30초를 1분으로 줄인 과정</a></li>
+<li><a class="post-link" href="/TIL/til/2026/11/08/TIL-38.html" title="낚시 게임에서 만난 MySQL 데드락 4건과 락 순서 통일">낚시 게임에서 만난 MySQL 데드락 4건과 락 순서 통일</a></li>
+<li><a class="post-link" href="/TIL/til/2026/09/22/TIL-37.html" title="챗봇을 만들며 이해한 LangChain과 RAG">챗봇을 만들며 이해한 LangChain과 RAG</a></li>
+<li><a class="post-link" href="/TIL/til/2026/05/19/TIL-36.html" title="주식 조회 서비스 성능 최적화">주식 조회 서비스 성능 최적화</a></li>
+</ul>
+    </div>
+<div class="post-comments"></div></section>
+</div>
+
+
+  </section>
+  <section class="sidebar" style="margin-left: 15px;">
+    <!-- Get sidebar items --><style type="text/css" media="screen">
+.post-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+</style>
+
+<div class="post-menu">
+  <div class="post-menu-title">목차</div>
+  <div class="post-menu-content"></div>
+</div>
+
+<script>
+  function generateContent() {
+    var menu = document.querySelector(".post-menu");
+    var menuContent =  menu.querySelector(".post-menu-content");
+    var headings = document.querySelector(".post-content").querySelectorAll("h2, h3, h4, h5, h6");
+
+    // Hide menu when no headings
+    if (headings.length === 0) {
+      return menu.style.display = "none";
+    }
+
+    // Generate post menu
+    var menuHTML = '';
+    for (var i = 0; i < headings.length; i++) {
+      var h = headings[i];
+      menuHTML += (
+        '<li class="h-' + h.tagName.toLowerCase() + '">'
+        + '<a href="#h-' + h.getAttribute('id') + '">' + h.textContent + '</a></li>');
+    }
+
+    menuContent.innerHTML = '<ul>' + menuHTML + '</ul>';
+
+    // The header element
+    var header = document.querySelector('header.site-header');
+
+    function doMenuCollapse(index, over_items) {
+      var items = menuContent.firstChild.children;
+
+      if (over_items == undefined) {
+        over_items = 20;
+      }
+
+      if (items.length < over_items) {
+        return;
+      }
+
+      var activeItem = items[index];
+      var beginItem = activeItem
+      var endItem = activeItem
+      var beginIndex = index;
+      var endIndex = index + 1;
+      while (beginIndex >= 0
+        && !items[beginIndex].classList.contains('h-h2')) {
+        beginIndex -= 1;
+      }
+      while (endIndex < items.length
+        && !items[endIndex].classList.contains('h-h2')) {
+        endIndex += 1;
+      }
+      for (var i = 0; i < beginIndex; i++) {
+        var item = items[i];
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+      for (var i = beginIndex + 1; i < endIndex; i++) {
+        var item = items[i];
+        item.style.display = '';
+      }
+      for (var i = endIndex; i < items.length; i++) {
+        var item = items[i];
+        if (!item.classList.contains('h-h2')) {
+          item.style.display = 'none';
+        }
+      }
+    }
+
+    // Init menu collapsed
+    doMenuCollapse(-1);
+
+    // Active the menu item
+    window.addEventListener('scroll', function () {
+      var lastActive = menuContent.querySelector('.active');
+      var changed = true;
+      var activeIndex = -1;
+      for (var i = headings.length - 1; i >= 0; i--) {
+        var h = headings[i];
+        var headingRect = h.getBoundingClientRect();
+        var headerRect = header.getBoundingClientRect();
+        var headerTop = Math.floor(headerRect.top);
+        var headerHeight = Math.floor(headerRect.height);
+        var headerBottom = headerTop + headerHeight + 20;
+        if (headingRect.top <= headerBottom) {
+          var id = 'h-' + h.getAttribute('id');
+          var a = menuContent.querySelector('a[href="#' + id  + '"]');
+          var curActive = a.parentNode;
+          if (curActive) {
+            curActive.classList.add('active');
+            activeIndex = i;
+          }
+          if (lastActive == curActive) {
+            changed = false;
+          }
+          break;
+        }
+      }
+      if (changed) {
+        if (lastActive) {
+          lastActive.classList.remove('active');
+        }
+        doMenuCollapse(activeIndex);
+      }
+    }, { passive: true });
+  }
+  generateContent();
+</script>
+</section>
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/TIL/"></data>
+
+  <div class="wrapper">
+    <div class="site-footer-inner">
+<div>© 2025-2026 김도환</div>
+      <div>
+<a title="Jekyll" href="https://jekyllrb.com/">Jekyll</a>과 <a title="Yat Theme" href="https://github.com/jeffreytse/jekyll-theme-yat">Yat Theme</a>로 만들었습니다.</div>
+      <div class="footer-col rss-subscribe"><a href="/TIL/feed.xml">RSS 구독</a></div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
